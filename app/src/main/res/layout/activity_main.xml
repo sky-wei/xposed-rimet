@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019 The sky Authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f5f5f5">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp">
+
+        <com.sky.xposed.common.ui.view.ItemMenu
+            android:id="@+id/im_version"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:onClick="onClick"
+            app:sky_itemMenuLine="false"
+            app:sky_itemMenuTextSize="15sp"
+            app:sky_itemMenuShowMore="false"
+            app:sky_itemMenuName="插件版本"
+            android:background="@drawable/selector_item_menu"
+            />
+
+        <com.sky.xposed.common.ui.view.ItemMenu
+            android:id="@+id/im_ding_version"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:onClick="onClick"
+            app:sky_itemMenuLine="true"
+            app:sky_itemMenuTextSize="15sp"
+            app:sky_itemMenuShowMore="false"
+            app:sky_itemMenuName="钉钉版本"
+            android:background="@drawable/selector_item_menu"
+            />
+
+        <com.sky.xposed.common.ui.view.ItemMenu
+            android:id="@+id/im_source"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:onClick="onClick"
+            app:sky_itemMenuLine="true"
+            app:sky_itemMenuTextSize="15sp"
+            app:sky_itemMenuShowMore="true"
+            app:sky_itemMenuName="项目源码地址"
+            android:background="@drawable/selector_item_menu"
+            />
+
+        <com.sky.xposed.common.ui.view.ItemMenu
+            android:id="@+id/im_download"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:onClick="onClick"
+            app:sky_itemMenuLine="true"
+            app:sky_itemMenuTextSize="15sp"
+            app:sky_itemMenuShowMore="true"
+            app:sky_itemMenuName="插件下载地址"
+            android:background="@drawable/selector_item_menu"
+            />
+
+        <com.sky.xposed.common.ui.view.ItemMenu
+            android:id="@+id/im_donate"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:onClick="onClick"
+            app:sky_itemMenuLine="true"
+            app:sky_itemMenuTextSize="15sp"
+            app:sky_itemMenuShowMore="true"
+            app:sky_itemMenuName="支持我们"
+            android:background="@drawable/selector_item_menu"
+            />
+
+        <com.sky.xposed.common.ui.view.ItemMenu
+            android:id="@+id/im_about"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:onClick="onClick"
+            app:sky_itemMenuLine="true"
+            app:sky_itemMenuTextSize="15sp"
+            app:sky_itemMenuShowMore="true"
+            app:sky_itemMenuName="关于"
+            android:background="@drawable/selector_item_menu"
+            />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            >
+
+            <TextView
+                android:id="@+id/tv_support_version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:lineSpacingExtra="3dp"
+                android:textSize="12sp"
+                android:textColor="#8f8f8f"
+                />
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</FrameLayout>
