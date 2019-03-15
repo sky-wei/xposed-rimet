@@ -48,12 +48,12 @@ public class CategoryItemView extends FrameLayout {
         super(context, attrs, defStyleAttr);
 
         setLayoutParams(LayoutUtil.newViewGroupParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, DisplayUtil.dip2px(getContext(), 40)));
+                ViewGroup.LayoutParams.MATCH_PARENT, DisplayUtil.dip2px(getContext(), 30)));
         setPadding(0, 10, 0, 10);
 
         tvName = new TextView(getContext());
         tvName.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
-        tvName.setTextSize(15);
+        tvName.setTextSize(13);
 
         LayoutParams params = LayoutUtil.newWrapFrameLayoutParams();
         params.leftMargin = DisplayUtil.dip2px(getContext(), 15);

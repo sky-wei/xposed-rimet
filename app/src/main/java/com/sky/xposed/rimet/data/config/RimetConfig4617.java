@@ -35,6 +35,9 @@ public class RimetConfig4617 extends RimetConfig {
         add(M.classz.class_android_dingtalk_redpackets_idl_service_RedEnvelopPickIService, "com.alibaba.android.dingtalk.redpackets.idl.service.RedEnvelopPickIService");
         add(M.classz.class_defpackage_RedPacketsRpc, "ces");
         add(M.classz.class_defpackage_RedPacketsRpc_9, "ces$9");
+        add(M.classz.class_lightapp_runtime_LightAppRuntimeReverseInterfaceImpl, "com.alibaba.lightapp.runtime.LightAppRuntimeReverseInterfaceImpl");
+        add(M.classz.class_android_dingtalk_redpackets_activities_FestivalRedPacketsPickActivity, "com.alibaba.android.dingtalk.redpackets.activities.FestivalRedPacketsPickActivity");
+        add(M.classz.class_android_dingtalk_redpackets_activities_PickRedPacketsActivity, "com.alibaba.android.dingtalk.redpackets.activities.PickRedPacketsActivity");
 
         /** Method */
         add(M.method.method_dingtalkbase_multidexsupport_DDApplication_onCreate, "onCreate");
@@ -45,6 +48,9 @@ public class RimetConfig4617 extends RimetConfig {
         add(M.method.method_defpackage_RedPacketsRpc_newInstance, "a");
         add(M.method.method_defpackage_ServiceFactory_getService, "a");
         add(M.method.method_android_dingtalk_redpackets_idl_service_RedEnvelopPickIService_pickRedEnvelopCluster, "pickRedEnvelopCluster");
+        add(M.method.method_lightapp_runtime_LightAppRuntimeReverseInterfaceImpl_initSecurityGuard, "initSecurityGuard");
+        add(M.method.method_android_dingtalk_redpackets_activities_FestivalRedPacketsPickActivity_initView, "a");
+        add(M.method.method_android_dingtalk_redpackets_activities_PickRedPacketsActivity_initView, "a");
 
         /** Field */
         add(M.field.field_wukong_im_message_MessageContentImpl_mType, "mType");
@@ -54,5 +60,9 @@ public class RimetConfig4617 extends RimetConfig {
         /** Key */
         add(M.key.key_sid, "sid");
         add(M.key.key_clusterid, "clusterid");
+
+        /** Res */
+        add(M.res.res_iv_pick, "iv_pick");
+        add(M.res.res_btn_pick, "btn_pick");
     }
 }

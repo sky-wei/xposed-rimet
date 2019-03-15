@@ -31,8 +31,8 @@ import com.sky.xposed.rimet.Constant;
 import com.sky.xposed.rimet.R;
 import com.sky.xposed.rimet.data.VersionManager;
 import com.sky.xposed.rimet.plugin.interfaces.XVersionManager;
+import com.sky.xposed.rimet.ui.dialog.DingDingDialog;
 import com.sky.xposed.rimet.ui.dialog.DonateDialog;
-import com.sky.xposed.rimet.ui.dialog.PluginSettingsDialog;
 import com.sky.xposed.rimet.ui.util.ActivityUtil;
 import com.sky.xposed.rimet.ui.util.DialogUtil;
 
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (item.getItemId() == R.id.menu_settings) {
             // 显示
-            PluginSettingsDialog dialog = new PluginSettingsDialog();
+            DingDingDialog dialog = new DingDingDialog();
             dialog.show(getFragmentManager(), "setting");
             return true;
         }

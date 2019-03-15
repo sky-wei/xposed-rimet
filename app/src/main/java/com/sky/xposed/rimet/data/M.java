@@ -42,6 +42,12 @@ public final class M {
         public static final int class_defpackage_RedPacketsRpc = 0x1f000007;
 
         public static final int class_defpackage_RedPacketsRpc_9 = 0x1f000008;
+
+        public static final int class_lightapp_runtime_LightAppRuntimeReverseInterfaceImpl = 0x1f000009;
+
+        public static final int class_android_dingtalk_redpackets_activities_FestivalRedPacketsPickActivity = 0x1f00000A;
+
+        public static final int class_android_dingtalk_redpackets_activities_PickRedPacketsActivity = 0x1f00000B;
     }
 
     public static final class method {
@@ -61,6 +67,12 @@ public final class M {
         public static final int method_defpackage_ServiceFactory_getService = 0x2f000007;
 
         public static final int method_android_dingtalk_redpackets_idl_service_RedEnvelopPickIService_pickRedEnvelopCluster = 0x2f000008;
+
+        public static final int method_lightapp_runtime_LightAppRuntimeReverseInterfaceImpl_initSecurityGuard = 0x2f000009;
+
+        public static final int method_android_dingtalk_redpackets_activities_FestivalRedPacketsPickActivity_initView = 0x2f00000A;
+
+        public static final int method_android_dingtalk_redpackets_activities_PickRedPacketsActivity_initView = 0x2f00000B;
     }
 
     public static final class field {
@@ -77,5 +89,12 @@ public final class M {
         public static final int key_sid = 0x4f000001;
 
         public static final int key_clusterid = 0x4f000002;
+    }
+
+    public static final class res {
+
+        public static final int res_iv_pick = 0x5f000001;
+
+        public static final int res_btn_pick = 0x5f000002;
     }
 }

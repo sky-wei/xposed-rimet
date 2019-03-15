@@ -49,7 +49,7 @@ public interface Constant {
 
     interface Name {
 
-        String TITLE = "DiDi";
+        String TITLE = "钉钉助手";
 
         String RIMET = "rimet";
     }
@@ -58,7 +58,13 @@ public interface Constant {
 
         int MAIN_MENU = 0x000001;
 
-        int AUTO_LOGIN = 0x000002;
+        int ENABLE_LUCKY = 0x000002;
+
+        int LUCKY_DELAYED = 0x000003;
+
+        int ENABLE_FAST_LUCKY = 0x000004;
+
+        int ENABLE_RECALL = 0x000005;
     }
 
     interface Preference {
@@ -87,7 +93,7 @@ public interface Constant {
 
         int DEBUG = 0x01000000;
 
-        int RED_PACKET = 0x02000000;
+        int DING_DING = 0x02000000;
 
         int LUCKY_MONEY = 0x03000000;
 

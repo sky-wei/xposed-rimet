@@ -28,12 +28,14 @@ import com.sky.xposed.rimet.Constant;
 import com.sky.xposed.rimet.data.ConfigManager;
 import com.sky.xposed.rimet.data.ResourceManager;
 import com.sky.xposed.rimet.plugin.develop.DevelopPlugin;
+import com.sky.xposed.rimet.plugin.dingding.DingDingHandler;
+import com.sky.xposed.rimet.plugin.dingding.DingDingPlugin;
 import com.sky.xposed.rimet.plugin.interfaces.XConfigManager;
 import com.sky.xposed.rimet.plugin.interfaces.XPlugin;
 import com.sky.xposed.rimet.plugin.interfaces.XPluginManager;
 import com.sky.xposed.rimet.plugin.interfaces.XResourceManager;
 import com.sky.xposed.rimet.plugin.interfaces.XVersionManager;
-import com.sky.xposed.rimet.plugin.redpacket.RedPacketPlugin;
+import com.sky.xposed.rimet.plugin.main.SettingsPlugin;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -221,9 +223,11 @@ public class PluginManager implements XPluginManager {
      */
     private void loadPlugin() {
 
-//        addPlugin(new SettingsPlugin(this));
-//        addPlugin(new RemittancePlugin(this));
-        addPlugin(new RedPacketPlugin(this));
+        addPlugin(new SettingsPlugin(this));
+        addPlugin(new DingDingPlugin
+                .Build(this)
+                .setHandler(new DingDingHandler(this))
+                .build());
 
         if (BuildConfig.DEBUG) {
             addPlugin(new DevelopPlugin(this));

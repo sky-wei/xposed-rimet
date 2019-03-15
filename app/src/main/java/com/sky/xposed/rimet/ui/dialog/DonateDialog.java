@@ -75,13 +75,13 @@ public class DonateDialog extends CommonDialog {
             // 启动支付宝
             showDonateImageDialog(
                     "*点击支付二维码即可打开支付宝*",
-                    UriUtil.getResource(R.drawable.selector_item_menu),
+                    UriUtil.getResource(R.drawable.alipay),
                     CLICK, (eventType, uri) -> {
                         // 直接拉起支付宝
                         ToastUtil.show("正在启动支付宝，感谢您的支持！");
 
                         if (!ActivityUtil.startAlipay(getContext(),
-                                "HTTPS://QR.ALIPAY.COM/FKX05224Z5KOVCQ61BQ729")) {
+                                "HTTPS://QR.ALIPAY.COM/FKX05261FCJGZABDGWMR46")) {
                             ToastUtil.show("启动支付宝失败");
                         }
                         return true;
@@ -92,7 +92,7 @@ public class DonateDialog extends CommonDialog {
             // 微信捐赠
             showDonateImageDialog(
                     "*长按保存到相册,再通过微信扫码二维码*",
-                    UriUtil.getResource(R.drawable.selector_item_menu),
+                    UriUtil.getResource(R.drawable.wechat),
                     LONG_CLICK, (eventType, uri) -> {
 
                         Picasso.get().load(uri).into(new Target() {
@@ -102,7 +102,7 @@ public class DonateDialog extends CommonDialog {
                                 if (bitmap == null) return;
 
                                 File imagePath = new File(Environment
-                                        .getExternalStorageDirectory(), "DCIM/wecaht.png");
+                                        .getExternalStorageDirectory(), "DCIM/wechat.png");
 
                                 // 保存图片
                                 if (CommUtil.saveImage2SDCard(imagePath.getPath(), bitmap)) {

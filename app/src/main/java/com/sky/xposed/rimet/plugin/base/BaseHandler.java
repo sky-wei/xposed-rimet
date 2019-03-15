@@ -61,12 +61,10 @@ public abstract class BaseHandler implements XHandler {
     }
 
     public void mainPerformClick(final View viewGroup, final String id) {
-
         mHandler.post(() -> performClick(viewGroup, id));
     }
 
     public void mainPerformClick(final View view) {
-
         mHandler.post(() -> performClick(view));
     }
 
@@ -84,6 +82,10 @@ public abstract class BaseHandler implements XHandler {
             // 点击
             view.performClick();
         }
+    }
+
+    public void postDelayed(Runnable runnable, long delayMillis) {
+        mHandler.postDelayed(runnable, delayMillis);
     }
 
     public XConfig getXConfig() {

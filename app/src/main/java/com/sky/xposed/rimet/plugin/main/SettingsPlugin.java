@@ -17,16 +17,16 @@
 package com.sky.xposed.rimet.plugin.main;
 
 import android.app.Activity;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
 
+import com.sky.xposed.common.ui.view.SimpleItemView;
+import com.sky.xposed.common.util.ResourceUtil;
 import com.sky.xposed.rimet.Constant;
-import com.sky.xposed.rimet.data.M;
 import com.sky.xposed.rimet.data.model.PluginInfo;
 import com.sky.xposed.rimet.plugin.base.BasePlugin;
-import com.sky.xposed.rimet.plugin.interfaces.XPlugin;
 import com.sky.xposed.rimet.plugin.interfaces.XPluginManager;
-import com.sky.xposed.rimet.ui.dialog.PluginSettingsDialog;
 
 /**
  * Created by sky on 2018/12/30.
@@ -45,36 +45,36 @@ public class SettingsPlugin extends BasePlugin {
     @Override
     public void onHandleLoadPackage() {
 
-        findMethod(M.classz.class_ui_LauncherUI, M.method.method_ui_LauncherUI_onCreateOptionsMenu, Menu.class)
+        findMethod(
+                "com.alibaba.android.user.settings.activity.NewSettingActivity",
+                "onCreate", Bundle.class)
                 .after(param -> {
 
-                    XPlugin xPlugin = getPluginManager()
-                            .getXPluginById(Constant.Plugin.MAIN_SETTINGS);
+                    final Activity activity = (Activity) param.thisObject;
 
-                    if (xPlugin.isEnable(Constant.XFlag.MAIN_MENU, true)) {
-                        Menu menu = (Menu) param.args[0];
-                        menu.add(Constant.GroupId.GROUP,
-                                Constant.ItemId.MAIN_SETTINGS, 0, Constant.Name.TITLE);
-                    }
-                });
+                    View view = activity.findViewById(ResourceUtil.getId(activity, "setting_msg_notice"));
+                    ViewGroup viewGroup = (ViewGroup) view.getParent();
 
-        findMethod(M.classz.class_ui_LauncherUI, M.method.method_ui_LauncherUI_onOptionsItemSelected, MenuItem.class)
-                .after(param -> {
+                    final int index = viewGroup.indexOfChild(view);
 
-                    MenuItem item = (MenuItem) param.args[0];
-                    Activity activity = (Activity) param.thisObject;
-
-                    if (Constant.ItemId.MAIN_SETTINGS == item.getItemId()) {
-                        // 打开设置界面
+                    SimpleItemView viewDing = new SimpleItemView(activity);
+                    viewDing.getNameView().setTextSize(17);
+                    viewDing.setName(Constant.Name.TITLE);
+                    viewDing.setOnClickListener(v -> {
+                        // 打开设置
                         openSettings(activity);
-                    }
+                    });
+                    viewGroup.addView(viewDing, index);
                 });
     }
 
     @Override
     public void openSettings(Activity activity) {
 
-        PluginSettingsDialog dialog = new PluginSettingsDialog();
-        dialog.show(activity.getFragmentManager(), "settings");
+        // 打开插件设置
+        getPluginManager().getXPluginById(Constant.Plugin.DING_DING).openSettings(activity);
+
+//        PluginSettingsDialog dialog = new PluginSettingsDialog();
+//        dialog.show(activity.getFragmentManager(), "settings");
     }
 }
