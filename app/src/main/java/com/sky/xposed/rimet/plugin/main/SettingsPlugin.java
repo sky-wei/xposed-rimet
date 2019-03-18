@@ -23,7 +23,9 @@ import android.view.ViewGroup;
 
 import com.sky.xposed.common.ui.view.SimpleItemView;
 import com.sky.xposed.common.util.ResourceUtil;
+import com.sky.xposed.rimet.BuildConfig;
 import com.sky.xposed.rimet.Constant;
+import com.sky.xposed.rimet.data.M;
 import com.sky.xposed.rimet.data.model.PluginInfo;
 import com.sky.xposed.rimet.plugin.base.BasePlugin;
 import com.sky.xposed.rimet.plugin.interfaces.XPluginManager;
@@ -46,13 +48,14 @@ public class SettingsPlugin extends BasePlugin {
     public void onHandleLoadPackage() {
 
         findMethod(
-                "com.alibaba.android.user.settings.activity.NewSettingActivity",
-                "onCreate", Bundle.class)
+                M.classz.class_android_user_settings_activity_NewSettingActivity,
+                M.method.method_android_user_settings_activity_NewSettingActivity_onCreate,
+                Bundle.class)
                 .after(param -> {
 
                     final Activity activity = (Activity) param.thisObject;
 
-                    View view = activity.findViewById(ResourceUtil.getId(activity, "setting_msg_notice"));
+                    View view = activity.findViewById(ResourceUtil.getId(activity, getXString(M.res.res_setting_msg_notice)));
                     ViewGroup viewGroup = (ViewGroup) view.getParent();
 
                     final int index = viewGroup.indexOfChild(view);
@@ -60,6 +63,7 @@ public class SettingsPlugin extends BasePlugin {
                     SimpleItemView viewDing = new SimpleItemView(activity);
                     viewDing.getNameView().setTextSize(17);
                     viewDing.setName(Constant.Name.TITLE);
+                    viewDing.setExtend("v" + BuildConfig.VERSION_NAME);
                     viewDing.setOnClickListener(v -> {
                         // 打开设置
                         openSettings(activity);

@@ -38,6 +38,7 @@ public class RimetConfig4617 extends RimetConfig {
         add(M.classz.class_lightapp_runtime_LightAppRuntimeReverseInterfaceImpl, "com.alibaba.lightapp.runtime.LightAppRuntimeReverseInterfaceImpl");
         add(M.classz.class_android_dingtalk_redpackets_activities_FestivalRedPacketsPickActivity, "com.alibaba.android.dingtalk.redpackets.activities.FestivalRedPacketsPickActivity");
         add(M.classz.class_android_dingtalk_redpackets_activities_PickRedPacketsActivity, "com.alibaba.android.dingtalk.redpackets.activities.PickRedPacketsActivity");
+        add(M.classz.class_android_user_settings_activity_NewSettingActivity, "com.alibaba.android.user.settings.activity.NewSettingActivity");
 
         /** Method */
         add(M.method.method_dingtalkbase_multidexsupport_DDApplication_onCreate, "onCreate");
@@ -51,6 +52,7 @@ public class RimetConfig4617 extends RimetConfig {
         add(M.method.method_lightapp_runtime_LightAppRuntimeReverseInterfaceImpl_initSecurityGuard, "initSecurityGuard");
         add(M.method.method_android_dingtalk_redpackets_activities_FestivalRedPacketsPickActivity_initView, "a");
         add(M.method.method_android_dingtalk_redpackets_activities_PickRedPacketsActivity_initView, "a");
+        add(M.method.method_android_user_settings_activity_NewSettingActivity_onCreate, "onCreate");
 
         /** Field */
         add(M.field.field_wukong_im_message_MessageContentImpl_mType, "mType");
@@ -64,5 +66,6 @@ public class RimetConfig4617 extends RimetConfig {
         /** Res */
         add(M.res.res_iv_pick, "iv_pick");
         add(M.res.res_btn_pick, "btn_pick");
+        add(M.res.res_setting_msg_notice, "setting_msg_notice");
     }
 }

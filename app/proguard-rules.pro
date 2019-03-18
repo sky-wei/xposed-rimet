@@ -19,3 +19,23 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Serializable
+-keepclasseswithmembernames class * implements java.io.Serializable {*;}
+
+-keep class com.sky.xposed.rimet.Main {*;}
+-keep class com.sky.xposed.rimet.StringFog
+
+-keep class rx.** {*;}
+-keep class okhttp3.** {*;}
+-keep class okio.** {*;}
+-keep class com.squareup.** {*;}
+-keep class org.apache.** {*;}
+-keep class com.google.gson.** {*;}
+-keep class android.support.** {*;}
+
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
+
+-dontwarn okhttp3.**
+-dontwarn okio.**

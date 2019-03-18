@@ -1,5 +1,14 @@
 ### Xposed-Rimet
 
+这是一个钉钉的Xposed插件
+
+#### Xposed Module Repository
+[http://repo.xposed.info/module/com.sky.xposed.rimet](http://repo.xposed.info/module/com.sky.xposed.rimet)
+
+QQ交流群: 
+1. __731081056__
+
+![](./screenshot/WechatIMG159.jpeg)
 
 ## License
 

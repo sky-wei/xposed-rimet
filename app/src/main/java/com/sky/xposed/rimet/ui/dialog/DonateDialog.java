@@ -58,11 +58,11 @@ public class DonateDialog extends CommonDialog {
     @Override
     public void createView(CommonFrameLayout frameView) {
 
-        sivAliPayDonate = ViewUtil.newSimpleItemView(getContext(), "支付宝捐赠");
         sivWeChatDonate = ViewUtil.newSimpleItemView(getContext(), "微信捐赠");
+        sivAliPayDonate = ViewUtil.newSimpleItemView(getContext(), "支付宝捐赠");
 
-        frameView.addContent(sivAliPayDonate);
         frameView.addContent(sivWeChatDonate);
+        frameView.addContent(sivAliPayDonate);
     }
 
     @Override

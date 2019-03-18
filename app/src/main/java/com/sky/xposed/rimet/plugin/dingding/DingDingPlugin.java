@@ -85,6 +85,33 @@ public class DingDingPlugin extends BasePlugin {
                     // 处理快速打开红包
                     mHandler.onHandlerPickRedPackets((Activity) param.thisObject);
                 });
+
+//        /* compiled from: MessageDs */
+//        /* renamed from: iqd */
+//        public final class iqd extends IMDatabase {
+
+//        findMethod("com.alibaba.wukong.im.message.MessageImpl", "recallStatus")
+//                .after(param -> {
+//
+//                    Object messageContent = XposedHelpers.callMethod(param.thisObject, "messageContent");
+//                    int type = XposedHelpers.getIntField(messageContent, "mType");
+//
+//                    if (1 != type) return;
+//
+//                    String text = (String) XposedHelpers.getObjectField(messageContent, "mText");
+//
+//                    Alog.d(">>>>>>>>>>>>>>>>>>> " + text + " >> " + param.getResult());
+//
+////                    if (!"Msg has been recalled.".equals(text)) {
+////
+////                        param.setResult(0);
+////                    }
+//                });
+
+//        findMethod("com.alibaba.wukong.im.message.MessageImpl", "recallStatus")
+//                .after(param -> {
+//
+//                });
     }
 
 

@@ -48,6 +48,8 @@ public final class M {
         public static final int class_android_dingtalk_redpackets_activities_FestivalRedPacketsPickActivity = 0x1f00000A;
 
         public static final int class_android_dingtalk_redpackets_activities_PickRedPacketsActivity = 0x1f00000B;
+
+        public static final int class_android_user_settings_activity_NewSettingActivity = 0x1f00000C;
     }
 
     public static final class method {
@@ -73,6 +75,8 @@ public final class M {
         public static final int method_android_dingtalk_redpackets_activities_FestivalRedPacketsPickActivity_initView = 0x2f00000A;
 
         public static final int method_android_dingtalk_redpackets_activities_PickRedPacketsActivity_initView = 0x2f00000B;
+
+        public static final int method_android_user_settings_activity_NewSettingActivity_onCreate = 0x2f00000C;
     }
 
     public static final class field {
@@ -96,5 +100,7 @@ public final class M {
         public static final int res_iv_pick = 0x5f000001;
 
         public static final int res_btn_pick = 0x5f000002;
+
+        public static final int res_setting_msg_notice = 0x5f000003;
     }
 }

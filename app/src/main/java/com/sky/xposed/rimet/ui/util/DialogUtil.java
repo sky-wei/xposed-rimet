@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -34,6 +35,8 @@ import com.sky.xposed.common.ui.util.ViewUtil;
 import com.sky.xposed.common.util.Alog;
 import com.sky.xposed.common.util.DisplayUtil;
 import com.sky.xposed.rimet.BuildConfig;
+import com.sky.xposed.rimet.R;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by sky on 2018/12/21.
@@ -152,20 +155,20 @@ public class DialogUtil {
             TextView tvHead = new TextView(context);
             tvHead.setTextColor(Color.BLACK);
             tvHead.setTextSize(14f);
-            tvHead.setText("\n当前版本：v" + BuildConfig.VERSION_NAME);
+            tvHead.setText("当前版本：v" + BuildConfig.VERSION_NAME);
 
-//            ImageView ivCommunity = new ImageView(context);
-//            ivCommunity.setLayoutParams(LayoutUtil.newWrapLinearLayoutParams());
-//            Picasso.get().load(resourceIdToUri(R.drawable.community)).into(ivCommunity);
+            ImageView ivCommunity = new ImageView(context);
+            ivCommunity.setLayoutParams(LayoutUtil.newWrapLinearLayoutParams());
+            Picasso.get().load(UriUtil.getResource(R.drawable.qq)).into(ivCommunity);
 
             TextView tvTail = new TextView(context);
             tvTail.setTextColor(Color.BLACK);
             tvTail.setTextSize(14f);
-//            tvTail.setText("官方QQ群：\n794327446(已满)\n824933593\n");
+            tvTail.setText("QQ群：731081056");
 
             content.addView(tvHead);
-//            content.addView(ivCommunity);
             content.addView(tvTail);
+            content.addView(ivCommunity);
 
             // 显示关于
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
