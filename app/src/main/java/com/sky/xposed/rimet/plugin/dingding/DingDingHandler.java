@@ -28,7 +28,6 @@ import com.sky.xposed.rimet.plugin.base.BaseHandler;
 import com.sky.xposed.rimet.plugin.interfaces.XConfigManager;
 import com.sky.xposed.rimet.plugin.interfaces.XPluginManager;
 import com.sky.xposed.rimet.util.CollectionUtil;
-import com.sky.xposed.rimet.util.ToStringUtil;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -194,7 +193,6 @@ public class DingDingHandler extends BaseHandler implements DingDingPlugin.Handl
 
         setMsgText(recallMessage, getMsgText(recallMessage) + " [已撤回]");
 
-        ToStringUtil.toString(recallMessage);
         XposedHelpers.callStaticMethod(classMessageDs,
                 getXString(M.method.method_defpackage_MessageDs_update), dbName, cid, Collections.singletonList(recallMessage));
     }

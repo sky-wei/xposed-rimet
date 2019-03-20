@@ -23,6 +23,7 @@ import com.sky.xposed.common.util.Alog;
 import com.sky.xposed.common.util.PackageUtil;
 import com.sky.xposed.rimet.Constant;
 import com.sky.xposed.rimet.data.config.RimetConfig4617;
+import com.sky.xposed.rimet.data.config.RimetConfig4618;
 import com.sky.xposed.rimet.plugin.interfaces.XConfig;
 import com.sky.xposed.rimet.plugin.interfaces.XVersionManager;
 
@@ -44,6 +45,7 @@ public class VersionManager implements XVersionManager {
     static {
         // 微信版本配置
         CONFIG_MAP.put("4.6.17", RimetConfig4617.class);
+        CONFIG_MAP.put("4.6.18", RimetConfig4618.class);
     }
 
     private XConfig mVersionConfig;

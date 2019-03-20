@@ -17,17 +17,22 @@
 package com.sky.xposed.rimet.plugin.develop;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
 
+import com.sky.xposed.common.util.Alog;
 import com.sky.xposed.rimet.Constant;
 import com.sky.xposed.rimet.data.model.PluginInfo;
 import com.sky.xposed.rimet.plugin.base.BasePlugin;
 import com.sky.xposed.rimet.plugin.interfaces.XPluginManager;
 import com.sky.xposed.rimet.ui.dialog.DevelopDialog;
+import com.sky.xposed.rimet.util.DebugUtil;
 import com.sky.xposed.rimet.util.ToStringUtil;
+
+import java.util.Arrays;
 
 /**
  * Created by sky on 2018/12/19.
@@ -97,46 +102,46 @@ public class DevelopPlugin extends BasePlugin {
 //                    ToStringUtil.toString(message);
 //
 //                });
-//        findMethod("com.alibaba.bee.DBManager", "insert", String.class, Class.class, String.class, ContentValues.class)
-//                .before(param -> {
+        findMethod("com.alibaba.bee.DBManager", "insert", String.class, Class.class, String.class, ContentValues.class)
+                .before(param -> {
+
+                    Alog.d(">>>>>>>>>> insert " + Arrays.toString(param.args));
+                });
+
+
+        findMethod("com.alibaba.bee.DBManager", "insertWithOnConflict", String.class, Class.class, String.class, ContentValues.class, int.class)
+                .before(param -> {
+
+                    Alog.d(">>>>>>>>>> insertWithOnConflict " + Arrays.toString(param.args));
+                });
+
+        findMethod("com.alibaba.bee.DBManager", "update", String.class, Class.class, String.class, ContentValues.class, String.class, String[].class)
+                .before(param -> {
+
+                    Alog.d(">>>>>>>>>> update " + Arrays.toString(param.args));
+
+//                    ContentValues contentValues = (ContentValues) param.args[3];
+//                    Class tClass = (Class) param.args[1];
+//                    String[] strings = (String[]) param.args[5];
 //
-//                    Alog.d(">>>>>>>>>> insert " + Arrays.toString(param.args));
-//                });
+////                    Alog.d(">>>>>>>>>>>>>>>>>> tClass " + tClass);
 //
+//                    if ("com.alibaba.wukong.im.message.MessageEntry".equals(tClass.getName())) {
 //
-//        findMethod("com.alibaba.bee.DBManager", "insertWithOnConflict", String.class, Class.class, String.class, ContentValues.class, int.class)
-//                .before(param -> {
+//                        Integer integer = contentValues.getAsInteger("recall");
 //
-//                    Alog.d(">>>>>>>>>> insertWithOnConflict " + Arrays.toString(param.args));
-//                });
+//                        Alog.d(">>>>>>>>>>>>>> " + Arrays.toString(strings));
 //
-//        findMethod("com.alibaba.bee.DBManager", "update", String.class, Class.class, String.class, ContentValues.class, String.class, String[].class)
-//                .before(param -> {
-//
-//                    Alog.d(">>>>>>>>>> update " + Arrays.toString(param.args));
-//
-////                    ContentValues contentValues = (ContentValues) param.args[3];
-////                    Class tClass = (Class) param.args[1];
-////                    String[] strings = (String[]) param.args[5];
-////
-//////                    Alog.d(">>>>>>>>>>>>>>>>>> tClass " + tClass);
-////
-////                    if ("com.alibaba.wukong.im.message.MessageEntry".equals(tClass.getName())) {
-////
-////                        Integer integer = contentValues.getAsInteger("recall");
-////
-////                        Alog.d(">>>>>>>>>>>>>> " + Arrays.toString(strings));
-////
-////                        if (integer != null && integer.intValue() == 1) {
-////                            DebugUtil.printStackTrace();
-////                            param.setResult(null);
-////                            return;
-////                        }
-////                    }
-//                });
-//
-//
-//
+//                        if (integer != null && integer.intValue() == 1) {
+//                            DebugUtil.printStackTrace();
+//                            param.setResult(null);
+//                            return;
+//                        }
+//                    }
+                });
+
+
+
 //        findMethod("com.alibaba.bee.DBManager", "updateWithOnConflict", String.class, Class.class, String.class, ContentValues.class, String.class, String[].class, int.class)
 //                .before(param -> {
 //
