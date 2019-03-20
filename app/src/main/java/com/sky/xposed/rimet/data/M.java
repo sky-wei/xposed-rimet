@@ -31,7 +31,7 @@ public final class M {
 
         public static final int class_dingtalkbase_multidexsupport_DDApplication = 0x1f000002;
 
-        public static final int class_defpackage_ConversationChangeMaid = 0x1f000003;
+        public static final int class_defpackage_MessageDs = 0x1f000003;
 
         public static final int class_plugin_webwx_ui_ExtDeviceWXLoginUI = 0x1f000004;
 
@@ -50,15 +50,17 @@ public final class M {
         public static final int class_android_dingtalk_redpackets_activities_PickRedPacketsActivity = 0x1f00000B;
 
         public static final int class_android_user_settings_activity_NewSettingActivity = 0x1f00000C;
+
+        public static final int class_wukong_im_base_IMDatabase = 0x1f00000D;
     }
 
     public static final class method {
 
         public static final int method_dingtalkbase_multidexsupport_DDApplication_onCreate = 0x2f000001;
 
-        public static final int method_defpackage_ConversationChangeMaid_onLatestMessageChanged = 0x2f000002;
+        public static final int method_defpackage_MessageDs_handler = 0x2f000002;
 
-        public static final int method_wukong_im_conversation_ConversationImpl_latestMessage = 0x2f000003;
+        public static final int method_android_dingtalkim_base_model_typeValue = 0x2f000003;
 
         public static final int method_wukong_im_message_MessageImpl_messageContent = 0x2f000004;
 
@@ -77,15 +79,27 @@ public final class M {
         public static final int method_android_dingtalk_redpackets_activities_PickRedPacketsActivity_initView = 0x2f00000B;
 
         public static final int method_android_user_settings_activity_NewSettingActivity_onCreate = 0x2f00000C;
+
+        public static final int method_defpackage_MessageDs_recall = 0x2f00000D;
+
+        public static final int method_wukong_im_conversation_ConversationImpl_latestMessage = 0x2f00000E;
+
+        public static final int method_wukong_im_base_IMDatabase_getWritableDatabase = 0x2f00000F;
+
+        public static final int method_defpackage_MessageDs_update = 0x2f000010;
+
+        public static final int method_wukong_im_message_MessageContentImpl_TextContentImpl_text = 0x2f000011;
+
+        public static final int method_wukong_im_message_MessageContentImpl_TextContentImpl_setText = 0x2f000012;
     }
 
     public static final class field {
 
-        public static final int field_wukong_im_message_MessageContentImpl_mType = 0x3f000001;
+        public static final int field_android_dingtalkim_base_model_DingtalkMessage_msgDisplayType = 0x3f000001;
 
-        public static final int field_wukong_im_message_MessageContentImpl_CustomMessageContentImpl_mCustomType = 0x3f000002;
+        public static final int field_wukong_im_message_MessageContentImpl_CustomMessageContentImpl_mExtension = 0x3f000002;
 
-        public static final int field_wukong_im_message_MessageContentImpl_CustomMessageContentImpl_mExtension = 0x3f000003;
+        public static final int field_android_dingtalkim_base_model_DingtalkMessage_mConversation = 0x3f000003;
     }
 
     public static final class key {

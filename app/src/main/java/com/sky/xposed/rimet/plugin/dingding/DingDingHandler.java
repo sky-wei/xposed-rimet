@@ -17,6 +17,7 @@
 package com.sky.xposed.rimet.plugin.dingding;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.view.View;
 
 import com.sky.xposed.common.util.ConversionUtil;
@@ -27,7 +28,10 @@ import com.sky.xposed.rimet.plugin.base.BaseHandler;
 import com.sky.xposed.rimet.plugin.interfaces.XConfigManager;
 import com.sky.xposed.rimet.plugin.interfaces.XPluginManager;
 import com.sky.xposed.rimet.util.CollectionUtil;
+import com.sky.xposed.rimet.util.ToStringUtil;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -52,14 +56,14 @@ public class DingDingHandler extends BaseHandler implements DingDingPlugin.Handl
     }
 
     @Override
-    public void onHandlerMessage(List conversations) {
+    public void onHandlerMessage(String cid, Collection messages) {
 
         // 未开启不需要处理
-        if (!mEnableLucky) return;
+        if (!mEnableLucky || CollectionUtil.isEmpty(messages)) return;
 
-        for (Object conversation : conversations) {
+        for (Object message : messages) {
             // 处理消息
-            onHandlerMessage(conversation);
+            handlerMessage(cid, message);
         }
     }
 
@@ -82,6 +86,16 @@ public class DingDingHandler extends BaseHandler implements DingDingPlugin.Handl
     }
 
     @Override
+    public boolean onRecallMessage(ContentValues contentValues) {
+
+        if (!mEnableRecall || contentValues == null) return false;
+
+        Integer integer = contentValues.getAsInteger("recall");
+
+        return integer != null && integer == 1;
+    }
+
+    @Override
     public void setEnable(int flag, boolean enable) {
 
         switch (flag) {
@@ -99,23 +113,36 @@ public class DingDingHandler extends BaseHandler implements DingDingPlugin.Handl
 
     /**
      * 处理消息
-     * @param conversation
+     * @param message
      */
-    private void onHandlerMessage(Object conversation) {
+    private void handlerMessage(String cid, Object message) {
 
-        Object message = XposedHelpers.callMethod(conversation,
-                getXString(M.method.method_wukong_im_conversation_ConversationImpl_latestMessage));
+        if (message == null) return;
+
+        int msgType = getMsgType(message);
+
+//        Alog.d(">>>>>>>>>>>>>>>>> MsgType " + msgType);
+
+        if (133 == msgType || 135 == msgType || 160 == msgType || 164 == msgType) {
+            // 处理红包消息
+            handlerLuckyMessage(message);
+        }
+
+        if (mEnableRecall && 126 == msgType) {
+            // 处理撤回消息
+            handlerRecallMessage(cid, message);
+        }
+    }
+
+    /**
+     * 处理红包消息
+     * @param message
+     */
+    private void handlerLuckyMessage(Object message) {
+
+        // 直接根据消息类型来处理
         Object messageContent = XposedHelpers.callMethod(message,
                 getXString(M.method.method_wukong_im_message_MessageImpl_messageContent));
-
-        if (messageContent == null) return;
-
-//        ToStringUtil.toString(messageContent);
-
-        int type = XposedHelpers.getIntField(
-                messageContent, getXString(M.field.field_wukong_im_message_MessageContentImpl_mType));
-
-        if (902 != type) return;
 
         List messageContents = (List) XposedHelpers.callMethod(
                 messageContent, getXString(M.method.method_wukong_im_message_MessageContentImpl_contents));
@@ -123,19 +150,12 @@ public class DingDingHandler extends BaseHandler implements DingDingPlugin.Handl
         if (CollectionUtil.isEmpty(messageContents)) return;
 
         Object customMessage = messageContents.get(0);
-        int customType = XposedHelpers.getIntField(
-                customMessage, getXString(M.field.field_wukong_im_message_MessageContentImpl_CustomMessageContentImpl_mCustomType));
-
-        if (902 != customType) return;
-
-//        ToStringUtil.toString(customMessage);
-
-        Map<String, String> extension = (Map<String, String>) XposedHelpers.getObjectField(
+        Map extension = (Map) XposedHelpers.getObjectField(
                 customMessage, getXString(M.field.field_wukong_im_message_MessageContentImpl_CustomMessageContentImpl_mExtension));
 
         // 获取红包信息
-        String sid = extension.get(getXString(M.key.key_sid));
-        String clusterId = extension.get(getXString(M.key.key_clusterid));
+        String sid = (String) extension.get(getXString(M.key.key_sid));
+        String clusterId = (String) extension.get(getXString(M.key.key_clusterid));
 
         // 获取休眠的时间
         long delayMillis = 1000L * ConversionUtil.parseInt(
@@ -146,11 +166,93 @@ public class DingDingHandler extends BaseHandler implements DingDingPlugin.Handl
     }
 
     /**
+     * 处理撤回的消息
+     * @param message
+     */
+    private void handlerRecallMessage(String cid, Object message) {
+
+        Object conversation = getObjectField(message,
+                M.field.field_android_dingtalkim_base_model_DingtalkMessage_mConversation);
+
+        if (conversation == null) return;
+
+        // 获取撤回的消息
+        Object recallMessage = XposedHelpers.callMethod(conversation,
+                getXString(M.method.method_wukong_im_conversation_ConversationImpl_latestMessage));
+
+        if (recallMessage == null) return;
+
+        // 获取消息类型
+        int msgType = getMsgType(recallMessage);
+
+        if (10 != msgType) return;  // 只处理文本消息
+
+        Class classIMDatabase = findClass(M.classz.class_wukong_im_base_IMDatabase);
+        Class classMessageDs = findClass(M.classz.class_defpackage_MessageDs);
+        String dbName = (String) XposedHelpers.callStaticMethod(classIMDatabase,
+                getXString(M.method.method_wukong_im_base_IMDatabase_getWritableDatabase));
+
+        setMsgText(recallMessage, getMsgText(recallMessage) + " [已撤回]");
+
+        ToStringUtil.toString(recallMessage);
+        XposedHelpers.callStaticMethod(classMessageDs,
+                getXString(M.method.method_defpackage_MessageDs_update), dbName, cid, Collections.singletonList(recallMessage));
+    }
+
+    /**
+     * 获取消息类型
+     * @param message
+     * @return
+     */
+    private int getMsgType(Object message) {
+
+        Object msgDisplayType = getObjectField(message,
+                M.field.field_android_dingtalkim_base_model_DingtalkMessage_msgDisplayType);
+
+        return (int) XposedHelpers.callMethod(msgDisplayType,
+                getXString(M.method.method_android_dingtalkim_base_model_typeValue));
+    }
+
+    /**
+     * 获取消息文本信息
+     * @param message
+     * @return
+     */
+    private String getMsgText(Object message) {
+
+        Object messageContent = XposedHelpers.callMethod(message,
+                getXString(M.method.method_wukong_im_message_MessageImpl_messageContent));
+
+        if (messageContent != null) {
+            return (String) XposedHelpers.callMethod(messageContent,
+                    getXString(M.method.method_wukong_im_message_MessageContentImpl_TextContentImpl_text));
+        }
+        return "";
+    }
+
+    /**
+     * 设置消息文本信息
+     * @param message
+     * @param text
+     */
+    private void setMsgText(Object message, String text) {
+
+        Object messageContent = XposedHelpers.callMethod(message,
+                getXString(M.method.method_wukong_im_message_MessageImpl_messageContent));
+
+        if (messageContent != null) {
+            // 重新设置字符串
+            XposedHelpers.callMethod(messageContent,
+                    getXString(M.method.method_wukong_im_message_MessageContentImpl_TextContentImpl_setText), text);
+        }
+    }
+
+    /**
      * 接收红包
      * @param sid
      * @param clusterId
      */
-    private void pickRedEnvelop(long sid, String clusterId) {
+    public void pickRedEnvelop(long sid, String clusterId) {
 
         Class classServiceFactory = findClass(M.classz.class_defpackage_ServiceFactory);
         Class classRedEnvelopPickIService = findClass(M.classz.class_android_dingtalk_redpackets_idl_service_RedEnvelopPickIService);

@@ -81,6 +81,110 @@ public class DevelopPlugin extends BasePlugin {
 //                "android.support.v4.app.Fragment",
 //                "onCreate", Bundle.class)
 //                .before(param -> Alog.d(">>>>>>>>>>>>>> Fragment " + param.thisObject.getClass()));
+
+
+
+//        findMethod("cxw", "getView", int.class, View.class, ViewGroup.class)
+//                .before(param -> {
+//
+//                    int position = (int) param.args[0];
+//                    Adapter adapter = (Adapter) param.thisObject;
+//
+//                    Alog.d(">>>>>>>>>>>>>>>>>> " + adapter.getCount());
+//
+//
+//                    Object message = XposedHelpers.callMethod(param.thisObject, "getItem", position);
+//                    ToStringUtil.toString(message);
+//
+//                });
+//        findMethod("com.alibaba.bee.DBManager", "insert", String.class, Class.class, String.class, ContentValues.class)
+//                .before(param -> {
+//
+//                    Alog.d(">>>>>>>>>> insert " + Arrays.toString(param.args));
+//                });
+//
+//
+//        findMethod("com.alibaba.bee.DBManager", "insertWithOnConflict", String.class, Class.class, String.class, ContentValues.class, int.class)
+//                .before(param -> {
+//
+//                    Alog.d(">>>>>>>>>> insertWithOnConflict " + Arrays.toString(param.args));
+//                });
+//
+//        findMethod("com.alibaba.bee.DBManager", "update", String.class, Class.class, String.class, ContentValues.class, String.class, String[].class)
+//                .before(param -> {
+//
+//                    Alog.d(">>>>>>>>>> update " + Arrays.toString(param.args));
+//
+////                    ContentValues contentValues = (ContentValues) param.args[3];
+////                    Class tClass = (Class) param.args[1];
+////                    String[] strings = (String[]) param.args[5];
+////
+//////                    Alog.d(">>>>>>>>>>>>>>>>>> tClass " + tClass);
+////
+////                    if ("com.alibaba.wukong.im.message.MessageEntry".equals(tClass.getName())) {
+////
+////                        Integer integer = contentValues.getAsInteger("recall");
+////
+////                        Alog.d(">>>>>>>>>>>>>> " + Arrays.toString(strings));
+////
+////                        if (integer != null && integer.intValue() == 1) {
+////                            DebugUtil.printStackTrace();
+////                            param.setResult(null);
+////                            return;
+////                        }
+////                    }
+//                });
+//
+//
+//
+//        findMethod("com.alibaba.bee.DBManager", "updateWithOnConflict", String.class, Class.class, String.class, ContentValues.class, String.class, String[].class, int.class)
+//                .before(param -> {
+//
+//                    Alog.d(">>>>>>>>>> updateWithOnConflict " + Arrays.toString(param.args));
+//                });
+//
+//        findMethod("com.alibaba.bee.DBManager", "delete", String.class, Class.class, String.class, String.class, String[].class)
+//                .before(param -> {
+//
+//                    Alog.d(">>>>>>>>>> delete " + Arrays.toString(param.args));
+//                });
+//
+//        findMethod("com.alibaba.bee.DBManager", "execRaw", String.class, String.class)
+//                .before(param -> {
+//
+//                    Alog.d(">>>>>>>>>> execRaw " + Arrays.toString(param.args));
+//                });
+//
+//        findMethod("com.alibaba.bee.DBManager", "execRaw", String.class, String.class, Object[].class)
+//                .before(param -> {
+//
+//                    Alog.d(">>>>>>>>>> execRaw " + Arrays.toString(param.args));
+//                });
+//
+//        findMethod("com.alibaba.bee.DBManager", "executeWriteTask", String.class, "com.alibaba.sqlcrypto.sqlite.DatabaseTask")
+//                .before(param -> {
+//
+//                    Alog.d(">>>>>>>>>> executeWriteTask " + Arrays.toString(param.args));
+//                });
+//
+//        findMethod("com.alibaba.bee.DBManager", "execInTransaction", String.class, Runnable.class, "com.alibaba.bee.SQLiteTransactionListener")
+//                .before(param -> {
+//
+//                    Alog.d(">>>>>>>>>> execInTransaction " + Arrays.toString(param.args));
+//                });
+//
+//        findMethod("com.alibaba.bee.DBManager", "compileStatement", String.class, Class.class, String.class)
+//                .before(param -> {
+//
+//                    Alog.d(">>>>>>>>>> compileStatement " + Arrays.toString(param.args));
+//
+//                    Class tClass = (Class) param.args[1];
+//
+//                    if ("com.alibaba.wukong.im.message.MessageEntry".equals(tClass.getName())) {
+//
+//                        DebugUtil.printStackTrace();
+//                    }
+//                });
     }
 
     @Override

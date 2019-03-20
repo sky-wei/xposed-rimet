@@ -17,6 +17,7 @@
 package com.sky.xposed.rimet.plugin.dingding;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 
 import com.sky.xposed.rimet.Constant;
@@ -27,6 +28,7 @@ import com.sky.xposed.rimet.plugin.interfaces.XPlugin;
 import com.sky.xposed.rimet.plugin.interfaces.XPluginManager;
 import com.sky.xposed.rimet.ui.dialog.DingDingDialog;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -62,12 +64,12 @@ public class DingDingPlugin extends BasePlugin {
                 .before(param -> param.setResult(null));
 
         findMethod(
-                M.classz.class_defpackage_ConversationChangeMaid,
-                M.method.method_defpackage_ConversationChangeMaid_onLatestMessageChanged,
-                List.class)
+                M.classz.class_defpackage_MessageDs,
+                M.method.method_defpackage_MessageDs_handler,
+                String.class, Collection.class, boolean.class)
                 .after(param -> {
                     // 处理消息
-                    mHandler.onHandlerMessage((List) param.args[0]);
+                    mHandler.onHandlerMessage((String) param.args[0], (Collection) param.args[1]);
                 });
 
         findMethod(
@@ -86,35 +88,18 @@ public class DingDingPlugin extends BasePlugin {
                     mHandler.onHandlerPickRedPackets((Activity) param.thisObject);
                 });
 
-//        /* compiled from: MessageDs */
-//        /* renamed from: iqd */
-//        public final class iqd extends IMDatabase {
-
-//        findMethod("com.alibaba.wukong.im.message.MessageImpl", "recallStatus")
-//                .after(param -> {
-//
-//                    Object messageContent = XposedHelpers.callMethod(param.thisObject, "messageContent");
-//                    int type = XposedHelpers.getIntField(messageContent, "mType");
-//
-//                    if (1 != type) return;
-//
-//                    String text = (String) XposedHelpers.getObjectField(messageContent, "mText");
-//
-//                    Alog.d(">>>>>>>>>>>>>>>>>>> " + text + " >> " + param.getResult());
-//
-////                    if (!"Msg has been recalled.".equals(text)) {
-////
-////                        param.setResult(0);
-////                    }
-//                });
-
-//        findMethod("com.alibaba.wukong.im.message.MessageImpl", "recallStatus")
-//                .after(param -> {
-//
-//                });
+        findMethod(
+                M.classz.class_defpackage_MessageDs,
+                M.method.method_defpackage_MessageDs_recall,
+                String.class, List.class, ContentValues.class)
+                .before(param -> {
+                    // 处理撤回消息
+                    if (mHandler.onRecallMessage((ContentValues) param.args[2])) {
+                        // 直接返回0
+                        param.setResult(0);
+                    }
+                });
     }
-
-
 
     @Override
     public void openSettings(Activity activity) {
@@ -127,11 +112,13 @@ public class DingDingPlugin extends BasePlugin {
 
         void setEnable(int flag, boolean enable);
 
-        void onHandlerMessage(List conversations);
+        void onHandlerMessage(String cid, Collection messages);
 
         void onHandlerFestivalRedPacketsPick(Activity activity);
 
         void onHandlerPickRedPackets(Activity activity);
+
+        boolean onRecallMessage(ContentValues contentValues);
     }
 
     public static class Build {

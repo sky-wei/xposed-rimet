@@ -29,7 +29,7 @@ public class RimetConfig4617 extends RimetConfig {
         /** Class */
         add(M.classz.class_rimet_LauncherApplication, "com.alibaba.android.rimet.LauncherApplication");
         add(M.classz.class_dingtalkbase_multidexsupport_DDApplication, "com.alibaba.android.dingtalkbase.multidexsupport.DDApplication");
-        add(M.classz.class_defpackage_ConversationChangeMaid, "dpw");   // ConversationChangeMaid
+        add(M.classz.class_defpackage_MessageDs, "iqd");
         add(M.classz.class_plugin_webwx_ui_ExtDeviceWXLoginUI, "com.tencent.mm.plugin.webwx.ui.ExtDeviceWXLoginUI");
         add(M.classz.class_defpackage_ServiceFactory, "jpn");   // ServiceFactory
         add(M.classz.class_android_dingtalk_redpackets_idl_service_RedEnvelopPickIService, "com.alibaba.android.dingtalk.redpackets.idl.service.RedEnvelopPickIService");
@@ -39,11 +39,12 @@ public class RimetConfig4617 extends RimetConfig {
         add(M.classz.class_android_dingtalk_redpackets_activities_FestivalRedPacketsPickActivity, "com.alibaba.android.dingtalk.redpackets.activities.FestivalRedPacketsPickActivity");
         add(M.classz.class_android_dingtalk_redpackets_activities_PickRedPacketsActivity, "com.alibaba.android.dingtalk.redpackets.activities.PickRedPacketsActivity");
         add(M.classz.class_android_user_settings_activity_NewSettingActivity, "com.alibaba.android.user.settings.activity.NewSettingActivity");
+        add(M.classz.class_wukong_im_base_IMDatabase, "com.alibaba.wukong.im.base.IMDatabase");
 
         /** Method */
         add(M.method.method_dingtalkbase_multidexsupport_DDApplication_onCreate, "onCreate");
-        add(M.method.method_defpackage_ConversationChangeMaid_onLatestMessageChanged, "onLatestMessageChanged");
-        add(M.method.method_wukong_im_conversation_ConversationImpl_latestMessage, "latestMessage");
+        add(M.method.method_defpackage_MessageDs_handler, "a");  // INSERT,IGNORE,INSERT_FAIL
+        add(M.method.method_android_dingtalkim_base_model_typeValue, "typeValue");
         add(M.method.method_wukong_im_message_MessageImpl_messageContent, "messageContent");
         add(M.method.method_wukong_im_message_MessageContentImpl_contents, "contents");
         add(M.method.method_defpackage_RedPacketsRpc_newInstance, "a");
@@ -53,11 +54,17 @@ public class RimetConfig4617 extends RimetConfig {
         add(M.method.method_android_dingtalk_redpackets_activities_FestivalRedPacketsPickActivity_initView, "a");
         add(M.method.method_android_dingtalk_redpackets_activities_PickRedPacketsActivity_initView, "a");
         add(M.method.method_android_user_settings_activity_NewSettingActivity_onCreate, "onCreate");
+        add(M.method.method_defpackage_MessageDs_recall, "a");
+        add(M.method.method_wukong_im_conversation_ConversationImpl_latestMessage, "latestMessage");
+        add(M.method.method_wukong_im_base_IMDatabase_getWritableDatabase, "getWritableDatabase");
+        add(M.method.method_defpackage_MessageDs_update, "a");
+        add(M.method.method_wukong_im_message_MessageContentImpl_TextContentImpl_text, "text");
+        add(M.method.method_wukong_im_message_MessageContentImpl_TextContentImpl_setText, "setText");
 
         /** Field */
-        add(M.field.field_wukong_im_message_MessageContentImpl_mType, "mType");
-        add(M.field.field_wukong_im_message_MessageContentImpl_CustomMessageContentImpl_mCustomType, "mCustomType");
+        add(M.field.field_android_dingtalkim_base_model_DingtalkMessage_msgDisplayType, "msgDisplayType");
         add(M.field.field_wukong_im_message_MessageContentImpl_CustomMessageContentImpl_mExtension, "mExtension");
+        add(M.field.field_android_dingtalkim_base_model_DingtalkMessage_mConversation, "mConversation");
 
         /** Key */
         add(M.key.key_sid, "sid");

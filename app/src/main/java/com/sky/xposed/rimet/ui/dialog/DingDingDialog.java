@@ -57,7 +57,7 @@ public class DingDingDialog extends CommonDialog {
         sivFastLuckyEnable.setDesc("开启时快速打开红包");
 
         sivRecallEnable = ViewUtil.newSwitchItemView(getContext(), "消息防撤回");
-        sivRecallEnable.setDesc("开启时消息不会被撤回(暂不可使用)");
+        sivRecallEnable.setDesc("开启时消息不会被撤回");
 
         sivDonate = ViewUtil.newSimpleItemView(getContext(), "支持我们");
         sivAbout = ViewUtil.newSimpleItemView(getContext(), "关于");
