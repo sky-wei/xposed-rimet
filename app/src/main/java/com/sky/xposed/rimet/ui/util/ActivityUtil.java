@@ -16,6 +16,7 @@
 
 package com.sky.xposed.rimet.ui.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -52,6 +53,14 @@ public class ActivityUtil {
             Alog.e("启动Activity异常", e);
         }
         return false;
+    }
+
+    public static boolean startActivity(Context context, Class<? extends Activity> classActivity) {
+
+        Intent intent = new Intent(context, classActivity);
+        intent.setAction(Intent.ACTION_VIEW);
+
+        return startActivity(context, intent);
     }
 
     public static boolean openUrl(Context context, String url) {
