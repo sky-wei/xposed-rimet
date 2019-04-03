@@ -15,25 +15,20 @@
   ~ limitations under the License.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.amap.api.maps2d.MapView
-        android:id="@+id/map_view"
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp" />
+    <item
+        android:id="@+id/menu_search"
+        android:title="search"
+        android:icon="@drawable/ic_action_search"
+        android:showAsAction="always"
+        />
 
-    <ListView
-        android:id="@+id/list_view"
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:scrollbars="none"
-        android:dividerHeight="1px"
-        android:layout_height="0dp">
+    <item
+        android:id="@+id/menu_ok"
+        android:title="ok"
+        android:icon="@drawable/ic_action_check"
+        android:showAsAction="always"
+        />
 
-    </ListView>
-
-</LinearLayout>
+</menu>

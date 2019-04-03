@@ -19,6 +19,7 @@ package com.sky.xposed.rimet;
 import android.app.Application;
 
 import com.sky.xposed.common.util.Alog;
+import com.sky.xposed.common.util.ToastUtil;
 
 /**
  * Created by sky on 2019/3/26.
@@ -30,5 +31,8 @@ public class App extends Application {
         super.onCreate();
 
         Alog.setDebug(BuildConfig.DEBUG);
+
+        // 初始化
+        ToastUtil.getInstance().init(getApplicationContext());
     }
 }

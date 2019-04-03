@@ -17,6 +17,11 @@
 package com.sky.xposed.rimet.ui.util;
 
 
+import android.location.Location;
+
+import com.amap.api.maps2d.model.LatLng;
+import com.amap.api.services.core.LatLonPoint;
+
 /**
  * Created by sky on 2019/3/26.
  */
@@ -26,24 +31,25 @@ public class MapUtil {
 
     }
 
-//    public static LatLng newLatLng(TencentLocation location) {
-//
-//        if (location == null) return null;
-//
-//        return newLatLng(location.getLatitude(), location.getLongitude());
-//    }
-//
-//    public static LatLng newLatLng(double latitude, double longitude) {
-//        return new LatLng(latitude, longitude);
-//    }
-//
-//    public static Location newLocation(LatLng latLng) {
-//
-//        Location location = new Location();
-//        location.lat((float) latLng.getLatitude());
-//        location.lng((float) latLng.getLongitude());
-//
-//        return location;
-//    }
+    public static LatLng newLatLng(Location location) {
 
+        if (location == null) return null;
+
+        return newLatLng(location.getLatitude(), location.getLongitude());
+    }
+
+    public static LatLng newLatLng(LatLonPoint location) {
+
+        if (location == null) return null;
+
+        return newLatLng(location.getLatitude(), location.getLongitude());
+    }
+
+    public static LatLng newLatLng(double latitude, double longitude) {
+        return new LatLng(latitude, longitude);
+    }
+
+    public static LatLonPoint newLocation(LatLng latLng) {
+        return new LatLonPoint(latLng.latitude, latLng.longitude);
+    }
 }
