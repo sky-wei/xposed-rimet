@@ -17,6 +17,7 @@
 package com.sky.xposed.rimet.ui.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,10 +93,31 @@ public class SearchResultAdapter extends BaseListAdapter<PoiItem> {
             PoiItem poiItem = getItem(position);
 
             tvTitle.setText(poiItem.getTitle());
-            tvSubTitle.setText(beginAddress + poiItem.getSnippet());
+            tvSubTitle.setText(poiItemToString(poiItem));
 
             ViewUtil.setVisibility(ivCheck, position == selectedPosition ? View.VISIBLE : View.INVISIBLE);
             ViewUtil.setVisibility(tvSubTitle, (position == 0 && poiItem.getPoiId().equals("regeo") ? View.GONE : View.VISIBLE));
         }
+    }
+
+    public String poiItemToString(PoiItem poiItem) {
+
+        if (beginAddress != null) {
+            return beginAddress + poiItem.getSnippet();
+        }
+
+        StringBuilder builder = new StringBuilder(poiItem.getProvinceName());
+
+        if (!TextUtils.equals(poiItem.getProvinceName(), poiItem.getCityName())) {
+            builder.append(poiItem.getCityName());
+        }
+
+        builder.append(poiItem.getAdName());
+
+        if (!TextUtils.equals(poiItem.getAdName(), poiItem.getSnippet())) {
+            builder.append(poiItem.getSnippet());
+        }
+
+        return builder.toString();
     }
 }

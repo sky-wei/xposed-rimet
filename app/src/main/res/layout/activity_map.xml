@@ -26,14 +26,29 @@
         android:layout_width="match_parent"
         android:layout_height="0dp" />
 
-    <ListView
-        android:id="@+id/list_view"
-        android:layout_weight="1"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:scrollbars="none"
-        android:dividerHeight="1px"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-    </ListView>
+        <ListView
+            android:id="@+id/list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:dividerHeight="1px">
+
+        </ListView>
+
+        <TextView
+            android:id="@+id/tv_prompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:layout_gravity="center"
+            android:text="暂无信息!"
+            />
+
+    </FrameLayout>
 
 </LinearLayout>

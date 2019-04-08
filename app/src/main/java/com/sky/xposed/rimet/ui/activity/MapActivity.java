@@ -16,11 +16,18 @@
 
 package com.sky.xposed.rimet.ui.activity;
 
+import android.Manifest;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,11 +57,14 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+import com.sky.xposed.common.ui.util.ViewUtil;
 import com.sky.xposed.common.util.Alog;
 import com.sky.xposed.common.util.ToastUtil;
 import com.sky.xposed.rimet.R;
 import com.sky.xposed.rimet.ui.adapter.SearchResultAdapter;
+import com.sky.xposed.rimet.ui.util.DialogUtil;
 import com.sky.xposed.rimet.ui.util.MapUtil;
+import com.sky.xposed.rimet.ui.util.PermissionUtil;
 import com.sky.xposed.rimet.util.CollectionUtil;
 
 import java.util.ArrayList;
@@ -67,6 +77,7 @@ public class MapActivity extends Activity implements LocationSource, AdapterView
 
     private MapView mMapView;
     private ListView mListView;
+    private View mTvPrompt;
     private AMap mAMap;
     private SearchResultAdapter mSearchResultAdapter;
 
@@ -96,6 +107,7 @@ public class MapActivity extends Activity implements LocationSource, AdapterView
         mMapView.onCreate(savedInstanceState);
 
         mListView = findViewById(R.id.list_view);
+        mTvPrompt = findViewById(R.id.tv_prompt);
         mSearchResultAdapter = new SearchResultAdapter(this);
         mListView.setAdapter(mSearchResultAdapter);
         mListView.setOnItemClickListener(this);
@@ -112,6 +124,31 @@ public class MapActivity extends Activity implements LocationSource, AdapterView
 
         mGeocodeSearch = new GeocodeSearch(getApplicationContext());
         mGeocodeSearch.setOnGeocodeSearchListener(new MyOnGeocodeSearchListener());
+
+        // 请求权限
+        PermissionUtil.requestPermissions(this,
+                new String[] {
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.ACCESS_FINE_LOCATION},
+                99);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (99 != requestCode) return;
+
+        boolean prompt = false;
+
+        for (int result : grantResults) {
+            if (result == PackageManager.PERMISSION_DENIED) {
+                prompt = true;
+                break;
+            }
+        }
+
+        if (prompt) ToastUtil.show("权限获取失败,功能将会受影响！");
     }
 
     @Override
@@ -131,9 +168,11 @@ public class MapActivity extends Activity implements LocationSource, AdapterView
             return true;
         } else if (R.id.menu_ok == itemId) {
             // 确定
+            returnChooseResult();
             return true;
         } else if (R.id.menu_search == itemId) {
             // 搜索
+            showSearchDialog();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -210,6 +249,53 @@ public class MapActivity extends Activity implements LocationSource, AdapterView
         mAMapLocationClient = null;
     }
 
+    /**
+     * 返回选择的结果
+     */
+    private void returnChooseResult() {
+
+        if (mSearchResultAdapter.isEmpty()) {
+            // 没有结果
+            setResult(Activity.RESULT_OK, new Intent());
+            onBackPressed();
+            return;
+        }
+
+        // 返回的结果
+        PoiItem poiItem = mSearchResultAdapter
+                .getItem(mSearchResultAdapter.getSelectedPosition());
+
+        Intent data = new Intent();
+        data.putExtra("address", mSearchResultAdapter.poiItemToString(poiItem));
+        data.putExtra("latitude", poiItem.getLatLonPoint().getLatitude());
+        data.putExtra("longitude", poiItem.getLatLonPoint().getLongitude());
+
+        setResult(Activity.RESULT_OK, new Intent());
+        onBackPressed();
+    }
+
+    /**
+     * 显示搜索提示框
+     */
+    private void showSearchDialog() {
+
+        SharedPreferences preferences = PreferenceManager
+                .getDefaultSharedPreferences(getApplicationContext());
+
+        DialogUtil.showSearchDialog(this, preferences.getString("key_word", ""), (keyWord) -> {
+
+            if (TextUtils.isEmpty(keyWord)) {
+                ToastUtil.show("搜索的关键字不能为空!");
+                return;
+            }
+
+            // 开始搜索
+            doSearchQuery(keyWord);
+            // 保存最后搜索记录
+            preferences.edit().putString("key_word", keyWord).apply();
+        });
+    }
+
     private void addMarkerInScreenCenter(LatLng locationLatLng) {
 
         LatLng latLng = mAMap.getCameraPosition().target;
@@ -247,20 +333,16 @@ public class MapActivity extends Activity implements LocationSource, AdapterView
 
     /**
      * 搜索Poi信息
-     * @param cityCode
+     * @param keyWord
      */
-    private void doSearchQuery(String cityCode) {
+    private void doSearchQuery(String keyWord) {
 
-        if (mSearchLatLonPoint == null) return;
-
-        mQuery = new PoiSearch.Query("", "", cityCode);
-        mQuery.setCityLimit(true);
+        mQuery = new PoiSearch.Query(keyWord, "", "");
         mQuery.setPageSize(20);
         mQuery.setPageNum(0);
 
         mPoiSearch = new PoiSearch(this, mQuery);
         mPoiSearch.setOnPoiSearchListener(new MyOnPoiSearchListener());
-        mPoiSearch.setBound(new PoiSearch.SearchBound(mSearchLatLonPoint, 1000, true));
         mPoiSearch.searchPOIAsyn();
     }
 
@@ -275,7 +357,8 @@ public class MapActivity extends Activity implements LocationSource, AdapterView
             if (mOnLocationChangedListener == null || mAMapLocationClient == null
                     || aMapLocation == null || aMapLocation.getErrorCode() != 0) {
                 // 定位失败了
-                ToastUtil.show("定位失败！");
+                deactivate();
+                ToastUtil.show("定位失败,请开启定位后再重新尝试!");
                 return;
             }
 
@@ -344,7 +427,8 @@ public class MapActivity extends Activity implements LocationSource, AdapterView
             if (result == null
                     || result.getRegeocodeAddress() == null
                     || result.getRegeocodeAddress().getPois() == null) {
-                Alog.e("没有搜索结果");
+                Alog.e("没有搜索结果!");
+                ToastUtil.show("没有搜索结果!");
                 return;
             }
 
@@ -359,6 +443,7 @@ public class MapActivity extends Activity implements LocationSource, AdapterView
             tmpList.add(curPoiItem);
             tmpList.addAll(regeocodeAddress.getPois());
 
+            ViewUtil.setVisibility(mTvPrompt, View.GONE);
             mSearchResultAdapter.setBeginAddress(regeocodeAddress.getProvince() + regeocodeAddress.getCity() + regeocodeAddress.getDistrict());
             mSearchResultAdapter.setSelectedPosition(0);
             mSearchResultAdapter.setItems(tmpList);
@@ -386,20 +471,28 @@ public class MapActivity extends Activity implements LocationSource, AdapterView
 
             if (poiResult == null || poiResult.getQuery() == null) {
                 Alog.e("没有搜索到结果");
+                ToastUtil.show("没有搜索结果!");
                 return;
             }
 
-            List<PoiItem> tmpList = new ArrayList<>();
-//            tmpList.add(mFirstItem);
+            // 获取搜索的结果
+            List<PoiItem> poiItems = poiResult.getPois();
 
-            if (!CollectionUtil.isEmpty(poiResult.getPois())) {
-                // 添加全部的信息
-                tmpList.addAll(poiResult.getPois());
-            }
+            ViewUtil.setVisibility(mTvPrompt,
+                    CollectionUtil.isEmpty(poiItems) ? View.VISIBLE : View.GONE);
 
             mSearchResultAdapter.setSelectedPosition(0);
-            mSearchResultAdapter.setItems(tmpList);
+            mSearchResultAdapter.setItems(poiItems);
+            mSearchResultAdapter.setBeginAddress(null);
             mSearchResultAdapter.notifyDataSetChanged();
+
+            if (CollectionUtil.isNotEmpty(poiItems)) {
+                // 移动到第一个位置
+                PoiItem poiItem = mSearchResultAdapter.getItem(0);
+                LatLng latLng = MapUtil.newLatLng(poiItem.getLatLonPoint());
+                isItemClickAction = true;
+                mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f));
+            }
         }
 
         @Override
