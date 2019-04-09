@@ -270,7 +270,7 @@ public class MapActivity extends Activity implements LocationSource, AdapterView
         data.putExtra("latitude", poiItem.getLatLonPoint().getLatitude());
         data.putExtra("longitude", poiItem.getLatLonPoint().getLongitude());
 
-        setResult(Activity.RESULT_OK, new Intent());
+        setResult(Activity.RESULT_OK, data);
         onBackPressed();
     }
 

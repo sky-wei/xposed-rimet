@@ -42,16 +42,20 @@ import de.robv.android.xposed.XposedHelpers;
 public class DingDingHandler extends BaseHandler implements DingDingPlugin.Handler {
 
     private XConfigManager mXConfigManager;
+
     private boolean mEnableLucky;
     private boolean mEnableFastLucky;
     private boolean mEnableRecall;
+    private boolean mEnableLocation;
 
     public DingDingHandler(XPluginManager pluginManager) {
         super(pluginManager);
         mXConfigManager = getPluginManager().getConfigManager();
+
         mEnableLucky = mXConfigManager.getBoolean(Constant.XFlag.ENABLE_LUCKY, true);
         mEnableFastLucky = mXConfigManager.getBoolean(Constant.XFlag.ENABLE_FAST_LUCKY, true);
         mEnableRecall = mXConfigManager.getBoolean(Constant.XFlag.ENABLE_RECALL, true);
+        mEnableLocation = mXConfigManager.getBoolean(Constant.XFlag.ENABLE_LOCATION, false);
     }
 
     @Override
@@ -106,6 +110,9 @@ public class DingDingHandler extends BaseHandler implements DingDingPlugin.Handl
                 break;
             case Constant.XFlag.ENABLE_RECALL:
                 mEnableRecall = enable;
+                break;
+            case Constant.XFlag.ENABLE_LOCATION:
+                mEnableLocation = enable;
                 break;
         }
     }

@@ -102,6 +102,10 @@ public class SearchResultAdapter extends BaseListAdapter<PoiItem> {
 
     public String poiItemToString(PoiItem poiItem) {
 
+        if ("regeo".equals(poiItem.getPoiId())) {
+            return poiItem.getSnippet();
+        }
+
         if (beginAddress != null) {
             return beginAddress + poiItem.getSnippet();
         }

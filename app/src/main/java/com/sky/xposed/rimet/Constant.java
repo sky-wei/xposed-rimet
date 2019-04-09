@@ -65,6 +65,14 @@ public interface Constant {
         int ENABLE_FAST_LUCKY = 0x000004;
 
         int ENABLE_RECALL = 0x000005;
+
+        int ENABLE_LOCATION = 0x000006;
+
+        int ADDRESS = 0x000007;
+
+        int LATITUDE = 0x000008;
+
+        int LONGITUDE = 0x000009;
     }
 
     interface Preference {

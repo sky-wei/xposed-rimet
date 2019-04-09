@@ -55,12 +55,41 @@ public class ActivityUtil {
         return false;
     }
 
+    public static boolean startActivityForResult(Activity activity, Intent intent, int requestCode) {
+
+        try {
+            // 获取目标包名
+            String packageName = intent.getPackage();
+
+            // 设置启动参数
+            if (!TextUtils.isEmpty(packageName)
+                    && !TextUtils.equals(packageName, activity.getPackageName())) {
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
+
+            // 启动Activity
+            activity.startActivityForResult(intent, requestCode);
+            return true;
+        } catch (Exception e) {
+            Alog.e("启动Activity异常", e);
+        }
+        return false;
+    }
+
     public static boolean startActivity(Context context, Class<? extends Activity> classActivity) {
 
         Intent intent = new Intent(context, classActivity);
         intent.setAction(Intent.ACTION_VIEW);
 
         return startActivity(context, intent);
+    }
+
+    public static boolean startActivityForResult(Activity activity, Class<? extends Activity> classActivity, int requestCode) {
+
+        Intent intent = new Intent(activity, classActivity);
+        intent.setAction(Intent.ACTION_VIEW);
+
+        return startActivityForResult(activity, intent, requestCode);
     }
 
     public static boolean openUrl(Context context, String url) {

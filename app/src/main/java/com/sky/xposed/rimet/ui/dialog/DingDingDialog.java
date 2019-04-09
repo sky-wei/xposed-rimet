@@ -16,16 +16,25 @@
 
 package com.sky.xposed.rimet.ui.dialog;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.sky.xposed.common.ui.util.ViewUtil;
 import com.sky.xposed.common.ui.view.CommonFrameLayout;
 import com.sky.xposed.common.ui.view.EditTextItemView;
 import com.sky.xposed.common.ui.view.SimpleItemView;
 import com.sky.xposed.common.ui.view.SwitchItemView;
+import com.sky.xposed.common.util.DisplayUtil;
+import com.sky.xposed.rimet.BuildConfig;
 import com.sky.xposed.rimet.Constant;
 import com.sky.xposed.rimet.plugin.interfaces.XPlugin;
+import com.sky.xposed.rimet.ui.activity.MapActivity;
 import com.sky.xposed.rimet.ui.util.DialogUtil;
 
 /**
@@ -37,6 +46,8 @@ public class DingDingDialog extends CommonDialog {
     private EditTextItemView sivLuckyDelayed;
     private SwitchItemView sivFastLuckyEnable;
     private SwitchItemView sivRecallEnable;
+    private SwitchItemView sivLocationEnable;
+    private SimpleItemView sivSettingsLocation;
     private SimpleItemView sivDonate;
     private SimpleItemView sivAbout;
 
@@ -59,6 +70,12 @@ public class DingDingDialog extends CommonDialog {
         sivRecallEnable = ViewUtil.newSwitchItemView(getContext(), "消息防撤回");
         sivRecallEnable.setDesc("开启时消息不会被撤回");
 
+        sivLocationEnable = ViewUtil.newSwitchItemView(getContext(), "虚拟定位");
+        sivLocationEnable.setDesc("开启时会修改当前位置信息");
+
+        sivSettingsLocation = ViewUtil.newSimpleItemView(getContext(), "位置信息");
+        sivSettingsLocation.setExtendHint("设置位置信息");
+
         sivDonate = ViewUtil.newSimpleItemView(getContext(), "支持我们");
         sivAbout = ViewUtil.newSimpleItemView(getContext(), "关于");
 
@@ -66,6 +83,8 @@ public class DingDingDialog extends CommonDialog {
         frameView.addContent(sivLuckyDelayed);
         frameView.addContent(sivFastLuckyEnable);
         frameView.addContent(sivRecallEnable);
+        frameView.addContent(sivLocationEnable);
+        frameView.addContent(sivSettingsLocation);
 
         frameView.addContent(sivDonate);
         frameView.addContent(sivAbout);
@@ -77,6 +96,14 @@ public class DingDingDialog extends CommonDialog {
 
         setTitle(Constant.Name.TITLE);
 
+        TextView tvExt = sivSettingsLocation.getExtendView();
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) tvExt.getLayoutParams();
+        params.leftMargin = DisplayUtil.dip2px(getContext(), 100);
+        tvExt.setMaxLines(2);
+        tvExt.setEllipsize(TextUtils.TruncateAt.END);
+        tvExt.setTextSize(12);
+
+        SharedPreferences preferences = getDefaultSharedPreferences();
         XPlugin xPlugin = getPluginManager().getXPluginById(Constant.Plugin.DING_DING);
 
         sivLuckyEnable.bind(getDefaultSharedPreferences(),
@@ -104,6 +131,23 @@ public class DingDingDialog extends CommonDialog {
                     return true;
                 });
 
+        sivLocationEnable.bind(getDefaultSharedPreferences(),
+                Integer.toString(Constant.XFlag.ENABLE_LOCATION), false,
+                (view1, key, value) -> {
+                    xPlugin.setEnable(Constant.XFlag.ENABLE_LOCATION, value);
+                    return true;
+                });
+
+        // 设置初始信息
+        sivSettingsLocation.setExtend(preferences.getString(
+                Integer.toString(Constant.XFlag.ADDRESS), ""));
+        sivSettingsLocation.setOnClickListener(v -> {
+            // 跳转到地图界面
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.setClassName(BuildConfig.APPLICATION_ID, MapActivity.class.getName());
+            startActivityForResult(intent, 99);
+        });
+
         sivDonate.setOnClickListener(v -> {
             // 打开捐赠界面
             DonateDialog donateDialog = new DonateDialog();
@@ -114,5 +158,37 @@ public class DingDingDialog extends CommonDialog {
             // 打开关于界面
             DialogUtil.showAboutDialog(getContext());
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 99 && resultCode == Activity.RESULT_OK) {
+            // 保存位置信息
+            saveLocationInfo(
+                    data.getStringExtra("address"),
+                    data.getDoubleExtra("latitude", 0),
+                    data.getDoubleExtra("longitude", 0));
+        }
+    }
+
+    /**
+     * 保存位置信息
+     * @param address
+     * @param latitude
+     * @param longitude
+     */
+    private void saveLocationInfo(String address, double latitude, double longitude) {
+
+        getDefaultSharedPreferences()
+                .edit()
+                .putString(Integer.toString(Constant.XFlag.ADDRESS), address)
+                .putString(Integer.toString(Constant.XFlag.LATITUDE), Double.toString(latitude))
+                .putString(Integer.toString(Constant.XFlag.LONGITUDE), Double.toString(longitude))
+                .apply();
+
+        // 设置UI信息
+        sivSettingsLocation.setExtend(address);
     }
 }
