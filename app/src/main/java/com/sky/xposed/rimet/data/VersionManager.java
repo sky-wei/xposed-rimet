@@ -24,11 +24,12 @@ import com.sky.xposed.common.util.PackageUtil;
 import com.sky.xposed.rimet.Constant;
 import com.sky.xposed.rimet.data.config.RimetConfig4617;
 import com.sky.xposed.rimet.data.config.RimetConfig4618;
+import com.sky.xposed.rimet.data.config.RimetConfig4621;
 import com.sky.xposed.rimet.plugin.interfaces.XConfig;
 import com.sky.xposed.rimet.plugin.interfaces.XVersionManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,12 +41,14 @@ import java.util.Map;
  */
 public class VersionManager implements XVersionManager {
 
-    private final static Map<String, Class<? extends XConfig>> CONFIG_MAP = new HashMap<>();
+    private final static Map<String, Class<? extends XConfig>> CONFIG_MAP = new LinkedHashMap<>();
 
     static {
         // 微信版本配置
         CONFIG_MAP.put("4.6.17", RimetConfig4617.class);
         CONFIG_MAP.put("4.6.18", RimetConfig4618.class);
+        CONFIG_MAP.put("4.6.20", RimetConfig4618.class);
+        CONFIG_MAP.put("4.6.21", RimetConfig4621.class);
     }
 
     private XConfig mVersionConfig;

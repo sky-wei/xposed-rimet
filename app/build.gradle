@@ -22,8 +22,8 @@ android {
         applicationId "com.sky.xposed.rimet"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 3
-        versionName "1.1.1"
+        versionCode 4
+        versionName "1.1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi", "armeabi-v7a"//, "arm64-v8a", "x86","arm64-v8a","x86_64"
