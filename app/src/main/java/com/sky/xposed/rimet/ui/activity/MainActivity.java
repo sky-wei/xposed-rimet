@@ -32,7 +32,7 @@ import com.sky.xposed.rimet.R;
 import com.sky.xposed.rimet.data.VersionManager;
 import com.sky.xposed.rimet.plugin.interfaces.XVersionManager;
 import com.sky.xposed.rimet.ui.dialog.DingDingDialog;
-import com.sky.xposed.rimet.ui.dialog.DonateDialog;
+import com.sky.xposed.rimet.ui.dialog.LoveDialog;
 import com.sky.xposed.rimet.ui.util.ActivityUtil;
 import com.sky.xposed.rimet.ui.util.DialogUtil;
 
@@ -100,10 +100,10 @@ public class MainActivity extends Activity {
                 // 源地址
                 ActivityUtil.openUrl(this, "https://github.com/sky-wei/xposed-rimet");
                 break;
-            case R.id.im_donate:
-                // 捐赠
-                DonateDialog donateDialog = new DonateDialog();
-                donateDialog.show(getFragmentManager(), "donate");
+            case R.id.im_love:
+                // 公益
+                LoveDialog loveDialog = new LoveDialog();
+                loveDialog.show(getFragmentManager(), "love");
                 break;
             case R.id.im_about:
                 // 关于

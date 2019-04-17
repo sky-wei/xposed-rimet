@@ -48,7 +48,7 @@ public class DingDingDialog extends CommonDialog {
     private SwitchItemView sivRecallEnable;
     private SwitchItemView sivLocationEnable;
     private SimpleItemView sivSettingsLocation;
-    private SimpleItemView sivDonate;
+    private SimpleItemView sivLove;
     private SimpleItemView sivAbout;
 
     @Override
@@ -76,7 +76,7 @@ public class DingDingDialog extends CommonDialog {
         sivSettingsLocation = ViewUtil.newSimpleItemView(getContext(), "位置信息");
         sivSettingsLocation.setExtendHint("设置位置信息");
 
-        sivDonate = ViewUtil.newSimpleItemView(getContext(), "支持我们");
+        sivLove = ViewUtil.newSimpleItemView(getContext(), "爱心公益");
         sivAbout = ViewUtil.newSimpleItemView(getContext(), "关于");
 
         frameView.addContent(sivLuckyEnable);
@@ -86,7 +86,7 @@ public class DingDingDialog extends CommonDialog {
         frameView.addContent(sivLocationEnable);
         frameView.addContent(sivSettingsLocation);
 
-        frameView.addContent(sivDonate);
+        frameView.addContent(sivLove);
         frameView.addContent(sivAbout);
     }
 
@@ -148,10 +148,10 @@ public class DingDingDialog extends CommonDialog {
             startActivityForResult(intent, 99);
         });
 
-        sivDonate.setOnClickListener(v -> {
+        sivLove.setOnClickListener(v -> {
             // 打开捐赠界面
-            DonateDialog donateDialog = new DonateDialog();
-            donateDialog.show(getFragmentManager(), "donate");
+            LoveDialog loveDialog = new LoveDialog();
+            loveDialog.show(getFragmentManager(), "love");
         });
 
         sivAbout.setOnClickListener(v -> {

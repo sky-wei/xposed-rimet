@@ -76,14 +76,14 @@
             />
 
         <com.sky.xposed.common.ui.view.ItemMenu
-            android:id="@+id/im_donate"
+            android:id="@+id/im_love"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:onClick="onClick"
             app:sky_itemMenuLine="true"
             app:sky_itemMenuTextSize="15sp"
             app:sky_itemMenuShowMore="true"
-            app:sky_itemMenuName="支持我们"
+            app:sky_itemMenuName="爱心公益"
             android:background="@drawable/selector_item_menu"
             />
 
