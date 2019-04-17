@@ -70,7 +70,7 @@ public class DingDingDialog extends CommonDialog {
         sivRecallEnable = ViewUtil.newSwitchItemView(getContext(), "消息防撤回");
         sivRecallEnable.setDesc("开启时消息不会被撤回");
 
-        sivLocationEnable = ViewUtil.newSwitchItemView(getContext(), "虚拟定位");
+        sivLocationEnable = ViewUtil.newSwitchItemView(getContext(), "虚拟定位(Bate)");
         sivLocationEnable.setDesc("开启时会修改当前位置信息");
 
         sivSettingsLocation = ViewUtil.newSimpleItemView(getContext(), "位置信息");

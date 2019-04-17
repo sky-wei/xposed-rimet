@@ -18,6 +18,8 @@ package com.sky.xposed.rimet.plugin.dingding;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.location.Location;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.sky.xposed.common.util.ConversionUtil;
@@ -29,6 +31,9 @@ import com.sky.xposed.rimet.plugin.interfaces.XConfigManager;
 import com.sky.xposed.rimet.plugin.interfaces.XPluginManager;
 import com.sky.xposed.rimet.util.CollectionUtil;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -96,6 +101,25 @@ public class DingDingHandler extends BaseHandler implements DingDingPlugin.Handl
         Integer integer = contentValues.getAsInteger("recall");
 
         return integer != null && integer == 1;
+    }
+
+    @Override
+    public Object getLastKnownLocation(Object location) {
+        // 生效时不返回位置信息
+        return mEnableLocation ? null : location;
+    }
+
+    @Override
+    public Object onHandlerLocationListener(Object listener) {
+
+        if (!Proxy.isProxyClass(listener.getClass())) {
+            // 创建代理类
+            return Proxy.newProxyInstance(
+                    listener.getClass().getClassLoader(),
+                    listener.getClass().getInterfaces(),
+                    new AMapLocationListenerProxy(listener));
+        }
+        return listener;
     }
 
     @Override
@@ -276,5 +300,43 @@ public class DingDingHandler extends BaseHandler implements DingDingPlugin.Handl
         XposedHelpers.callMethod(redEnvelopPickIService,
                 getXString(M.method.method_android_dingtalk_redpackets_idl_service_RedEnvelopPickIService_pickRedEnvelopCluster),
                 sid, clusterId, handler);
+    }
+
+    private final class AMapLocationListenerProxy implements InvocationHandler {
+
+        private Object mListener;
+
+        public AMapLocationListenerProxy(Object listener) {
+            mListener = listener;
+        }
+
+        @Override
+        public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
+
+            if (mEnableLocation
+                    && "onLocationChanged".equals(method.getName())) {
+                // 开始处理
+                handlerLocationChanged(objects);
+            }
+            return method.invoke(mListener, objects);
+        }
+
+        private void handlerLocationChanged(Object[] objects) {
+
+            if (objects == null || objects.length != 1) return;
+
+            Location location = (Location) objects[0];
+
+            String latitude = mXConfigManager
+                    .getString(Constant.XFlag.LATITUDE, "");
+            String longitude = mXConfigManager
+                    .getString(Constant.XFlag.LONGITUDE, "");
+
+            if (!TextUtils.isEmpty(latitude) && !TextUtils.isEmpty(longitude)) {
+                // 重新修改值
+                location.setLongitude(Double.parseDouble(longitude));
+                location.setLatitude(Double.parseDouble(latitude));
+            }
+        }
     }
 }

@@ -99,6 +99,20 @@ public class DingDingPlugin extends BasePlugin {
                         param.setResult(0);
                     }
                 });
+
+
+        /****************  位置信息处理 ******************/
+
+        findMethod(
+                "com.amap.api.location.AMapLocationClient",
+                "getLastKnownLocation")
+                .after(param -> param.setResult(mHandler.getLastKnownLocation(param.getResult())));
+
+        findMethod(
+                "com.amap.api.location.AMapLocationClient",
+                "setLocationListener",
+                "com.amap.api.location.AMapLocationListener")
+                .before(param -> param.args[0] = mHandler.onHandlerLocationListener(param.args[0]));
     }
 
     @Override
@@ -119,6 +133,10 @@ public class DingDingPlugin extends BasePlugin {
         void onHandlerPickRedPackets(Activity activity);
 
         boolean onRecallMessage(ContentValues contentValues);
+
+        Object getLastKnownLocation(Object location);
+
+        Object onHandlerLocationListener(Object listener);
     }
 
     public static class Build {
