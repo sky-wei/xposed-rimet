@@ -83,16 +83,13 @@ public class LoveDialog extends CommonDialog {
     private void startWeChatLove() {
 
         Bundle bundle = new Bundle();
-        bundle.putString("ext_info", "shortcut_5fc2a1c29f62c2a14923c3a2c2adc3bac2aec3bac282c2a42d12c3b4c3a4");
-        bundle.putString("digest", "d952772408daca364707bd7bf54912aa");
-        bundle.putString("id", "shortcut_4fc2b1c2a635c2a41d72c3adc3bcc2a9c3bdc3b2c28fc3b67f33c3b3c2a5c39b");
-        bundle.putInt("type", 1);
-        bundle.putString("ext_info_1", "1");
-        bundle.putString("token", "f622a9dbb4c4eaea685e476f225ccabf");
+        bundle.putBoolean("LauncherUI.From.Biz.Shortcut", true);
+        bundle.putString("app_shortcut_custom_id", "shortcut_c28a4ac297c2a53fc386336b79c38cc28fc29ac2b5c3acc38d");
+        bundle.putString("LauncherUI.Shortcut.Username", "shortcut_c28a4ac297c2a53fc386336b79c38cc28fc29ac2b5c3acc38d");
 
-        Intent intent = new Intent("com.tencent.mm.action.WX_SHORTCUT");
+        Intent intent = new Intent("com.tencent.mm.action.BIZSHORTCUT");
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setClassName("com.tencent.mm", "com.tencent.mm.plugin.base.stub.WXShortcutEntryActivity");
+        intent.setClassName("com.tencent.mm", "com.tencent.mm.ui.LauncherUI");
         intent.putExtras(bundle);
 
         if (!ActivityUtil.startActivity(getContext(), intent)) {
