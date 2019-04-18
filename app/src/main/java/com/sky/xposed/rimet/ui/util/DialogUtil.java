@@ -17,9 +17,12 @@
 package com.sky.xposed.rimet.ui.util;
 
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.text.Html;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
@@ -34,6 +37,7 @@ import com.sky.xposed.common.ui.util.LayoutUtil;
 import com.sky.xposed.common.ui.util.ViewUtil;
 import com.sky.xposed.common.util.Alog;
 import com.sky.xposed.common.util.DisplayUtil;
+import com.sky.xposed.common.util.ToastUtil;
 import com.sky.xposed.rimet.BuildConfig;
 import com.sky.xposed.rimet.R;
 import com.squareup.picasso.Picasso;
@@ -193,13 +197,15 @@ public class DialogUtil {
             tvHead.setText("当前版本：v" + BuildConfig.VERSION_NAME);
 
             ImageView ivCommunity = new ImageView(context);
+            ivCommunity.setOnClickListener(v -> copyToClipboard(context, "731081056"));
             ivCommunity.setLayoutParams(LayoutUtil.newWrapLinearLayoutParams());
             Picasso.get().load(UriUtil.getResource(R.drawable.qq)).into(ivCommunity);
 
             TextView tvTail = new TextView(context);
             tvTail.setTextColor(Color.BLACK);
             tvTail.setTextSize(14f);
-            tvTail.setText("QQ群：731081056");
+            tvTail.setText(Html.fromHtml("QQ群：<u>731081056</u>"));
+            tvTail.setOnClickListener(v -> copyToClipboard(context, "731081056"));
 
             content.addView(tvHead);
             content.addView(tvTail);
@@ -213,6 +219,19 @@ public class DialogUtil {
             builder.show();
         } catch (Throwable tr) {
             Alog.e("异常了", tr);
+        }
+    }
+
+    private static void copyToClipboard(Context context, String text) {
+
+        // 复制到剪贴板
+        ClipboardManager clipboardManager = (ClipboardManager)
+                context.getSystemService(Context.CLIPBOARD_SERVICE);
+
+        if (clipboardManager != null) {
+            clipboardManager.setPrimaryClip(
+                    ClipData.newPlainText("text", text));
+            ToastUtil.show("QQ号已复制!");
         }
     }
 
