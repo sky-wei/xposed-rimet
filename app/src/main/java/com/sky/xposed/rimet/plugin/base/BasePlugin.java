@@ -18,10 +18,12 @@ package com.sky.xposed.rimet.plugin.base;
 
 import android.app.ActivityThread;
 import android.content.Context;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.sky.xposed.common.util.Alog;
 import com.sky.xposed.javax.MethodHook;
+import com.sky.xposed.javax.XposedPlus;
 import com.sky.xposed.javax.XposedUtil;
 import com.sky.xposed.rimet.plugin.interfaces.XConfig;
 import com.sky.xposed.rimet.plugin.interfaces.XConfigManager;
@@ -121,8 +123,33 @@ public abstract class BasePlugin implements XPlugin {
         return findClass(getXString(className));
     }
 
+    public Class findMatcherClass(int className) {
+        return findMatcherClass(getXString(className));
+    }
+
     public Class findClass(String className, ClassLoader classLoader) {
         return XposedHelpers.findClass(className, classLoader);
+    }
+
+    public Class findMatcherClass(String classNameList) {
+
+        if (TextUtils.isEmpty(classNameList)) return null;
+
+        // 多个类名
+        String[] classNames = classNameList.split(",");
+
+        for (String className : classNames) {
+
+            // 查找相应的Class
+            Class tClass = findClassIfExists(className);
+
+            if (tClass != null) return tClass;
+        }
+        return null;
+    }
+
+    public Class findClassIfExists(String className) {
+        return XposedHelpers.findClassIfExists(className, mParam.classLoader);
     }
 
     public MethodHook findMethod(String className, String methodName, Object... parameterTypes) {

@@ -30,6 +30,10 @@ import com.sky.xposed.rimet.ui.dialog.DingDingDialog;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Pattern;
+
+import de.robv.android.xposed.XposedBridge;
+import de.robv.android.xposed.XposedHelpers;
 
 /**
  * Created by sky on 2019/3/14.
@@ -64,7 +68,7 @@ public class DingDingPlugin extends BasePlugin {
                 .before(param -> param.setResult(null));
 
         findMethod(
-                M.classz.class_defpackage_MessageDs,
+                findMatcherClass(M.classz.class_defpackage_MessageDs),
                 M.method.method_defpackage_MessageDs_handler,
                 String.class, Collection.class, boolean.class)
                 .after(param -> {
@@ -89,7 +93,7 @@ public class DingDingPlugin extends BasePlugin {
                 });
 
         findMethod(
-                M.classz.class_defpackage_MessageDs,
+                findMatcherClass(M.classz.class_defpackage_MessageDs),
                 M.method.method_defpackage_MessageDs_recall,
                 String.class, List.class, ContentValues.class)
                 .before(param -> {
