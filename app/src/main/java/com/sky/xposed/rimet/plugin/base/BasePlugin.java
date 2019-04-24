@@ -23,12 +23,13 @@ import android.widget.Toast;
 
 import com.sky.xposed.common.util.Alog;
 import com.sky.xposed.javax.MethodHook;
-import com.sky.xposed.javax.XposedPlus;
 import com.sky.xposed.javax.XposedUtil;
 import com.sky.xposed.rimet.plugin.interfaces.XConfig;
 import com.sky.xposed.rimet.plugin.interfaces.XConfigManager;
 import com.sky.xposed.rimet.plugin.interfaces.XPlugin;
 import com.sky.xposed.rimet.plugin.interfaces.XPluginManager;
+
+import java.lang.reflect.Method;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
@@ -123,33 +124,34 @@ public abstract class BasePlugin implements XPlugin {
         return findClass(getXString(className));
     }
 
-    public Class findMatcherClass(int className) {
-        return findMatcherClass(getXString(className));
+    public Method findMatcherMethod(int className, int methodName, Object... parameterTypes) {
+        return findMatcherMethod(getXString(className), getXString(methodName), parameterTypes);
     }
 
     public Class findClass(String className, ClassLoader classLoader) {
         return XposedHelpers.findClass(className, classLoader);
     }
 
-    public Class findMatcherClass(String classNameList) {
+    public Method findMatcherMethod(String classNameList, String methodNameList, Object... parameterTypes) {
 
         if (TextUtils.isEmpty(classNameList)) return null;
 
         // 多个类名
         String[] classNames = classNameList.split(",");
+        String[] methodNames = methodNameList.split(",");
 
-        for (String className : classNames) {
+        for (int i = 0; i < classNameList.length(); i++) {
 
-            // 查找相应的Class
-            Class tClass = findClassIfExists(className);
+            Method method = findMethodExactIfExists(
+                    classNames[i], methodNames[i], parameterTypes);
 
-            if (tClass != null) return tClass;
+            if (method != null) return method;
         }
         return null;
     }
 
-    public Class findClassIfExists(String className) {
-        return XposedHelpers.findClassIfExists(className, mParam.classLoader);
+    public Method findMethodExactIfExists(String className, String methodName, Object... parameterTypes) {
+        return XposedHelpers.findMethodExactIfExists(className, mParam.classLoader, methodName, parameterTypes);
     }
 
     public MethodHook findMethod(String className, String methodName, Object... parameterTypes) {

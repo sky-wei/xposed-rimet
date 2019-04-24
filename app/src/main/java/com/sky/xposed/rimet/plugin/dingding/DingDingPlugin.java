@@ -28,12 +28,12 @@ import com.sky.xposed.rimet.plugin.interfaces.XPlugin;
 import com.sky.xposed.rimet.plugin.interfaces.XPluginManager;
 import com.sky.xposed.rimet.ui.dialog.DingDingDialog;
 
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
-import java.util.regex.Pattern;
 
+import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
-import de.robv.android.xposed.XposedHelpers;
 
 /**
  * Created by sky on 2019/3/14.
@@ -67,14 +67,19 @@ public class DingDingPlugin extends BasePlugin {
                 Context.class)
                 .before(param -> param.setResult(null));
 
-        findMethod(
-                findMatcherClass(M.classz.class_defpackage_MessageDs),
+        Method methodMessage = findMatcherMethod(
+                M.classz.class_defpackage_MessageDs,
                 M.method.method_defpackage_MessageDs_handler,
-                String.class, Collection.class, boolean.class)
-                .after(param -> {
-                    // 处理消息
-                    mHandler.onHandlerMessage((String) param.args[0], (Collection) param.args[1]);
-                });
+                String.class, Collection.class, boolean.class);
+
+        XposedBridge.hookMethod(methodMessage, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                super.afterHookedMethod(param);
+                // 处理消息
+                mHandler.onHandlerMessage((String) param.args[0], (Collection) param.args[1]);
+            }
+        });
 
         findMethod(
                 M.classz.class_android_dingtalk_redpackets_activities_FestivalRedPacketsPickActivity,
@@ -92,17 +97,23 @@ public class DingDingPlugin extends BasePlugin {
                     mHandler.onHandlerPickRedPackets((Activity) param.thisObject);
                 });
 
-        findMethod(
-                findMatcherClass(M.classz.class_defpackage_MessageDs),
+        Method methodRecall = findMatcherMethod(
+                M.classz.class_defpackage_MessageDs,
                 M.method.method_defpackage_MessageDs_recall,
-                String.class, List.class, ContentValues.class)
-                .before(param -> {
-                    // 处理撤回消息
-                    if (mHandler.onRecallMessage((ContentValues) param.args[2])) {
-                        // 直接返回0
-                        param.setResult(0);
-                    }
-                });
+                String.class, List.class, ContentValues.class);
+
+        XposedBridge.hookMethod(methodRecall, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                super.beforeHookedMethod(param);
+
+                // 处理撤回消息
+                if (mHandler.onRecallMessage((ContentValues) param.args[2])) {
+                    // 直接返回0
+                    param.setResult(0);
+                }
+            }
+        });
 
 
         /****************  位置信息处理 ******************/

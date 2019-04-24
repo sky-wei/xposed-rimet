@@ -18,6 +18,7 @@ package com.sky.xposed.rimet.plugin.base;
 
 import android.content.Context;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.sky.xposed.common.util.ResourceUtil;
@@ -25,6 +26,8 @@ import com.sky.xposed.javax.XposedUtil;
 import com.sky.xposed.rimet.plugin.interfaces.XConfig;
 import com.sky.xposed.rimet.plugin.interfaces.XHandler;
 import com.sky.xposed.rimet.plugin.interfaces.XPluginManager;
+
+import java.lang.reflect.Method;
 
 import de.robv.android.xposed.XposedHelpers;
 
@@ -110,5 +113,32 @@ public abstract class BaseHandler implements XHandler {
 
     public Class findClass(int className) {
         return findClass(getXString(className));
+    }
+
+    public Method findMatcherMethod(int className, int methodName, Object... parameterTypes) {
+        return findMatcherMethod(getXString(className), getXString(methodName), parameterTypes);
+    }
+
+    public Method findMatcherMethod(String classNameList, String methodNameList, Object... parameterTypes) {
+
+        if (TextUtils.isEmpty(classNameList)) return null;
+
+        // 多个类名
+        String[] classNames = classNameList.split(",");
+        String[] methodNames = methodNameList.split(",");
+
+        for (int i = 0; i < classNameList.length(); i++) {
+
+            Method method = findMethodExactIfExists(
+                    classNames[i], methodNames[i], parameterTypes);
+
+            if (method != null) return method;
+        }
+        return null;
+    }
+
+    public Method findMethodExactIfExists(String className, String methodName, Object... parameterTypes) {
+        return XposedHelpers.findMethodExactIfExists(className,
+                mPluginManager.getLoadPackageParam().classLoader, methodName, parameterTypes);
     }
 }

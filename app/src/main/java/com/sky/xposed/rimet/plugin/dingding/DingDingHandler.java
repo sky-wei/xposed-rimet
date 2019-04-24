@@ -22,6 +22,7 @@ import android.location.Location;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.sky.xposed.common.util.Alog;
 import com.sky.xposed.common.util.ConversionUtil;
 import com.sky.xposed.common.util.ResourceUtil;
 import com.sky.xposed.rimet.Constant;
@@ -192,7 +193,13 @@ public class DingDingHandler extends BaseHandler implements DingDingPlugin.Handl
                 mXConfigManager.getString(Constant.XFlag.LUCKY_DELAYED, ""));
 
         // 获取红包
-        postDelayed(() -> pickRedEnvelop(ConversionUtil.parseLong(sid), clusterId), delayMillis);
+        postDelayed(() -> {
+            try {
+                pickRedEnvelop(ConversionUtil.parseLong(sid), clusterId);
+            } catch (Throwable tr) {
+                Alog.e("处理异常", tr);
+            }
+        }, delayMillis);
     }
 
     /**
@@ -217,15 +224,23 @@ public class DingDingHandler extends BaseHandler implements DingDingPlugin.Handl
 
         if (10 != msgType) return;  // 只处理文本消息
 
-        Class classIMDatabase = findClass(M.classz.class_wukong_im_base_IMDatabase);
-        Class classMessageDs = findClass(M.classz.class_defpackage_MessageDs);
-        String dbName = (String) XposedHelpers.callStaticMethod(classIMDatabase,
-                getXString(M.method.method_wukong_im_base_IMDatabase_getWritableDatabase));
+        try {
+            Class classIMDatabase = findClass(M.classz.class_wukong_im_base_IMDatabase);
+            String dbName = (String) XposedHelpers.callStaticMethod(classIMDatabase,
+                    getXString(M.method.method_wukong_im_base_IMDatabase_getWritableDatabase));
 
-        setMsgText(recallMessage, getMsgText(recallMessage) + " [已撤回]");
+            Method methodMessageUpdate =  findMatcherMethod(
+                    M.classz.class_defpackage_MessageDs,
+                    M.method.method_defpackage_MessageDs_update,
+                    String.class, String.class, List.class);
 
-        XposedHelpers.callStaticMethod(classMessageDs,
-                getXString(M.method.method_defpackage_MessageDs_update), dbName, cid, Collections.singletonList(recallMessage));
+            setMsgText(recallMessage, getMsgText(recallMessage) + " [已撤回]");
+
+            // 更新消息信息
+            methodMessageUpdate.invoke(null, dbName, cid, Collections.singletonList(recallMessage));
+        } catch (Throwable tr) {
+            Alog.e("异常了", tr);
+        }
     }
 
     /**
@@ -281,9 +296,8 @@ public class DingDingHandler extends BaseHandler implements DingDingPlugin.Handl
      * @param sid
      * @param clusterId
      */
-    public void pickRedEnvelop(long sid, String clusterId) {
+    public void pickRedEnvelop(long sid, String clusterId) throws Exception {
 
-        Class classServiceFactory = findClass(M.classz.class_defpackage_ServiceFactory);
         Class classRedEnvelopPickIService = findClass(M.classz.class_android_dingtalk_redpackets_idl_service_RedEnvelopPickIService);
         Class classRedPacketsRpc = findClass(M.classz.class_defpackage_RedPacketsRpc);
         Class classSubRedPacketsRpc = findClass(M.classz.class_defpackage_RedPacketsRpc_9);
@@ -292,9 +306,13 @@ public class DingDingHandler extends BaseHandler implements DingDingPlugin.Handl
                 classRedPacketsRpc, getXString(M.method.method_defpackage_RedPacketsRpc_newInstance));
         Object handler = XposedHelpers.newInstance(classSubRedPacketsRpc, redPacketsRpc, null);
 
+        Method methodGetService = findMatcherMethod(
+                M.classz.class_defpackage_ServiceFactory,
+                M.method.method_defpackage_ServiceFactory_getService,
+                Class.class);
+
         // 获取红包服务
-        Object redEnvelopPickIService = XposedHelpers.callStaticMethod(
-                classServiceFactory, getXString(M.method.method_defpackage_ServiceFactory_getService), classRedEnvelopPickIService);
+        Object redEnvelopPickIService = methodGetService.invoke(null, classRedEnvelopPickIService);
 
         // 自动接收红包
         XposedHelpers.callMethod(redEnvelopPickIService,
