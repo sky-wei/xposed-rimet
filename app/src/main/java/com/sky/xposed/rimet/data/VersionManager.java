@@ -22,18 +22,25 @@ import android.content.pm.PackageInfo;
 import com.sky.xposed.common.util.Alog;
 import com.sky.xposed.common.util.PackageUtil;
 import com.sky.xposed.rimet.Constant;
+import com.sky.xposed.rimet.data.cache.ICacheManager;
+import com.sky.xposed.rimet.data.cache.IRimetCache;
+import com.sky.xposed.rimet.data.cache.RimetCache;
+import com.sky.xposed.rimet.data.config.CacheRimetConfig;
 import com.sky.xposed.rimet.data.config.RimetConfig4617;
 import com.sky.xposed.rimet.data.config.RimetConfig4618;
 import com.sky.xposed.rimet.data.config.RimetConfig4621;
 import com.sky.xposed.rimet.data.config.RimetConfig4625;
 import com.sky.xposed.rimet.data.config.RimetConfig4629;
+import com.sky.xposed.rimet.data.model.ConfigModel;
+import com.sky.xposed.rimet.data.model.VersionModel;
 import com.sky.xposed.rimet.plugin.interfaces.XConfig;
+import com.sky.xposed.rimet.plugin.interfaces.XConfigManager;
 import com.sky.xposed.rimet.plugin.interfaces.XVersionManager;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -43,32 +50,29 @@ import java.util.Map;
  */
 public class VersionManager implements XVersionManager {
 
-    private final static Map<String, Class<? extends XConfig>> CONFIG_MAP = new LinkedHashMap<>();
-
-    static {
-        // 微信版本配置
-        CONFIG_MAP.put("4.6.17", RimetConfig4617.class);
-        CONFIG_MAP.put("4.6.18", RimetConfig4618.class);
-        CONFIG_MAP.put("4.6.20", RimetConfig4618.class);
-        CONFIG_MAP.put("4.6.21", RimetConfig4621.class);
-        CONFIG_MAP.put("4.6.25", RimetConfig4625.class);
-        CONFIG_MAP.put("4.6.29", RimetConfig4629.class);
-    }
-
     private XConfig mVersionConfig;
-    private VersionInfo mVersionInfo;
+    private XVersionManager mInternalVersionManager;
+    private XVersionManager mCacheVersionManager;
 
     private VersionManager(Build build) {
 
         PackageInfo packageInfo = PackageUtil
                 .getPackageInfo(build.mContext, Constant.Rimet.PACKAGE_NAME, 0);
 
+        VersionInfo versionInfo = null;
+
         if (packageInfo != null) {
             // 保存包版本信息
-            mVersionInfo = new VersionInfo();
-            mVersionInfo.versionName = packageInfo.versionName;
-            mVersionInfo.versionCode = packageInfo.versionCode;
+            versionInfo = new VersionInfo();
+            versionInfo.versionName = packageInfo.versionName;
+            versionInfo.versionCode = packageInfo.versionCode;
         }
+
+        // 创建内部版本配置管理
+        mInternalVersionManager = new InternalVersionManager(versionInfo);
+        // 创建缓存版本配置管理
+        mCacheVersionManager = new CacheVersionManager(
+                versionInfo, new RimetCache(build.mConfigManager, build.mCacheManager));
     }
 
     /**
@@ -77,7 +81,7 @@ public class VersionManager implements XVersionManager {
      */
     @Override
     public String getVersionName() {
-        return mVersionInfo != null ? mVersionInfo.versionName : "";
+        return mInternalVersionManager.getVersionName();
     }
 
     /**
@@ -86,7 +90,7 @@ public class VersionManager implements XVersionManager {
      */
     @Override
     public int getVersionCode() {
-        return mVersionInfo != null ? mVersionInfo.versionCode : 0;
+        return mInternalVersionManager.getVersionCode();
     }
 
     /**
@@ -95,7 +99,7 @@ public class VersionManager implements XVersionManager {
      */
     @Override
     public boolean isSupportVersion() {
-        return isSupportVersion(getVersionName());
+        return mInternalVersionManager.isSupportVersion() || mCacheVersionManager.isSupportVersion();
     }
 
     /**
@@ -105,40 +109,152 @@ public class VersionManager implements XVersionManager {
     @Override
     public XConfig getSupportConfig() {
         if (mVersionConfig == null) {
-            mVersionConfig = getSupportConfig(CONFIG_MAP.get(getVersionName()));
+            mVersionConfig = mInternalVersionManager.getSupportConfig();
+        }
+        if (mVersionConfig == null) {
+            mVersionConfig = mCacheVersionManager.getSupportConfig();
         }
         return mVersionConfig;
     }
 
     @Override
-    public List<String> getSupportVersion() {
-        return new ArrayList<>(CONFIG_MAP.keySet());
+    public Set<String> getSupportVersion() {
+
+        Set<String> version = new HashSet<>();
+        version.addAll(mInternalVersionManager.getSupportVersion());
+        version.addAll(mCacheVersionManager.getSupportVersion());
+
+        return version;
     }
 
-    /**
-     * 判断Hook是否支持当前版本
-     * @return
-     */
-    public boolean isSupportVersion(String versionName) {
-        return CONFIG_MAP.containsKey(versionName);
-    }
 
     /**
-     * 创建指定的配置类
-     * @param vClass
-     * @return
+     * 程序内置的版本管理
      */
-    private XConfig getSupportConfig(Class<? extends XConfig> vClass) {
+    private static final class InternalVersionManager implements XVersionManager {
 
-        if (vClass == null) return null;
+        private final static Map<String, Class<? extends XConfig>> CONFIG_MAP = new LinkedHashMap<>();
 
-        try {
-            // 创建实例
-            return vClass.newInstance();
-        } catch (Throwable tr) {
-            Alog.e("创建版本配置异常", tr);
+        static {
+            // 微信版本配置
+            CONFIG_MAP.put("4.6.17", RimetConfig4617.class);
+            CONFIG_MAP.put("4.6.18", RimetConfig4618.class);
+            CONFIG_MAP.put("4.6.20", RimetConfig4618.class);
+            CONFIG_MAP.put("4.6.21", RimetConfig4621.class);
+            CONFIG_MAP.put("4.6.25", RimetConfig4625.class);
+//            CONFIG_MAP.put("4.6.29", RimetConfig4629.class);
         }
-        return null;
+
+        private VersionInfo mVersionInfo;
+
+        public InternalVersionManager(VersionInfo versionInfo) {
+            mVersionInfo = versionInfo;
+        }
+
+        @Override
+        public String getVersionName() {
+            return mVersionInfo != null ? mVersionInfo.versionName : "";
+        }
+
+        @Override
+        public int getVersionCode() {
+            return mVersionInfo != null ? mVersionInfo.versionCode : 0;
+        }
+
+        @Override
+        public boolean isSupportVersion() {
+            return isSupportVersion(getVersionName());
+        }
+
+        @Override
+        public XConfig getSupportConfig() {
+            return getSupportConfig(CONFIG_MAP.get(getVersionName()));
+        }
+
+        @Override
+        public Set<String> getSupportVersion() {
+            return CONFIG_MAP.keySet();
+        }
+
+        /**
+         * 判断Hook是否支持当前版本
+         * @return
+         */
+        public boolean isSupportVersion(String versionName) {
+            return CONFIG_MAP.containsKey(versionName);
+        }
+
+        /**
+         * 创建指定的配置类
+         * @param vClass
+         * @return
+         */
+        private XConfig getSupportConfig(Class<? extends XConfig> vClass) {
+
+            if (vClass == null) return null;
+
+            try {
+                // 创建实例
+                return vClass.newInstance();
+            } catch (Throwable tr) {
+                Alog.e("创建版本配置异常", tr);
+            }
+            return null;
+        }
+    }
+
+
+    /**
+     * 本地缓存的版本配置管理
+     */
+    private static final class CacheVersionManager implements XVersionManager {
+
+        private VersionInfo mVersionInfo;
+        private IRimetCache mRimetCache;
+
+        public CacheVersionManager(VersionInfo versionInfo, IRimetCache iRimetCache) {
+            mVersionInfo = versionInfo;
+            mRimetCache = iRimetCache;
+        }
+
+        @Override
+        public String getVersionName() {
+            return mVersionInfo != null ? mVersionInfo.versionName : "";
+        }
+
+        @Override
+        public int getVersionCode() {
+            return mVersionInfo != null ? mVersionInfo.versionCode : 0;
+        }
+
+        @Override
+        public boolean isSupportVersion() {
+            return getSupportVersion().contains(getVersionName());
+        }
+
+        @Override
+        public XConfig getSupportConfig() {
+            // 加载本地版本配置
+            ConfigModel model = mRimetCache.getVersionConfig(Integer.toString(getVersionCode()));
+
+            if (model == null || model.getVersionConfig() == null) {
+                // 本地配置无效
+                return null;
+            }
+            return new CacheRimetConfig(model);
+        }
+
+        @Override
+        public Set<String> getSupportVersion() {
+            // 获取本地版本
+            VersionModel model = mRimetCache.getSupportVersion();
+
+            if (model == null || model.getSupportConfig() == null) {
+                // 本地没有配置
+                return new HashSet<>();
+            }
+            return model.getSupportConfig().keySet();
+        }
     }
 
     /**
@@ -153,9 +269,21 @@ public class VersionManager implements XVersionManager {
     public static final class Build {
 
         private Context mContext;
+        private XConfigManager mConfigManager;
+        private ICacheManager mCacheManager;
 
         public Build(Context context) {
             mContext = context;
+        }
+
+        public Build setConfigManager(XConfigManager xConfigManager) {
+            mConfigManager = xConfigManager;
+            return this;
+        }
+
+        public Build setCacheManager(ICacheManager iCacheManager) {
+            mCacheManager = iCacheManager;
+            return this;
         }
 
         public XVersionManager build() {

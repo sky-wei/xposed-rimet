@@ -33,6 +33,8 @@
 -keep class org.apache.** {*;}
 -keep class com.google.gson.** {*;}
 -keep class android.support.** {*;}
+-keep class retrofit2.** {*;}
+
 
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}

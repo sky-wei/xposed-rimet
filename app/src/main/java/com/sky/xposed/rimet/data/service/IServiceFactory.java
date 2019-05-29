@@ -14,42 +14,18 @@
  * limitations under the License.
  */
 
-package com.sky.xposed.rimet.plugin.interfaces;
-
-import java.util.Set;
+package com.sky.xposed.rimet.data.service;
 
 /**
- * Created by sky on 2019/3/12.
+ * Created by sky on 2019-05-27.
  */
-public interface XVersionManager {
+public interface IServiceFactory {
 
     /**
-     * 获取当前版本名
+     * 创建服务
+     * @param tClass
+     * @param <T>
      * @return
      */
-    String getVersionName();
-
-    /**
-     * 获取当前版本号
-     * @return
-     */
-    int getVersionCode();
-
-    /**
-     * 判断Hook是否支持当前版本
-     * @return
-     */
-    boolean isSupportVersion();
-
-    /**
-     * 获取支持版本的配置信息,如果没有适配到返回Null
-     * @return
-     */
-    XConfig getSupportConfig();
-
-    /**
-     * 获取插件支持的版本
-     * @return
-     */
-    Set<String> getSupportVersion();
+    <T> T createService(Class<T> tClass);
 }

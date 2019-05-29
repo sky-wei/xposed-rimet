@@ -21,6 +21,11 @@ package com.sky.xposed.rimet;
  */
 public interface Constant {
 
+    interface Service {
+
+        String BASE_URL = "http://skywei.info:9090/rimet/";
+    }
+
     interface Rimet {
 
         String PACKAGE_NAME = "com.alibaba.android.rimet";
@@ -73,6 +78,10 @@ public interface Constant {
         int LATITUDE = 0x000008;
 
         int LONGITUDE = 0x000009;
+
+        int UPDATE_LAST_TIME = 0x00000A;
+
+        int VERSION_LAST_TIME = 0x00000B;
     }
 
     interface Preference {
@@ -111,10 +120,5 @@ public interface Constant {
     interface ItemId {
 
         int MAIN_SETTINGS = 60001;
-    }
-
-    interface Key {
-
-        String DATA = "data";
     }
 }

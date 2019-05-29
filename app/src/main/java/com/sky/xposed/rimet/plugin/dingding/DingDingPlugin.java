@@ -48,6 +48,11 @@ public class DingDingPlugin extends BasePlugin {
     }
 
     @Override
+    public boolean isHandler() {
+        return getVersionManager().isSupportVersion();
+    }
+
+    @Override
     public void setEnable(int flag, boolean enable) {
 //        super.setEnable(flag, enable);    // 不需要处理
         mHandler.setEnable(flag, enable);

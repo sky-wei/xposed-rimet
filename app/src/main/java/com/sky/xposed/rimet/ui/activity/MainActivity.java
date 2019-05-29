@@ -29,8 +29,6 @@ import com.sky.xposed.common.util.ToastUtil;
 import com.sky.xposed.rimet.BuildConfig;
 import com.sky.xposed.rimet.Constant;
 import com.sky.xposed.rimet.R;
-import com.sky.xposed.rimet.data.VersionManager;
-import com.sky.xposed.rimet.plugin.interfaces.XVersionManager;
 import com.sky.xposed.rimet.ui.dialog.DingDingDialog;
 import com.sky.xposed.rimet.ui.dialog.LoveDialog;
 import com.sky.xposed.rimet.ui.util.ActivityUtil;
@@ -50,10 +48,6 @@ public class MainActivity extends Activity {
         // 初始化
         ToastUtil.getInstance().init(getApplicationContext());
 
-        XVersionManager versionManager = new VersionManager
-                .Build(getApplicationContext())
-                .build();
-
         imVersion = findViewById(R.id.im_version);
         imDingVersion = findViewById(R.id.im_ding_version);
         tvSupportVersion = findViewById(R.id.tv_support_version);
@@ -62,8 +56,8 @@ public class MainActivity extends Activity {
         imDingVersion.setDesc(getDingVersionName());
 
         StringBuilder builder = new StringBuilder();
-        builder.append(versionManager.isSupportVersion() ? "支持当前版本" : "不支持当前版本");
-        builder.append("\n支持的版本: " + versionManager.getSupportVersion());
+        builder.append("配置入口: 钉钉->我的->设置->钉钉助手");
+        builder.append("\n注: 只有Xposed功能生效,才会在设置中显示钉钉助手");
 
         tvSupportVersion.setText(builder.toString());
     }
@@ -99,6 +93,10 @@ public class MainActivity extends Activity {
             case R.id.im_source:
                 // 源地址
                 ActivityUtil.openUrl(this, "https://github.com/sky-wei/xposed-rimet");
+                break;
+            case R.id.im_document:
+                // 文档地址
+                ActivityUtil.openUrl(this, "http://blog.skywei.info/2019-04-18/xposed_rimet");
                 break;
             case R.id.im_love:
                 // 公益

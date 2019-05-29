@@ -14,42 +14,50 @@
  * limitations under the License.
  */
 
-package com.sky.xposed.rimet.plugin.interfaces;
-
-import java.util.Set;
+package com.sky.xposed.rimet.data.cache;
 
 /**
- * Created by sky on 2019/3/12.
+ * Created by sky on 2019-05-27.
  */
-public interface XVersionManager {
+public interface ICacheManager {
 
     /**
-     * 获取当前版本名
+     * 生成Key
+     * @param value
      * @return
      */
-    String getVersionName();
+    String buildKey(String value);
 
     /**
-     * 获取当前版本号
+     * 获取相应Key的信息
+     * @param key
+     * @param tClass
+     * @param <T>
      * @return
      */
-    int getVersionCode();
+    <T> T get(String key, Class<T> tClass);
 
     /**
-     * 判断Hook是否支持当前版本
-     * @return
+     * 保存相应的信息
+     * @param key
+     * @param value
+     * @param <T>
      */
-    boolean isSupportVersion();
+    <T> void put(String key, T value);
 
     /**
-     * 获取支持版本的配置信息,如果没有适配到返回Null
-     * @return
+     * 移除信息
+     * @param key
      */
-    XConfig getSupportConfig();
+    void remove(String key);
 
     /**
-     * 获取插件支持的版本
-     * @return
+     * 清除所有
      */
-    Set<String> getSupportVersion();
+    void clear();
+
+    /**
+     * 关闭
+     */
+    void close();
 }

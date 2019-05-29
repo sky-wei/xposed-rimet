@@ -27,6 +27,11 @@ import com.sky.xposed.rimet.BuildConfig;
 import com.sky.xposed.rimet.Constant;
 import com.sky.xposed.rimet.data.ConfigManager;
 import com.sky.xposed.rimet.data.ResourceManager;
+import com.sky.xposed.rimet.data.VersionManager;
+import com.sky.xposed.rimet.data.cache.CacheManager;
+import com.sky.xposed.rimet.data.cache.ICacheManager;
+import com.sky.xposed.rimet.data.source.IRepositoryFactory;
+import com.sky.xposed.rimet.data.source.RepositoryFactory;
 import com.sky.xposed.rimet.plugin.develop.DevelopPlugin;
 import com.sky.xposed.rimet.plugin.dingding.DingDingHandler;
 import com.sky.xposed.rimet.plugin.dingding.DingDingPlugin;
@@ -37,6 +42,7 @@ import com.sky.xposed.rimet.plugin.interfaces.XResourceManager;
 import com.sky.xposed.rimet.plugin.interfaces.XVersionManager;
 import com.sky.xposed.rimet.plugin.main.SettingsPlugin;
 import com.squareup.picasso.Picasso;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,6 +64,8 @@ public class PluginManager implements XPluginManager {
     private XVersionManager mVersionManager;
     private XResourceManager mResourceManager;
     private XConfigManager mConfigManager;
+    private ICacheManager mCacheManager;
+    private IRepositoryFactory mRepositoryFactory;
     private Map<Class, Object> mObjectMap = new HashMap<>();
 
     private SparseArray<XPlugin> mXPlugins = new SparseArray<>();
@@ -65,14 +73,33 @@ public class PluginManager implements XPluginManager {
     private PluginManager(Build build) {
         mContext = build.mContext;
         mLoadPackageParam = build.mLoadPackageParam;
-        mVersionManager = build.mXVersionManager;
 
         // 调试开关
         Alog.setDebug(BuildConfig.DEBUG);
 
+        // 创建缓存管理
+        mCacheManager = new CacheManager(mContext);
+
+        // 创建配置管理对象
+        mConfigManager = new ConfigManager
+                .Build(this)
+                .setConfigName(Constant.Name.RIMET)
+                .build();
+
+        // 获取版本管理对象
+        mVersionManager = new VersionManager
+                .Build(mContext)
+                .setConfigManager(mConfigManager)
+                .setCacheManager(mCacheManager)
+                .build();
+
         mHandler = new PluginHandler();
         ToastUtil.getInstance().init(mContext);
         Picasso.setSingletonInstance(new Picasso.Builder(mContext).build());
+
+        // 添加统计
+        CrashReport.initCrashReport(mContext, "3f1c04b5b5", BuildConfig.DEBUG);
+        CrashReport.setAppChannel(mContext, BuildConfig.FLAVOR);
 
         // 个别需要静态引用
         sXPluginManager = this;
@@ -88,8 +115,7 @@ public class PluginManager implements XPluginManager {
     @Override
     public void handleLoadPackage() {
 
-        if (mXPlugins.size() != 0
-                || !getVersionManager().isSupportVersion()) {
+        if (mXPlugins.size() != 0) {
             Alog.d("暂时不需要处理加载的包!");
             return;
         }
@@ -130,12 +156,6 @@ public class PluginManager implements XPluginManager {
 
     @Override
     public XConfigManager getConfigManager() {
-        if (mConfigManager == null) {
-            mConfigManager = new ConfigManager
-                    .Build(this)
-                    .setConfigName(Constant.Name.RIMET)
-                    .build();
-        }
         return mConfigManager;
     }
 
@@ -147,6 +167,14 @@ public class PluginManager implements XPluginManager {
                     .build();
         }
         return mResourceManager;
+    }
+
+    @Override
+    public IRepositoryFactory getRepositoryFactory() {
+        if (mRepositoryFactory == null) {
+            mRepositoryFactory = new RepositoryFactory(mConfigManager, mCacheManager);
+        }
+        return mRepositoryFactory;
     }
 
     /**
@@ -254,7 +282,6 @@ public class PluginManager implements XPluginManager {
 
         private Context mContext;
         private XC_LoadPackage.LoadPackageParam mLoadPackageParam;
-        private XVersionManager mXVersionManager;
 
         public Build(Context context) {
             mContext = context;
@@ -262,11 +289,6 @@ public class PluginManager implements XPluginManager {
 
         public Build setLoadPackageParam(XC_LoadPackage.LoadPackageParam loadPackageParam) {
             mLoadPackageParam = loadPackageParam;
-            return this;
-        }
-
-        public Build setVersionManager(XVersionManager xVersionManager) {
-            mXVersionManager = xVersionManager;
             return this;
         }
 

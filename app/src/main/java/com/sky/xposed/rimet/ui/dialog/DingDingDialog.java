@@ -19,10 +19,16 @@ package com.sky.xposed.rimet.ui.dialog;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.sky.xposed.common.ui.util.ViewUtil;
@@ -30,18 +36,25 @@ import com.sky.xposed.common.ui.view.CommonFrameLayout;
 import com.sky.xposed.common.ui.view.EditTextItemView;
 import com.sky.xposed.common.ui.view.SimpleItemView;
 import com.sky.xposed.common.ui.view.SwitchItemView;
+import com.sky.xposed.common.ui.view.TitleView;
 import com.sky.xposed.common.util.DisplayUtil;
 import com.sky.xposed.rimet.BuildConfig;
 import com.sky.xposed.rimet.Constant;
+import com.sky.xposed.rimet.R;
 import com.sky.xposed.rimet.plugin.interfaces.XPlugin;
 import com.sky.xposed.rimet.ui.activity.MapActivity;
 import com.sky.xposed.rimet.ui.util.DialogUtil;
+import com.sky.xposed.rimet.ui.util.UriUtil;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by sky on 2019/3/13.
  */
 public class DingDingDialog extends CommonDialog {
 
+    private ImageButton mMoreButton;
+
+    private TextView tvPrompt;
     private SwitchItemView sivLuckyEnable;
     private EditTextItemView sivLuckyDelayed;
     private SwitchItemView sivFastLuckyEnable;
@@ -53,6 +66,18 @@ public class DingDingDialog extends CommonDialog {
 
     @Override
     public void createView(CommonFrameLayout frameView) {
+
+        TitleView titleView = frameView.getTitleView();
+        mMoreButton = titleView.addMoreImageButton();
+
+        int left = DisplayUtil.dip2px(getContext(), 15);
+        int top = DisplayUtil.dip2px(getContext(), 12);
+
+        tvPrompt = new TextView(getContext());
+        tvPrompt.setTextSize(14);
+        tvPrompt.setBackgroundColor(Color.GRAY);
+        tvPrompt.setTextColor(Color.WHITE);
+        tvPrompt.setPadding(left, top, left, top);
 
         sivLuckyEnable = ViewUtil.newSwitchItemView(getContext(), "自动接收红包");
         sivLuckyEnable.setDesc("开启时自动接收红包");
@@ -79,6 +104,7 @@ public class DingDingDialog extends CommonDialog {
         sivLove = ViewUtil.newSimpleItemView(getContext(), "爱心公益");
         sivAbout = ViewUtil.newSimpleItemView(getContext(), "关于");
 
+        frameView.addContent(tvPrompt);
         frameView.addContent(sivLuckyEnable);
         frameView.addContent(sivLuckyDelayed);
         frameView.addContent(sivFastLuckyEnable);
@@ -95,6 +121,10 @@ public class DingDingDialog extends CommonDialog {
         super.initView(view, args);
 
         setTitle(Constant.Name.TITLE);
+
+        // 是否支持版本
+        boolean isSupportVersion = getPluginManager().getVersionManager().isSupportVersion();
+        setPromptText(isSupportVersion ? "" : "不支持当前版本!");
 
         TextView tvExt = sivSettingsLocation.getExtendView();
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) tvExt.getLayoutParams();
@@ -158,6 +188,16 @@ public class DingDingDialog extends CommonDialog {
             // 打开关于界面
             DialogUtil.showAboutDialog(getContext());
         });
+
+        mMoreButton.setOnClickListener(v -> {
+            // 打开更多菜单
+            showMoreMenu();
+        });
+
+        // 设置图标
+        Picasso.get()
+                .load(UriUtil.getResource(R.drawable.ic_action_more_vert))
+                .into(mMoreButton);
     }
 
     @Override
@@ -171,6 +211,15 @@ public class DingDingDialog extends CommonDialog {
                     data.getDoubleExtra("latitude", 0),
                     data.getDoubleExtra("longitude", 0));
         }
+    }
+
+    /**
+     * 设置提示消息
+     * @param text
+     */
+    private void setPromptText(String text) {
+        tvPrompt.setText(text);
+        ViewUtil.setVisibility(tvPrompt, TextUtils.isEmpty(text) ? View.GONE : View.VISIBLE);
     }
 
     /**
@@ -190,5 +239,43 @@ public class DingDingDialog extends CommonDialog {
 
         // 设置UI信息
         sivSettingsLocation.setExtend(address);
+    }
+
+    /**
+     * 显示更多菜单
+     */
+    private void showMoreMenu() {
+
+        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), mMoreButton, Gravity.RIGHT);
+        Menu menu = popupMenu.getMenu();
+
+        menu.add(1, 1, 1, "检测更新");
+        menu.add(1, 2, 1, "更新配置");
+        menu.add(1, 3, 1, "清除配置");
+
+        popupMenu.setOnMenuItemClickListener(item -> {
+            handlerMoreMenu(item);
+            return true;
+        });
+        popupMenu.show();
+    }
+
+    /**
+     * 处理更多菜单事件
+     * @param item
+     */
+    private void handlerMoreMenu(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case 1:
+                // 检测更新
+                break;
+            case 2:
+                // 更新配置
+                break;
+            case 3:
+                // 清除配置
+                break;
+        }
     }
 }

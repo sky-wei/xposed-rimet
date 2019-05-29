@@ -19,6 +19,8 @@ package com.sky.xposed.rimet.plugin.interfaces;
 import android.content.Context;
 import android.os.Handler;
 
+import com.sky.xposed.rimet.data.source.IRepositoryFactory;
+
 import java.util.List;
 
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
@@ -63,6 +65,12 @@ public interface XPluginManager {
      * @return
      */
     XResourceManager getResourceManager();
+
+    /**
+     * 获取仓库工厂类
+     * @return
+     */
+    IRepositoryFactory getRepositoryFactory();
 
     /**
      * 获取相应flag的插件

@@ -28,6 +28,7 @@ import com.sky.xposed.rimet.plugin.interfaces.XConfig;
 import com.sky.xposed.rimet.plugin.interfaces.XConfigManager;
 import com.sky.xposed.rimet.plugin.interfaces.XPlugin;
 import com.sky.xposed.rimet.plugin.interfaces.XPluginManager;
+import com.sky.xposed.rimet.plugin.interfaces.XVersionManager;
 
 import java.lang.reflect.Method;
 
@@ -90,6 +91,10 @@ public abstract class BasePlugin implements XPlugin {
 
     public XPluginManager getPluginManager() {
         return mPluginManager;
+    }
+
+    public XVersionManager getVersionManager() {
+        return mPluginManager.getVersionManager();
     }
 
     public XConfig getXConfig() {

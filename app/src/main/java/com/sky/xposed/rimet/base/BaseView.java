@@ -14,42 +14,26 @@
  * limitations under the License.
  */
 
-package com.sky.xposed.rimet.plugin.interfaces;
-
-import java.util.Set;
+package com.sky.xposed.rimet.base;
 
 /**
- * Created by sky on 2019/3/12.
+ * Created by sky on 16-9-28.
  */
-public interface XVersionManager {
+public interface BaseView {
 
     /**
-     * 获取当前版本名
-     * @return
+     * 显示加载提示框
      */
-    String getVersionName();
+    void showLoading();
 
     /**
-     * 获取当前版本号
-     * @return
+     * 取消加载提示框
      */
-    int getVersionCode();
+    void cancelLoading();
 
     /**
-     * 判断Hook是否支持当前版本
-     * @return
+     * 显示消息
+     * @param msg
      */
-    boolean isSupportVersion();
-
-    /**
-     * 获取支持版本的配置信息,如果没有适配到返回Null
-     * @return
-     */
-    XConfig getSupportConfig();
-
-    /**
-     * 获取插件支持的版本
-     * @return
-     */
-    Set<String> getSupportVersion();
+    void showMessage(String msg);
 }

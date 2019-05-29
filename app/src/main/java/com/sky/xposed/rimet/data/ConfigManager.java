@@ -56,6 +56,11 @@ public class ConfigManager implements XConfigManager {
     }
 
     @Override
+    public long getLong(int flag, long defValue) {
+        return mSimplePreferences.getLong(flag, defValue);
+    }
+
+    @Override
     public Set<String> getStringSet(int flag, Set<String> defValue) {
         return mSimplePreferences.getStringSet(flag, defValue);
     }
@@ -73,6 +78,11 @@ public class ConfigManager implements XConfigManager {
     @Override
     public void putInt(int flag, int value) {
         mSimplePreferences.putInt(flag, value);
+    }
+
+    @Override
+    public void putLong(int flag, long value) {
+        mSimplePreferences.putLong(flag, value);
     }
 
     @Override
@@ -127,6 +137,11 @@ public class ConfigManager implements XConfigManager {
         }
 
         @Override
+        public long getLong(int flag, long defValue) {
+            return mSharedPreferences.getLong(Integer.toString(flag), defValue);
+        }
+
+        @Override
         public Set<String> getStringSet(int flag, Set<String> defValue) {
             return mSharedPreferences.getStringSet(Integer.toString(flag), defValue);
         }
@@ -144,6 +159,11 @@ public class ConfigManager implements XConfigManager {
         @Override
         public void putInt(int flag, int value) {
             mSharedPreferences.edit().putInt(Integer.toString(flag), value).apply();
+        }
+
+        @Override
+        public void putLong(int flag, long value) {
+            mSharedPreferences.edit().putLong(Integer.toString(flag), value).apply();
         }
 
         @Override

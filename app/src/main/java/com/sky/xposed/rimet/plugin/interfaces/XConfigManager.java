@@ -35,6 +35,8 @@ public interface XConfigManager {
 
     int getInt(int flag, int defValue);
 
+    long getLong(int flag, long defValue);
+
     Set<String> getStringSet(int flag, Set<String> defValue);
 
     void putString(int flag, String value);
@@ -42,6 +44,8 @@ public interface XConfigManager {
     void putBoolean(int flag, boolean value);
 
     void putInt(int flag, int value);
+
+    void putLong(int flag, long value);
 
     void putStringSet(int flag, Set<String> value);
 
