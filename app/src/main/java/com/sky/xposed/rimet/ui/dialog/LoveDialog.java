@@ -52,7 +52,7 @@ public class LoveDialog extends CommonDialog {
         tvTip.setText("这个世界有些人更需要你们的帮助！");
         tvTip.setTextSize(12);
 
-        sivWeChatLove = ViewUtil.newSimpleItemView(getContext(), "微信公益");
+        sivWeChatLove = ViewUtil.newSimpleItemView(getContext(), "腾讯公益");
         sivAliPayLove = ViewUtil.newSimpleItemView(getContext(), "支付宝公益");
 
         frameView.addContent(tvTip);
@@ -81,21 +81,7 @@ public class LoveDialog extends CommonDialog {
      * 启动微信公益
      */
     private void startWeChatLove() {
-
-        Bundle bundle = new Bundle();
-        bundle.putBoolean("LauncherUI.From.Biz.Shortcut", true);
-        bundle.putString("app_shortcut_custom_id", "shortcut_c28a4ac297c2a53fc386336b79c38cc28fc29ac2b5c3acc38d");
-        bundle.putString("LauncherUI.Shortcut.Username", "shortcut_c28a4ac297c2a53fc386336b79c38cc28fc29ac2b5c3acc38d");
-
-        Intent intent = new Intent("com.tencent.mm.action.BIZSHORTCUT");
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setClassName("com.tencent.mm", "com.tencent.mm.ui.LauncherUI");
-        intent.putExtras(bundle);
-
-        if (!ActivityUtil.startActivity(getContext(), intent)) {
-            // 跳转失败
-            ToastUtil.show("跳转到微信公益失败!");
-        }
+        ActivityUtil.openUrl(getContext(), "https://gongyi.qq.com/");
     }
 
     /**

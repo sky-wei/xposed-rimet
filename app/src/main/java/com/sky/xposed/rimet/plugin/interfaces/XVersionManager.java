@@ -52,4 +52,9 @@ public interface XVersionManager {
      * @return
      */
     Set<String> getSupportVersion();
+
+    /**
+     * 清除配置版本配置
+     */
+    void clearVersionConfig();
 }

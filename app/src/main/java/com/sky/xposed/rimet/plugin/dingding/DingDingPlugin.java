@@ -49,7 +49,7 @@ public class DingDingPlugin extends BasePlugin {
 
     @Override
     public boolean isHandler() {
-        return getVersionManager().isSupportVersion();
+        return getVersionManager().getSupportConfig() != null ;
     }
 
     @Override

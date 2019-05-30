@@ -62,4 +62,9 @@ public interface IRimetCache {
      * @return
      */
     ConfigModel getVersionConfig(String versionCode);
+
+    /**
+     * 清除配置信息
+     */
+    void clearVersionConfig();
 }

@@ -30,7 +30,6 @@ import com.sky.xposed.rimet.data.config.RimetConfig4617;
 import com.sky.xposed.rimet.data.config.RimetConfig4618;
 import com.sky.xposed.rimet.data.config.RimetConfig4621;
 import com.sky.xposed.rimet.data.config.RimetConfig4625;
-import com.sky.xposed.rimet.data.config.RimetConfig4629;
 import com.sky.xposed.rimet.data.model.ConfigModel;
 import com.sky.xposed.rimet.data.model.VersionModel;
 import com.sky.xposed.rimet.plugin.interfaces.XConfig;
@@ -127,6 +126,12 @@ public class VersionManager implements XVersionManager {
         return version;
     }
 
+    @Override
+    public void clearVersionConfig() {
+        mInternalVersionManager.clearVersionConfig();
+        mCacheVersionManager.clearVersionConfig();
+    }
+
 
     /**
      * 程序内置的版本管理
@@ -174,6 +179,11 @@ public class VersionManager implements XVersionManager {
         @Override
         public Set<String> getSupportVersion() {
             return CONFIG_MAP.keySet();
+        }
+
+        @Override
+        public void clearVersionConfig() {
+            // 不需要清除配置
         }
 
         /**
@@ -254,6 +264,11 @@ public class VersionManager implements XVersionManager {
                 return new HashSet<>();
             }
             return model.getSupportConfig().keySet();
+        }
+
+        @Override
+        public void clearVersionConfig() {
+            mRimetCache.clearVersionConfig();
         }
     }
 

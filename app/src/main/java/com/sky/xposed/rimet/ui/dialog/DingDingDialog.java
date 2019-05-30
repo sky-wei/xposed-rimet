@@ -41,8 +41,13 @@ import com.sky.xposed.common.util.DisplayUtil;
 import com.sky.xposed.rimet.BuildConfig;
 import com.sky.xposed.rimet.Constant;
 import com.sky.xposed.rimet.R;
+import com.sky.xposed.rimet.contract.RimetContract;
+import com.sky.xposed.rimet.data.model.UpdateModel;
+import com.sky.xposed.rimet.plugin.interfaces.XConfig;
 import com.sky.xposed.rimet.plugin.interfaces.XPlugin;
+import com.sky.xposed.rimet.presenter.RimetPresenter;
 import com.sky.xposed.rimet.ui.activity.MapActivity;
+import com.sky.xposed.rimet.ui.util.ActivityUtil;
 import com.sky.xposed.rimet.ui.util.DialogUtil;
 import com.sky.xposed.rimet.ui.util.UriUtil;
 import com.squareup.picasso.Picasso;
@@ -50,7 +55,7 @@ import com.squareup.picasso.Picasso;
 /**
  * Created by sky on 2019/3/13.
  */
-public class DingDingDialog extends CommonDialog {
+public class DingDingDialog extends CommonDialog implements RimetContract.View {
 
     private ImageButton mMoreButton;
 
@@ -63,6 +68,8 @@ public class DingDingDialog extends CommonDialog {
     private SimpleItemView sivSettingsLocation;
     private SimpleItemView sivLove;
     private SimpleItemView sivAbout;
+
+    private RimetContract.Presenter mRimetPresenter;
 
     @Override
     public void createView(CommonFrameLayout frameView) {
@@ -120,11 +127,10 @@ public class DingDingDialog extends CommonDialog {
     protected void initView(View view, Bundle args) {
         super.initView(view, args);
 
-        setTitle(Constant.Name.TITLE);
+        // 创建对象
+        mRimetPresenter = new RimetPresenter(getPluginManager(), this);
 
-        // 是否支持版本
-        boolean isSupportVersion = getPluginManager().getVersionManager().isSupportVersion();
-        setPromptText(isSupportVersion ? "" : "不支持当前版本!");
+        setTitle(Constant.Name.TITLE);
 
         TextView tvExt = sivSettingsLocation.getExtendView();
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) tvExt.getLayoutParams();
@@ -198,6 +204,16 @@ public class DingDingDialog extends CommonDialog {
         Picasso.get()
                 .load(UriUtil.getResource(R.drawable.ic_action_more_vert))
                 .into(mMoreButton);
+
+        // 检测更新
+        mRimetPresenter.checkUpdate(true);
+
+        // 是否支持版本
+        XConfig xConfig = getPluginManager().getVersionManager().getSupportConfig();
+        setPromptText(xConfig != null ? "" : "不支持当前版本!");
+
+        // 更新配置文件
+        if (xConfig == null) mRimetPresenter.updateConfig(true);
     }
 
     @Override
@@ -211,6 +227,42 @@ public class DingDingDialog extends CommonDialog {
                     data.getDoubleExtra("latitude", 0),
                     data.getDoubleExtra("longitude", 0));
         }
+    }
+
+    @Override
+    public void onUpdate(UpdateModel model) {
+        // 提示用户更新
+        DialogUtil.showDialog(getContext(),
+                "提示", "发现新的版本,是否更新?",
+                (dialog, which) -> {
+                    // 跳转到浏览器安装
+                    ActivityUtil.openUrl(getContext(), model.getUrl());
+                });
+    }
+
+    @Override
+    public void onUpdateFailed(String msg) {
+        showMessage(msg);
+    }
+
+    @Override
+    public void onUpdateConfigSucceed() {
+        setPromptText("配置更新成功,需要重启钉钉即可生效!");
+    }
+
+    @Override
+    public void onUpdateConfigFailed(String msg) {
+        showMessage(msg);
+    }
+
+    @Override
+    public void onClearConfigSucceed() {
+        showMessage("清除配置成功!");
+    }
+
+    @Override
+    public void onClearConfigFailed(String msg) {
+        showMessage(msg);
     }
 
     /**
@@ -269,12 +321,15 @@ public class DingDingDialog extends CommonDialog {
         switch (item.getItemId()) {
             case 1:
                 // 检测更新
+                mRimetPresenter.checkUpdate(false);
                 break;
             case 2:
                 // 更新配置
+                mRimetPresenter.updateConfig(false);
                 break;
             case 3:
                 // 清除配置
+                mRimetPresenter.clearConfig();
                 break;
         }
     }

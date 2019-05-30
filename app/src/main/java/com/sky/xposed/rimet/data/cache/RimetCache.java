@@ -22,12 +22,14 @@ import com.sky.xposed.rimet.data.model.UpdateModel;
 import com.sky.xposed.rimet.data.model.VersionModel;
 import com.sky.xposed.rimet.plugin.interfaces.XConfigManager;
 
+import java.util.Map;
+
 /**
  * Created by sky on 2019-05-27.
  */
 public class RimetCache implements IRimetCache {
 
-    private static final long TIMEOUT = 1000 * 60 * 60 * 24;
+    private static final long TIMEOUT = 1000 * 60 * 60 * 6;
 
     private ICacheManager mCacheManager;
     private XConfigManager mConfigManager;
@@ -60,7 +62,7 @@ public class RimetCache implements IRimetCache {
         long lastTime = mConfigManager.getLong(Constant.XFlag.UPDATE_LAST_TIME, 0);
         UpdateModel model = mCacheManager.get(buildKey(UpdateModel.class.getSimpleName()), UpdateModel.class);
 
-        if (model != null && !isExpired(lastTime, TIMEOUT)) {
+        if (model != null && !isExpired(lastTime)) {
             // 返回有效数据
             return model;
         }
@@ -73,7 +75,7 @@ public class RimetCache implements IRimetCache {
         long lastTime = mConfigManager.getLong(Constant.XFlag.VERSION_LAST_TIME, 0);
         VersionModel model = mCacheManager.get(buildKey(VersionModel.class.getSimpleName()), VersionModel.class);
 
-        if (model != null && !isExpired(lastTime, TIMEOUT)) {
+        if (model != null && !isExpired(lastTime)) {
             // 返回有效数据
             return model;
         }
@@ -85,15 +87,34 @@ public class RimetCache implements IRimetCache {
         return mCacheManager.get(buildKey(versionCode), ConfigModel.class);
     }
 
+    @Override
+    public void clearVersionConfig() {
+
+        VersionModel model = getSupportVersion();
+
+        if (model == null || model.getSupportConfig() == null) {
+            // 已经清除,不需要再处理
+            return ;
+        }
+
+        Map<String, String> version = model.getSupportConfig();
+
+        for (String versionName : version.keySet()) {
+            // 删除所有版本配置
+            mCacheManager.remove(buildKey(version.get(versionName)));
+        }
+        mCacheManager.remove(buildKey(VersionModel.class.getSimpleName()));
+    }
+
     private String buildKey(String value) {
         return mCacheManager.buildKey(value);
     }
 
-    private boolean isExpired(long lastTime, long timeout) {
+    private boolean isExpired(long lastTime) {
 
         long curTime = System.currentTimeMillis();
 
         // 当前时间-最后时间>=超时时间 || 异常情况: 当前时间 < 最后时间
-        return curTime - lastTime >= timeout || curTime < lastTime;
+        return curTime - lastTime >= RimetCache.TIMEOUT || curTime < lastTime;
     }
 }

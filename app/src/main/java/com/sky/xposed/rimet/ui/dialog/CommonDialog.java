@@ -24,8 +24,10 @@ import android.view.Window;
 
 import com.sky.xposed.common.ui.view.CommonFrameLayout;
 import com.sky.xposed.common.ui.view.TitleView;
+import com.sky.xposed.common.util.ToastUtil;
 import com.sky.xposed.rimet.Constant;
 import com.sky.xposed.rimet.R;
+import com.sky.xposed.rimet.base.BaseView;
 import com.sky.xposed.rimet.ui.base.BaseDialog;
 import com.sky.xposed.rimet.ui.util.UriUtil;
 import com.squareup.picasso.Picasso;
@@ -33,7 +35,7 @@ import com.squareup.picasso.Picasso;
 /**
  * Created by sky on 2019/3/13.
  */
-public abstract class CommonDialog extends BaseDialog {
+public abstract class CommonDialog extends BaseDialog implements BaseView {
 
     private TitleView mToolbar;
     private CommonFrameLayout mCommonFrameLayout;
@@ -88,5 +90,20 @@ public abstract class CommonDialog extends BaseDialog {
     public void onCloseDialog() {
         // 关闭界面
         dismiss();
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void cancelLoading() {
+
+    }
+
+    @Override
+    public void showMessage(String msg) {
+        ToastUtil.show(msg);
     }
 }

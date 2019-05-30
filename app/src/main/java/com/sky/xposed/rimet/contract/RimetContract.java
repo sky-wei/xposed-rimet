@@ -27,10 +27,39 @@ public interface RimetContract {
 
     interface View extends BaseView {
 
+        /**
+         * 提示用户更新
+         * @param model
+         */
         void onUpdate(UpdateModel model);
 
+        /**
+         * 更新失败
+         * @param msg
+         */
         void onUpdateFailed(String msg);
 
+        /**
+         * 更新配置成功
+         */
+        void onUpdateConfigSucceed();
+
+        /**
+         * 更新配置失败
+         * @param msg
+         */
+        void onUpdateConfigFailed(String msg);
+
+        /**
+         * 清除成功
+         */
+        void onClearConfigSucceed();
+
+        /**
+         * 清除失败
+         * @param msg
+         */
+        void onClearConfigFailed(String msg);
     }
 
     interface Presenter extends BasePresenter {
@@ -38,17 +67,16 @@ public interface RimetContract {
         /**
          * 检测更新
          */
-        void checkUpdate();
+        void checkUpdate(boolean auto);
 
         /**
-         * 获取运行的版本
+         * 更新配置
          */
-        void getSupportVersion();
+        void updateConfig(boolean auto);
 
         /**
-         * 获取版本的配置
-         * @param versionCode
+         * 清除配置
          */
-        void getVersionConfig(String versionCode);
+        void clearConfig();
     }
 }
