@@ -24,7 +24,16 @@ import java.util.Map;
  */
 public class ConfigModel implements Serializable {
 
-    private Map<Integer, String> versionConfig;
+    private String version;                     // 版本
+    private Map<Integer, String> versionConfig; // index,value
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
     public Map<Integer, String> getVersionConfig() {
         return versionConfig;

@@ -125,7 +125,7 @@ public class RimetPresenter extends AbstractPresenter implements RimetContract.P
         }
 
         // 获取相应的版本配置
-        ioToMain(mRimetSource.getVersionConfig(versionName))
+        ioToMain(mRimetSource.getVersionConfig(version.get(versionName)))
                 .subscribe(model1 -> {
                     // 更新配置成功
                     mView.onUpdateConfigSucceed();

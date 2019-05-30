@@ -18,8 +18,11 @@ package com.sky.xposed.rimet;
 
 import android.app.Application;
 
+import com.google.gson.Gson;
 import com.sky.xposed.common.util.Alog;
 import com.sky.xposed.common.util.ToastUtil;
+import com.sky.xposed.rimet.data.config.RimetConfig;
+import com.sky.xposed.rimet.data.config.RimetConfig4629;
 
 /**
  * Created by sky on 2019/3/26.
@@ -34,5 +37,11 @@ public class App extends Application {
 
         // 初始化
         ToastUtil.getInstance().init(getApplicationContext());
+
+        if (BuildConfig.DEBUG) {
+            // 转换配置信息
+            RimetConfig config = new RimetConfig4629();
+            Alog.d(new Gson().toJson(config.toMap()));
+        }
     }
 }

@@ -244,14 +244,27 @@ public class VersionManager implements XVersionManager {
 
         @Override
         public XConfig getSupportConfig() {
-            // 加载本地版本配置
-            ConfigModel model = mRimetCache.getVersionConfig(Integer.toString(getVersionCode()));
 
-            if (model == null || model.getVersionConfig() == null) {
+            VersionModel model = mRimetCache.getSupportVersion();
+
+            if (model == null
+                    || model.getSupportConfig() == null
+                    || !model.getSupportConfig().containsKey(getVersionName())) {
                 // 本地配置无效
                 return null;
             }
-            return new CacheRimetConfig(model);
+
+            // 获取版本号(这个版本号不是钉钉的版本号)
+            final String versionCode = model.getSupportConfig().get(getVersionName());
+
+            // 加载本地版本配置
+            ConfigModel model1 = mRimetCache.getVersionConfig(versionCode);
+
+            if (model1 == null || model1.getVersionConfig() == null) {
+                // 本地配置无效
+                return null;
+            }
+            return new CacheRimetConfig(model1);
         }
 
         @Override

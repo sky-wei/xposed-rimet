@@ -24,7 +24,16 @@ import java.util.Map;
  */
 public class VersionModel implements Serializable {
 
+    private String version;                     // 版本
     private Map<String, String> supportConfig;  // 版本名,版本号
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
     public Map<String, String> getSupportConfig() {
         return supportConfig;

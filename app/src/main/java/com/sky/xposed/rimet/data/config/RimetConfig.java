@@ -16,10 +16,14 @@
 
 package com.sky.xposed.rimet.data.config;
 
+import android.annotation.SuppressLint;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
 import com.sky.xposed.rimet.plugin.interfaces.XConfig;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by sky on 2019/1/14.
@@ -68,5 +72,21 @@ public abstract class RimetConfig implements XConfig {
     @Override
     public boolean has(int key) {
         return !TextUtils.isEmpty(get(key));
+    }
+
+    @SuppressLint("UseSparseArrays")
+    public Map<Integer, String> toMap() {
+
+        Map<Integer, String> config = new HashMap<>();
+
+        for (int i = 0; i < mConfig.size(); i++) {
+
+            int key = mConfig.keyAt(i);
+            String value = (String) mConfig.get(key);
+
+            config.put(key, value);
+        }
+
+        return config;
     }
 }

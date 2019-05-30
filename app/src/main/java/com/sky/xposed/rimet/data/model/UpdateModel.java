@@ -26,6 +26,7 @@ public class UpdateModel implements Serializable {
     private String url;
     private String versionName;
     private int versionCode;
+    private String desc;
 
     public String getUrl() {
         return url;
@@ -49,5 +50,13 @@ public class UpdateModel implements Serializable {
 
     public void setVersionCode(int versionCode) {
         this.versionCode = versionCode;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 }
