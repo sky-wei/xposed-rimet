@@ -86,8 +86,7 @@ public class DialogUtil {
 
         if (context == null
                 || TextUtils.isEmpty(message)
-                || TextUtils.isEmpty(positive)
-                || TextUtils.isEmpty(negative)) {
+                || TextUtils.isEmpty(positive)) {
             // 不进行处理
             return;
         }

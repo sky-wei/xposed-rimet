@@ -234,10 +234,11 @@ public class DingDingDialog extends CommonDialog implements RimetContract.View {
         // 提示用户更新
         DialogUtil.showDialog(getContext(),
                 "提示", "发现新的版本,是否更新? \n" + model.getDesc(),
-                (dialog, which) -> {
+                "更新", (dialog, which) -> {
                     // 跳转到浏览器安装
                     ActivityUtil.openUrl(getContext(), model.getUrl());
-                });
+                },
+                !model.isForce() ? "取消" : "", null, !model.isForce());
     }
 
     @Override

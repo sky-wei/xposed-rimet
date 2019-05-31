@@ -23,10 +23,11 @@ import java.io.Serializable;
  */
 public class UpdateModel implements Serializable {
 
-    private String url;
-    private String versionName;
-    private int versionCode;
-    private String desc;
+    private String url;             // 下载地址
+    private String versionName;     // 版本名
+    private int versionCode;        // 版本号
+    private String desc;            // 更新描述
+    private boolean force;          // 是否强制更新
 
     public String getUrl() {
         return url;
@@ -60,6 +61,14 @@ public class UpdateModel implements Serializable {
         this.desc = desc;
     }
 
+    public boolean isForce() {
+        return force;
+    }
+
+    public void setForce(boolean force) {
+        this.force = force;
+    }
+
     @Override
     public String toString() {
         return "UpdateModel{" +
@@ -67,6 +76,7 @@ public class UpdateModel implements Serializable {
                 ", versionName='" + versionName + '\'' +
                 ", versionCode=" + versionCode +
                 ", desc='" + desc + '\'' +
+                ", force=" + force +
                 '}';
     }
 }
