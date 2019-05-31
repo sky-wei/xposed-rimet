@@ -62,11 +62,7 @@ public class RimetCache implements IRimetCache {
         long lastTime = mConfigManager.getLong(Constant.XFlag.UPDATE_LAST_TIME, 0);
         UpdateModel model = mCacheManager.get(buildKey(UpdateModel.class.getSimpleName()), UpdateModel.class);
 
-        if (model != null && !isExpired(lastTime)) {
-            // 返回有效数据
-            return model;
-        }
-        return null;
+        return model != null && !isExpired(lastTime) ? model : null;
     }
 
     @Override
@@ -75,11 +71,7 @@ public class RimetCache implements IRimetCache {
         long lastTime = mConfigManager.getLong(Constant.XFlag.VERSION_LAST_TIME, 0);
         VersionModel model = mCacheManager.get(buildKey(VersionModel.class.getSimpleName()), VersionModel.class);
 
-        if (model != null && !isExpired(lastTime)) {
-            // 返回有效数据
-            return model;
-        }
-        return null;
+        return model != null && !isExpired(lastTime) ? model : null;
     }
 
     @Override

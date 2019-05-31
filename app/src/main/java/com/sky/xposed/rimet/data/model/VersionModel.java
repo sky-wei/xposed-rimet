@@ -42,4 +42,12 @@ public class VersionModel implements Serializable {
     public void setSupportConfig(Map<String, String> supportConfig) {
         this.supportConfig = supportConfig;
     }
+
+    @Override
+    public String toString() {
+        return "VersionModel{" +
+                "version='" + version + '\'' +
+                ", supportConfig=" + supportConfig +
+                '}';
+    }
 }

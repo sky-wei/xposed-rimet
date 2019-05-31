@@ -59,4 +59,14 @@ public class UpdateModel implements Serializable {
     public void setDesc(String desc) {
         this.desc = desc;
     }
+
+    @Override
+    public String toString() {
+        return "UpdateModel{" +
+                "url='" + url + '\'' +
+                ", versionName='" + versionName + '\'' +
+                ", versionCode=" + versionCode +
+                ", desc='" + desc + '\'' +
+                '}';
+    }
 }

@@ -34,6 +34,7 @@
 -keep class com.google.gson.** {*;}
 -keep class android.support.** {*;}
 -keep class retrofit2.** {*;}
+-keep class com.google.** {*;}
 
 
 -dontwarn com.tencent.bugly.**

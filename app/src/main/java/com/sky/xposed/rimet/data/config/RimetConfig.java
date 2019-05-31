@@ -32,15 +32,10 @@ public abstract class RimetConfig implements XConfig {
 
     private SparseArray<Object> mConfig = new SparseArray<>();
 
-    public RimetConfig() {
-        // 加载配置
-        loadConfig();
-    }
-
     /**
      * 加载配置
      */
-    protected abstract void loadConfig();
+    public abstract RimetConfig loadConfig();
 
     protected void add(int key, String value) {
         mConfig.append(key, value);

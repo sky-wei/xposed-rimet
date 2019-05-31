@@ -32,16 +32,18 @@ public class CacheRimetConfig extends RimetConfig {
     }
 
     @Override
-    protected void loadConfig() {
+    public RimetConfig loadConfig() {
 
         // 获取版本配置
         Map<Integer, String> config = mConfigModel.getVersionConfig();
 
-        if (config == null) return;
+        if (config == null) return this;
 
         for (int key : config.keySet()) {
             // 添加到配置中
             add(key, config.get(key));
         }
+
+        return this;
     }
 }

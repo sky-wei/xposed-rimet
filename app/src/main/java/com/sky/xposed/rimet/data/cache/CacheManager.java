@@ -23,6 +23,7 @@ import com.jakewharton.disklrucache.DiskLruCache;
 import com.sky.xposed.common.util.Alog;
 import com.sky.xposed.rimet.util.FileUtil;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -30,14 +31,17 @@ import java.io.IOException;
  */
 public class CacheManager implements ICacheManager {
 
+    private static final long MAX_SIZE = 1024 * 1024 * 100;
+
     private Gson mGson;
     private DiskLruCache mDiskLruCache;
 
     public CacheManager(Context context) {
         mGson = new Gson();
+        File cacheDir = new File(context.getCacheDir(), "config");
         try {
             mDiskLruCache = DiskLruCache
-                    .open(context.getCacheDir(), 1, 1, 1000);
+                    .open(cacheDir, 2, 1, MAX_SIZE);
         } catch (IOException e) {
             Alog.e("异常了", e);
         }
@@ -50,7 +54,7 @@ public class CacheManager implements ICacheManager {
     }
 
     @Override
-    public <T> T get(String key, Class<T> tClass) {
+    public synchronized  <T> T get(String key, Class<T> tClass) {
 
         if (mDiskLruCache == null) return null;
 
@@ -63,7 +67,7 @@ public class CacheManager implements ICacheManager {
                 return mGson.fromJson(temp, tClass);
             }
         } catch (Throwable tr) {
-            Alog.e("put异常", tr);
+            Alog.e("get异常", tr);
         } finally {
             FileUtil.closeQuietly(snapshot);
         }
@@ -71,7 +75,7 @@ public class CacheManager implements ICacheManager {
     }
 
     @Override
-    public <T> void put(String key, T value) {
+    public synchronized <T> void put(String key, T value) {
 
         if (mDiskLruCache == null) return;
 
@@ -91,7 +95,7 @@ public class CacheManager implements ICacheManager {
     }
 
     @Override
-    public void remove(String key) {
+    public synchronized void remove(String key) {
 
         if (mDiskLruCache == null) return;
 

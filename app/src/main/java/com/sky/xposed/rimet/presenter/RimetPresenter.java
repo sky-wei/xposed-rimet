@@ -24,6 +24,7 @@ import com.sky.xposed.rimet.contract.RimetContract;
 import com.sky.xposed.rimet.data.model.UpdateModel;
 import com.sky.xposed.rimet.data.model.VersionModel;
 import com.sky.xposed.rimet.data.source.IRimetSource;
+import com.sky.xposed.rimet.plugin.interfaces.XConfig;
 import com.sky.xposed.rimet.plugin.interfaces.XPluginManager;
 import com.sky.xposed.rimet.plugin.interfaces.XVersionManager;
 
@@ -65,6 +66,14 @@ public class RimetPresenter extends AbstractPresenter implements RimetContract.P
     @SuppressLint("CheckResult")
     @Override
     public void updateConfig(boolean auto) {
+
+        // 获取配置信息
+        XConfig xConfig = mVersionManager.getSupportConfig();
+
+        if (xConfig != null) {
+            if (!auto) mView.onUpdateConfigFailed("当前配置不需要更新!");
+            return;
+        }
 
         ioToMain(mRimetSource.getSupportVersion())
                 .subscribe(model -> {

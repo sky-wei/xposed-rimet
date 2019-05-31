@@ -24,7 +24,7 @@ import com.sky.xposed.rimet.data.M;
 public class RimetConfig4618 extends RimetConfig {
 
     @Override
-    public void loadConfig() {
+    public RimetConfig loadConfig() {
 
         /** Class */
         add(M.classz.class_rimet_LauncherApplication, "com.alibaba.android.rimet.LauncherApplication");
@@ -74,5 +74,7 @@ public class RimetConfig4618 extends RimetConfig {
         add(M.res.res_iv_pick, "iv_pick");
         add(M.res.res_btn_pick, "btn_pick");
         add(M.res.res_setting_msg_notice, "setting_msg_notice");
+
+        return this;
     }
 }

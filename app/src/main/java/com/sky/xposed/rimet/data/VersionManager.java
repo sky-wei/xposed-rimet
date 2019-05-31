@@ -26,16 +26,20 @@ import com.sky.xposed.rimet.data.cache.ICacheManager;
 import com.sky.xposed.rimet.data.cache.IRimetCache;
 import com.sky.xposed.rimet.data.cache.RimetCache;
 import com.sky.xposed.rimet.data.config.CacheRimetConfig;
+import com.sky.xposed.rimet.data.config.RimetConfig;
 import com.sky.xposed.rimet.data.config.RimetConfig4617;
 import com.sky.xposed.rimet.data.config.RimetConfig4618;
 import com.sky.xposed.rimet.data.config.RimetConfig4621;
 import com.sky.xposed.rimet.data.config.RimetConfig4625;
+import com.sky.xposed.rimet.data.config.RimetConfig4629;
+import com.sky.xposed.rimet.data.config.RimetConfig4630;
 import com.sky.xposed.rimet.data.model.ConfigModel;
 import com.sky.xposed.rimet.data.model.VersionModel;
 import com.sky.xposed.rimet.plugin.interfaces.XConfig;
 import com.sky.xposed.rimet.plugin.interfaces.XConfigManager;
 import com.sky.xposed.rimet.plugin.interfaces.XVersionManager;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -138,7 +142,7 @@ public class VersionManager implements XVersionManager {
      */
     private static final class InternalVersionManager implements XVersionManager {
 
-        private final static Map<String, Class<? extends XConfig>> CONFIG_MAP = new LinkedHashMap<>();
+        private final static Map<String, Class<? extends RimetConfig>> CONFIG_MAP = new LinkedHashMap<>();
 
         static {
             // 微信版本配置
@@ -147,7 +151,8 @@ public class VersionManager implements XVersionManager {
             CONFIG_MAP.put("4.6.20", RimetConfig4618.class);
             CONFIG_MAP.put("4.6.21", RimetConfig4621.class);
             CONFIG_MAP.put("4.6.25", RimetConfig4625.class);
-//            CONFIG_MAP.put("4.6.29", RimetConfig4629.class);
+            CONFIG_MAP.put("4.6.29", RimetConfig4629.class);
+            CONFIG_MAP.put("4.6.30", RimetConfig4630.class);
         }
 
         private VersionInfo mVersionInfo;
@@ -199,13 +204,13 @@ public class VersionManager implements XVersionManager {
          * @param vClass
          * @return
          */
-        private XConfig getSupportConfig(Class<? extends XConfig> vClass) {
+        private XConfig getSupportConfig(Class<? extends RimetConfig> vClass) {
 
             if (vClass == null) return null;
 
             try {
                 // 创建实例
-                return vClass.newInstance();
+                return vClass.newInstance().loadConfig();
             } catch (Throwable tr) {
                 Alog.e("创建版本配置异常", tr);
             }
@@ -245,43 +250,49 @@ public class VersionManager implements XVersionManager {
         @Override
         public XConfig getSupportConfig() {
 
-            VersionModel model = mRimetCache.getSupportVersion();
+            Map<String, String> version = getSupportVersionMap();
 
-            if (model == null
-                    || model.getSupportConfig() == null
-                    || !model.getSupportConfig().containsKey(getVersionName())) {
+            if (!version.containsKey(getVersionName())) {
                 // 本地配置无效
                 return null;
             }
 
             // 获取版本号(这个版本号不是钉钉的版本号)
-            final String versionCode = model.getSupportConfig().get(getVersionName());
-
-            // 加载本地版本配置
-            ConfigModel model1 = mRimetCache.getVersionConfig(versionCode);
-
-            if (model1 == null || model1.getVersionConfig() == null) {
-                // 本地配置无效
-                return null;
-            }
-            return new CacheRimetConfig(model1);
+            return getSupportConfig(version.get(getVersionName()));
         }
 
         @Override
         public Set<String> getSupportVersion() {
-            // 获取本地版本
-            VersionModel model = mRimetCache.getSupportVersion();
-
-            if (model == null || model.getSupportConfig() == null) {
-                // 本地没有配置
-                return new HashSet<>();
-            }
-            return model.getSupportConfig().keySet();
+            return getSupportVersionMap().keySet();
         }
 
         @Override
         public void clearVersionConfig() {
             mRimetCache.clearVersionConfig();
+        }
+
+        private Map<String, String> getSupportVersionMap() {
+
+            // 获取本地版本
+            VersionModel model = mRimetCache.getSupportVersion();
+
+            if (model == null || model.getSupportConfig() == null) {
+                // 本地没有配置
+                return new HashMap<>();
+            }
+            return model.getSupportConfig();
+        }
+
+        private XConfig getSupportConfig(String versionCode) {
+
+            // 加载本地版本配置
+            ConfigModel model = mRimetCache.getVersionConfig(versionCode);
+
+            if (model == null || model.getVersionConfig() == null) {
+                // 本地配置无效
+                return null;
+            }
+            return new CacheRimetConfig(model).loadConfig();
         }
     }
 

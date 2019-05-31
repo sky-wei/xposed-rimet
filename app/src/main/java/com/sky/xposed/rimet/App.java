@@ -22,7 +22,7 @@ import com.google.gson.Gson;
 import com.sky.xposed.common.util.Alog;
 import com.sky.xposed.common.util.ToastUtil;
 import com.sky.xposed.rimet.data.config.RimetConfig;
-import com.sky.xposed.rimet.data.config.RimetConfig4629;
+import com.sky.xposed.rimet.data.config.RimetConfig4630;
 
 /**
  * Created by sky on 2019/3/26.
@@ -40,7 +40,7 @@ public class App extends Application {
 
         if (BuildConfig.DEBUG) {
             // 转换配置信息
-            RimetConfig config = new RimetConfig4629();
+            RimetConfig config = new RimetConfig4630().loadConfig();
             Alog.d(new Gson().toJson(config.toMap()));
         }
     }

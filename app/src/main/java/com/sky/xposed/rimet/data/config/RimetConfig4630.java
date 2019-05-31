@@ -21,7 +21,7 @@ import com.sky.xposed.rimet.data.M;
 /**
  * Created by sky on 2019/1/14.
  */
-public class RimetConfig4625 extends RimetConfig {
+public class RimetConfig4630 extends RimetConfig {
 
     @Override
     public RimetConfig loadConfig() {
@@ -29,12 +29,12 @@ public class RimetConfig4625 extends RimetConfig {
         /** Class */
         add(M.classz.class_rimet_LauncherApplication, "com.alibaba.android.rimet.LauncherApplication");
         add(M.classz.class_dingtalkbase_multidexsupport_DDApplication, "com.alibaba.android.dingtalkbase.multidexsupport.DDApplication");
-        add(M.classz.class_defpackage_MessageDs, "ivh,jbk");        // MessageDs
+        add(M.classz.class_defpackage_MessageDs, "jgi,jgi");        // MessageDs
         add(M.classz.class_plugin_webwx_ui_ExtDeviceWXLoginUI, "com.tencent.mm.plugin.webwx.ui.ExtDeviceWXLoginUI");
-        add(M.classz.class_defpackage_ServiceFactory, "jut,kaw");   // ServiceFactory
+        add(M.classz.class_defpackage_ServiceFactory, "kge,kge");   // ServiceFactory
         add(M.classz.class_android_dingtalk_redpackets_idl_service_RedEnvelopPickIService, "com.alibaba.android.dingtalk.redpackets.idl.service.RedEnvelopPickIService");
-        add(M.classz.class_defpackage_RedPacketsRpc, "cfe");    // RedPacketsRpc
-        add(M.classz.class_defpackage_RedPacketsRpc_9, "cfe$9");
+        add(M.classz.class_defpackage_RedPacketsRpc, "chl");    // RedPacketsRpc
+        add(M.classz.class_defpackage_RedPacketsRpc_9, "chl$9");
         add(M.classz.class_lightapp_runtime_LightAppRuntimeReverseInterfaceImpl, "com.alibaba.lightapp.runtime.LightAppRuntimeReverseInterfaceImpl");
         add(M.classz.class_android_dingtalk_redpackets_activities_FestivalRedPacketsPickActivity, "com.alibaba.android.dingtalk.redpackets.activities.FestivalRedPacketsPickActivity");
         add(M.classz.class_android_dingtalk_redpackets_activities_PickRedPacketsActivity, "com.alibaba.android.dingtalk.redpackets.activities.PickRedPacketsActivity");
