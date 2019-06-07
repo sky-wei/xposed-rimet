@@ -153,6 +153,7 @@ public class VersionManager implements XVersionManager {
             CONFIG_MAP.put("4.6.25", RimetConfig4625.class);
             CONFIG_MAP.put("4.6.29", RimetConfig4629.class);
             CONFIG_MAP.put("4.6.30", RimetConfig4630.class);
+//            CONFIG_MAP.put("4.6.33", RimetConfig4633.class);
         }
 
         private VersionInfo mVersionInfo;

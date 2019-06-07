@@ -23,7 +23,7 @@ public interface Constant {
 
     interface Service {
 
-        String BASE_URL = "http://skywei.info:9090/rimet/";
+        String BASE_URL = "https://coding.net/u/sky_wei/p/xposed-rimet/git/raw/develop/";
     }
 
     interface Rimet {
