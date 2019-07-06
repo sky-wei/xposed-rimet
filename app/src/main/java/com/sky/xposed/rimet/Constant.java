@@ -80,8 +80,6 @@ public interface Constant {
         int LONGITUDE = 0x000009;
 
         int UPDATE_LAST_TIME = 0x00000A;
-
-        int VERSION_LAST_TIME = 0x00000B;
     }
 
     interface Preference {

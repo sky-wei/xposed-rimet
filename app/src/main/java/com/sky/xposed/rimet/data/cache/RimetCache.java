@@ -48,7 +48,6 @@ public class RimetCache implements IRimetCache {
     @Override
     public void saveSupportVersion(VersionModel model) {
         mCacheManager.put(buildKey(VersionModel.class.getSimpleName()), model);
-        mConfigManager.putLong(Constant.XFlag.VERSION_LAST_TIME, System.currentTimeMillis());
     }
 
     @Override
@@ -67,11 +66,7 @@ public class RimetCache implements IRimetCache {
 
     @Override
     public VersionModel getSupportVersion() {
-
-        long lastTime = mConfigManager.getLong(Constant.XFlag.VERSION_LAST_TIME, 0);
-        VersionModel model = mCacheManager.get(buildKey(VersionModel.class.getSimpleName()), VersionModel.class);
-
-        return model != null && !isExpired(lastTime) ? model : null;
+        return mCacheManager.get(buildKey(VersionModel.class.getSimpleName()), VersionModel.class);
     }
 
     @Override
