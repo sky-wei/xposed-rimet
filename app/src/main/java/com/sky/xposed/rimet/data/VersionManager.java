@@ -35,6 +35,7 @@ import com.sky.xposed.rimet.data.config.RimetConfig4629;
 import com.sky.xposed.rimet.data.config.RimetConfig4630;
 import com.sky.xposed.rimet.data.config.RimetConfig4633;
 import com.sky.xposed.rimet.data.config.RimetConfig4636;
+import com.sky.xposed.rimet.data.config.RimetConfig4637;
 import com.sky.xposed.rimet.data.model.ConfigModel;
 import com.sky.xposed.rimet.data.model.VersionModel;
 import com.sky.xposed.rimet.plugin.interfaces.XConfig;
@@ -147,7 +148,7 @@ public class VersionManager implements XVersionManager {
         private final static Map<String, Class<? extends RimetConfig>> CONFIG_MAP = new LinkedHashMap<>();
 
         static {
-            // 微信版本配置
+            // 钉钉版本配置
             CONFIG_MAP.put("4.6.17", RimetConfig4617.class);
             CONFIG_MAP.put("4.6.18", RimetConfig4618.class);
             CONFIG_MAP.put("4.6.20", RimetConfig4618.class);
@@ -156,7 +157,8 @@ public class VersionManager implements XVersionManager {
             CONFIG_MAP.put("4.6.29", RimetConfig4629.class);
             CONFIG_MAP.put("4.6.30", RimetConfig4630.class);
             CONFIG_MAP.put("4.6.33", RimetConfig4633.class);
-//            CONFIG_MAP.put("4.6.36", RimetConfig4636.class);
+            CONFIG_MAP.put("4.6.36", RimetConfig4636.class);
+            CONFIG_MAP.put("4.6.37", RimetConfig4637.class);
         }
 
         private VersionInfo mVersionInfo;
