@@ -196,15 +196,15 @@ public class DialogUtil {
             tvHead.setText("当前版本：v" + BuildConfig.VERSION_NAME);
 
             ImageView ivCommunity = new ImageView(context);
-            ivCommunity.setOnClickListener(v -> copyToClipboard(context, "731081056"));
+            ivCommunity.setOnClickListener(v -> copyToClipboard(context, "808328957"));
             ivCommunity.setLayoutParams(LayoutUtil.newWrapLinearLayoutParams());
             Picasso.get().load(UriUtil.getResource(R.drawable.qq)).into(ivCommunity);
 
             TextView tvTail = new TextView(context);
             tvTail.setTextColor(Color.BLACK);
             tvTail.setTextSize(14f);
-            tvTail.setText(Html.fromHtml("QQ群：<u>731081056</u>"));
-            tvTail.setOnClickListener(v -> copyToClipboard(context, "731081056"));
+            tvTail.setText(Html.fromHtml("QQ群：<br/> <u>731081056</u>(1群) <br/> <u>808328957</u>(2群)"));
+            tvTail.setOnClickListener(v -> copyToClipboard(context, "808328957"));
 
             content.addView(tvHead);
             content.addView(tvTail);

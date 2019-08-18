@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public class RimetCache implements IRimetCache {
 
-    private static final long TIMEOUT = 1000 * 60 * 60 * 6;
+    private static final long TIMEOUT = 1000 * 60 * 60;
 
     private ICacheManager mCacheManager;
     private XConfigManager mConfigManager;

@@ -75,6 +75,10 @@ public class RimetPresenter extends AbstractPresenter implements RimetContract.P
             return;
         }
 
+        // 清除版本信息
+        mVersionManager.clearVersionConfig();
+
+        // 获取获取配置
         ioToMain(mRimetSource.getSupportVersion())
                 .subscribe(model -> {
                     // 更新配置
@@ -104,6 +108,12 @@ public class RimetPresenter extends AbstractPresenter implements RimetContract.P
             Alog.e("清除异常", throwable);
             mView.onClearConfigFailed("清除配置失败!");
         });
+
+        try {
+
+        } catch (Throwable tr) {
+
+        }
     }
 
     private void checkUpdate(boolean auto, UpdateModel model) {

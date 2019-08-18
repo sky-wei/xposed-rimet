@@ -145,7 +145,7 @@ public abstract class BasePlugin implements XPlugin {
         String[] classNames = classNameList.split(",");
         String[] methodNames = methodNameList.split(",");
 
-        for (int i = 0; i < classNameList.length(); i++) {
+        for (int i = 0; i < classNames.length; i++) {
 
             Method method = findMethodExactIfExists(
                     classNames[i], methodNames[i], parameterTypes);

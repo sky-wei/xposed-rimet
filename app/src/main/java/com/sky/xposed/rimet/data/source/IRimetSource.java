@@ -43,7 +43,7 @@ public interface IRimetSource {
 
     /**
      * 获取相应的版本版本
-     * @param versionCode
+     * @param versionCode 版本号
      * @return
      */
     Observable<ConfigModel> getVersionConfig(String versionCode);
