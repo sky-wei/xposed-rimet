@@ -50,25 +50,31 @@ public class SettingsPlugin extends BasePlugin {
                 "com.alibaba.android.user.settings.activity.NewSettingActivity",
                 "onCreate",
                 Bundle.class)
-                .after(param -> {
+                .after(param -> onHnalderSettings((Activity) param.thisObject));
 
-                    final Activity activity = (Activity) param.thisObject;
+        findMethod(
+                "com.alibaba.android.user.settings.activity.UserSettingsActivity",
+                "onCreate",
+                Bundle.class)
+                .after(param -> onHnalderSettings((Activity) param.thisObject));
+    }
 
-                    View view = activity.findViewById(ResourceUtil.getId(activity, "setting_msg_notice"));
-                    ViewGroup viewGroup = (ViewGroup) view.getParent();
+    private void onHnalderSettings(Activity activity) {
 
-                    final int index = viewGroup.indexOfChild(view);
+        View view = activity.findViewById(ResourceUtil.getId(activity, "setting_msg_notice"));
+        ViewGroup viewGroup = (ViewGroup) view.getParent();
 
-                    SimpleItemView viewDing = new SimpleItemView(activity);
-                    viewDing.getNameView().setTextSize(17);
-                    viewDing.setName(Constant.Name.TITLE);
-                    viewDing.setExtend("v" + BuildConfig.VERSION_NAME);
-                    viewDing.setOnClickListener(v -> {
-                        // 打开设置
-                        openSettings(activity);
-                    });
-                    viewGroup.addView(viewDing, index);
-                });
+        final int index = viewGroup.indexOfChild(view);
+
+        SimpleItemView viewDing = new SimpleItemView(activity);
+        viewDing.getNameView().setTextSize(17);
+        viewDing.setName(Constant.Name.TITLE);
+        viewDing.setExtend("v" + BuildConfig.VERSION_NAME);
+        viewDing.setOnClickListener(v -> {
+            // 打开设置
+            openSettings(activity);
+        });
+        viewGroup.addView(viewDing, index);
     }
 
     @Override
