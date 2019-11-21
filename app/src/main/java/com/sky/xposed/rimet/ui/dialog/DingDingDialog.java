@@ -22,13 +22,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.sky.xposed.common.ui.util.ViewUtil;
@@ -36,28 +31,21 @@ import com.sky.xposed.common.ui.view.CommonFrameLayout;
 import com.sky.xposed.common.ui.view.EditTextItemView;
 import com.sky.xposed.common.ui.view.SimpleItemView;
 import com.sky.xposed.common.ui.view.SwitchItemView;
-import com.sky.xposed.common.ui.view.TitleView;
 import com.sky.xposed.common.util.DisplayUtil;
 import com.sky.xposed.rimet.BuildConfig;
 import com.sky.xposed.rimet.Constant;
-import com.sky.xposed.rimet.R;
 import com.sky.xposed.rimet.contract.RimetContract;
 import com.sky.xposed.rimet.data.model.UpdateModel;
 import com.sky.xposed.rimet.plugin.interfaces.XConfig;
 import com.sky.xposed.rimet.plugin.interfaces.XPlugin;
-import com.sky.xposed.rimet.presenter.RimetPresenter;
 import com.sky.xposed.rimet.ui.activity.MapActivity;
 import com.sky.xposed.rimet.ui.util.ActivityUtil;
 import com.sky.xposed.rimet.ui.util.DialogUtil;
-import com.sky.xposed.rimet.ui.util.UriUtil;
-import com.squareup.picasso.Picasso;
 
 /**
  * Created by sky on 2019/3/13.
  */
 public class DingDingDialog extends CommonDialog implements RimetContract.View {
-
-    private ImageButton mMoreButton;
 
     private TextView tvPrompt;
     private SwitchItemView sivLuckyEnable;
@@ -69,13 +57,8 @@ public class DingDingDialog extends CommonDialog implements RimetContract.View {
     private SimpleItemView sivLove;
     private SimpleItemView sivAbout;
 
-    private RimetContract.Presenter mRimetPresenter;
-
     @Override
     public void createView(CommonFrameLayout frameView) {
-
-        TitleView titleView = frameView.getTitleView();
-        mMoreButton = titleView.addMoreImageButton();
 
         int left = DisplayUtil.dip2px(getContext(), 15);
         int top = DisplayUtil.dip2px(getContext(), 12);
@@ -128,7 +111,7 @@ public class DingDingDialog extends CommonDialog implements RimetContract.View {
         super.initView(view, args);
 
         // 创建对象
-        mRimetPresenter = new RimetPresenter(getPluginManager(), this);
+//        mRimetPresenter = new RimetPresenter(getPluginManager(), this);
 
         setTitle(Constant.Name.TITLE);
 
@@ -195,25 +178,9 @@ public class DingDingDialog extends CommonDialog implements RimetContract.View {
             DialogUtil.showAboutDialog(getContext());
         });
 
-        mMoreButton.setOnClickListener(v -> {
-            // 打开更多菜单
-            showMoreMenu();
-        });
-
-        // 设置图标
-        Picasso.get()
-                .load(UriUtil.getResource(R.drawable.ic_action_more_vert))
-                .into(mMoreButton);
-
-        // 检测更新
-        mRimetPresenter.checkUpdate(true);
-
         // 是否支持版本
         XConfig xConfig = getPluginManager().getVersionManager().getSupportConfig();
         setPromptText(xConfig != null ? "" : "不支持当前版本!");
-
-        // 更新配置文件
-        if (xConfig == null) mRimetPresenter.updateConfig(true);
     }
 
     @Override
@@ -292,46 +259,5 @@ public class DingDingDialog extends CommonDialog implements RimetContract.View {
 
         // 设置UI信息
         sivSettingsLocation.setExtend(address);
-    }
-
-    /**
-     * 显示更多菜单
-     */
-    private void showMoreMenu() {
-
-        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), mMoreButton, Gravity.RIGHT);
-        Menu menu = popupMenu.getMenu();
-
-        menu.add(1, 1, 1, "检测更新");
-        menu.add(1, 2, 1, "更新配置");
-        menu.add(1, 3, 1, "清除配置");
-
-        popupMenu.setOnMenuItemClickListener(item -> {
-            handlerMoreMenu(item);
-            return true;
-        });
-        popupMenu.show();
-    }
-
-    /**
-     * 处理更多菜单事件
-     * @param item
-     */
-    private void handlerMoreMenu(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case 1:
-                // 检测更新
-                mRimetPresenter.checkUpdate(false);
-                break;
-            case 2:
-                // 更新配置
-                mRimetPresenter.updateConfig(false);
-                break;
-            case 3:
-                // 清除配置
-                mRimetPresenter.clearConfig();
-                break;
-        }
     }
 }

@@ -29,16 +29,18 @@ import com.sky.xposed.common.util.ToastUtil;
 import com.sky.xposed.rimet.BuildConfig;
 import com.sky.xposed.rimet.Constant;
 import com.sky.xposed.rimet.R;
+import com.sky.xposed.rimet.data.VersionManager;
+import com.sky.xposed.rimet.data.cache.ICacheManager;
+import com.sky.xposed.rimet.plugin.interfaces.XConfigManager;
+import com.sky.xposed.rimet.plugin.interfaces.XVersionManager;
 import com.sky.xposed.rimet.ui.dialog.DingDingDialog;
 import com.sky.xposed.rimet.ui.dialog.LoveDialog;
 import com.sky.xposed.rimet.ui.util.ActivityUtil;
 import com.sky.xposed.rimet.ui.util.DialogUtil;
 
-public class MainActivity extends Activity {
+import java.util.Set;
 
-    private ItemMenu imVersion;
-    private ItemMenu imDingVersion;
-    private TextView tvSupportVersion;
+public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,16 +50,24 @@ public class MainActivity extends Activity {
         // 初始化
         ToastUtil.getInstance().init(getApplicationContext());
 
-        imVersion = findViewById(R.id.im_version);
-        imDingVersion = findViewById(R.id.im_ding_version);
-        tvSupportVersion = findViewById(R.id.tv_support_version);
+        ItemMenu imVersion = findViewById(R.id.im_version);
+        ItemMenu imDingVersion = findViewById(R.id.im_ding_version);
+        TextView tvSupportVersion = findViewById(R.id.tv_support_version);
 
         imVersion.setDesc("v" + BuildConfig.VERSION_NAME);
         imDingVersion.setDesc(getDingVersionName());
 
+        XVersionManager mVersionManager = new VersionManager
+                .Build(this)
+                .setConfigManager(mConfigManager)
+                .setCacheManager(mCacheManager)
+                .build();
+
         StringBuilder builder = new StringBuilder();
         builder.append("配置入口: 钉钉->我的->设置->钉钉助手");
         builder.append("\n注: 只有Xposed功能生效,才会在设置中显示钉钉助手");
+        builder.append("\n\n适配的版本: \n");
+        builder.append(mVersionManager.getSupportVersion());
 
         tvSupportVersion.setText(builder.toString());
     }
@@ -118,4 +128,98 @@ public class MainActivity extends Activity {
 
         return info == null ? "Unknown" : "v" + info.getVersionName();
     }
+
+    private final XConfigManager mConfigManager = new XConfigManager() {
+        @Override
+        public String getString(int flag, String defValue) {
+            return null;
+        }
+
+        @Override
+        public boolean getBoolean(int flag, boolean defValue) {
+            return false;
+        }
+
+        @Override
+        public int getInt(int flag, int defValue) {
+            return 0;
+        }
+
+        @Override
+        public long getLong(int flag, long defValue) {
+            return 0;
+        }
+
+        @Override
+        public Set<String> getStringSet(int flag, Set<String> defValue) {
+            return null;
+        }
+
+        @Override
+        public void putString(int flag, String value) {
+
+        }
+
+        @Override
+        public void putBoolean(int flag, boolean value) {
+
+        }
+
+        @Override
+        public void putInt(int flag, int value) {
+
+        }
+
+        @Override
+        public void putLong(int flag, long value) {
+
+        }
+
+        @Override
+        public void putStringSet(int flag, Set<String> value) {
+
+        }
+
+        @Override
+        public XConfigManager getConfigManager(String name) {
+            return null;
+        }
+
+        @Override
+        public void release() {
+
+        }
+    };
+
+    private final ICacheManager mCacheManager = new ICacheManager() {
+        @Override
+        public String buildKey(String value) {
+            return null;
+        }
+
+        @Override
+        public <T> T get(String key, Class<T> tClass) {
+            return null;
+        }
+
+        @Override
+        public <T> void put(String key, T value) {
+
+        }
+
+        @Override
+        public void remove(String key) {
+
+        }
+
+        @Override
+        public void clear() {
+
+        }
+
+        @Override
+        public void close() {
+
+        }
+    };
 }
