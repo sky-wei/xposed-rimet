@@ -193,22 +193,22 @@ public class DialogUtil {
             TextView tvHead = new TextView(context);
             tvHead.setTextColor(Color.BLACK);
             tvHead.setTextSize(14f);
-            tvHead.setText("当前版本：v" + BuildConfig.VERSION_NAME);
+            tvHead.setText("\n当前版本：v" + BuildConfig.VERSION_NAME);
 
-            ImageView ivCommunity = new ImageView(context);
-            ivCommunity.setOnClickListener(v -> copyToClipboard(context, "808328957"));
-            ivCommunity.setLayoutParams(LayoutUtil.newWrapLinearLayoutParams());
-            Picasso.get().load(UriUtil.getResource(R.drawable.qq)).into(ivCommunity);
-
-            TextView tvTail = new TextView(context);
-            tvTail.setTextColor(Color.BLACK);
-            tvTail.setTextSize(14f);
-            tvTail.setText(Html.fromHtml("QQ群：<br/> <u>731081056</u>(1群) <br/> <u>808328957</u>(2群)"));
-            tvTail.setOnClickListener(v -> copyToClipboard(context, "808328957"));
+//            ImageView ivCommunity = new ImageView(context);
+//            ivCommunity.setOnClickListener(v -> copyToClipboard(context, "808328957"));
+//            ivCommunity.setLayoutParams(LayoutUtil.newWrapLinearLayoutParams());
+//            Picasso.get().load(UriUtil.getResource(R.drawable.qq)).into(ivCommunity);
+//
+//            TextView tvTail = new TextView(context);
+//            tvTail.setTextColor(Color.BLACK);
+//            tvTail.setTextSize(14f);
+//            tvTail.setText(Html.fromHtml("QQ群：<br/> <u>731081056</u>(1群) <br/> <u>808328957</u>(2群)"));
+//            tvTail.setOnClickListener(v -> copyToClipboard(context, "808328957"));
 
             content.addView(tvHead);
-            content.addView(tvTail);
-            content.addView(ivCommunity);
+//            content.addView(tvTail);
+//            content.addView(ivCommunity);
 
             // 显示关于
             AlertDialog.Builder builder = new AlertDialog.Builder(context);

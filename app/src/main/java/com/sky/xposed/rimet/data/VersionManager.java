@@ -47,8 +47,8 @@ import com.sky.xposed.rimet.plugin.interfaces.XConfigManager;
 import com.sky.xposed.rimet.plugin.interfaces.XVersionManager;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -130,7 +130,7 @@ public class VersionManager implements XVersionManager {
     @Override
     public Set<String> getSupportVersion() {
 
-        Set<String> version = new HashSet<>();
+        Set<String> version = new LinkedHashSet<>();
         version.addAll(mInternalVersionManager.getSupportVersion());
         version.addAll(mCacheVersionManager.getSupportVersion());
 
