@@ -39,6 +39,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import de.robv.android.xposed.XposedHelpers;
 
@@ -352,8 +353,9 @@ public class DingDingHandler extends BaseHandler implements DingDingPlugin.Handl
 
             if (!TextUtils.isEmpty(latitude) && !TextUtils.isEmpty(longitude)) {
                 // 重新修改值
-                location.setLongitude(Double.parseDouble(longitude));
-                location.setLatitude(Double.parseDouble(latitude));
+                int number = new Random().nextInt(15 - 3 + 1) + 3;
+                location.setLongitude(Double.parseDouble(longitude) + Double.valueOf(number)/100000);
+                location.setLatitude(Double.parseDouble(latitude) + Double.valueOf(number)/100000);
             }
         }
     }
