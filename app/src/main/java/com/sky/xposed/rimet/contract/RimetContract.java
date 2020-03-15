@@ -16,9 +16,9 @@
 
 package com.sky.xposed.rimet.contract;
 
-import com.sky.xposed.rimet.base.BasePresenter;
-import com.sky.xposed.rimet.base.BaseView;
 import com.sky.xposed.rimet.data.model.UpdateModel;
+import com.sky.xposed.ui.base.BasePresenter;
+import com.sky.xposed.ui.base.BaseView;
 
 /**
  * Created by sky on 2019-05-28.

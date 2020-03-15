@@ -23,7 +23,6 @@ import com.sky.xposed.rimet.data.service.IServiceFactory;
 import com.sky.xposed.rimet.data.service.ServiceFactory;
 import com.sky.xposed.rimet.data.source.local.RimetLocalSource;
 import com.sky.xposed.rimet.data.source.remote.RimetRemoteSource;
-import com.sky.xposed.rimet.plugin.interfaces.XConfigManager;
 
 /**
  * Created by sky on 2019-05-27.
@@ -33,9 +32,9 @@ public class RepositoryFactory implements IRepositoryFactory {
     private IServiceFactory mServiceFactory;
     private IRimetCache mRimetCache;
 
-    public RepositoryFactory(XConfigManager xConfigManager, ICacheManager iCacheManager) {
+    public RepositoryFactory(ICacheManager iCacheManager) {
         mServiceFactory = new ServiceFactory();
-        mRimetCache = new RimetCache(xConfigManager, iCacheManager);
+        mRimetCache = new RimetCache(iCacheManager);
     }
 
     @Override

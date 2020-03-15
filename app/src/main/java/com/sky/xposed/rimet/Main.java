@@ -18,60 +18,100 @@ package com.sky.xposed.rimet;
 
 import android.app.Application;
 import android.content.Context;
-import android.text.TextUtils;
 
-import com.sky.xposed.common.util.Alog;
-import com.sky.xposed.javax.MethodHook;
+import com.sky.xposed.common.util.ToastUtil;
+import com.sky.xposed.core.adapter.CoreListenerAdapter;
+import com.sky.xposed.core.adapter.ThrowableAdapter;
+import com.sky.xposed.core.component.ComponentFactory;
+import com.sky.xposed.core.interfaces.XConfig;
+import com.sky.xposed.core.interfaces.XCoreManager;
+import com.sky.xposed.core.interfaces.XPlugin;
+import com.sky.xposed.core.internal.CoreManager;
 import com.sky.xposed.javax.XposedPlus;
 import com.sky.xposed.javax.XposedUtil;
-import com.sky.xposed.rimet.plugin.PluginManager;
-import com.sky.xposed.rimet.plugin.interfaces.XPluginManager;
+import com.sky.xposed.ui.util.CoreUtil;
+import com.sky.xposed.ui.util.DisplayUtil;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
+import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 /**
  * Created by sky on 2019/3/14.
  */
-public class Main implements IXposedHookLoadPackage, MethodHook.ThrowableCallback {
-
-    @Override
-    public void onThrowable(Throwable tr) {
-        Alog.e("Throwable", tr);
-    }
+public class Main implements IXposedHookLoadPackage {
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpParam) throws Throwable {
 
-        if (!Constant.Rimet.PACKAGE_NAME.equals(lpParam.packageName)) return;
+        if (!XConstant.Rimet.PACKAGE_NAME.equals(lpParam.packageName)) return;
 
-        // 设置默认的参数
+        // 初始化XposedPlus
         XposedPlus.setDefaultInstance(new XposedPlus.Builder(lpParam)
-                .throwableCallback(this)
+                .throwableCallback(new ThrowableAdapter())
                 .build());
 
-        // Hook
-        XposedUtil
-                .findMethod(
-                        "com.alibaba.android.dingtalkbase.multidexsupport.DDApplication",
-                        "onCreate")
-                .before(param -> {
+        XposedUtil.findMethod(
+                "com.alibaba.android.dingtalkbase.multidexsupport.DDApplication", "onCreate")
+                .before(param -> handleLoadPackage(param, lpParam));
+    }
 
-                    Application application = (Application) param.thisObject;
-                    Context context = application.getApplicationContext();
+    /**
+     * 处理加载的包
+     * @param param
+     * @param lpParam
+     * @throws Throwable
+     */
+    private void handleLoadPackage(
+            XC_MethodHook.MethodHookParam param,
+            XC_LoadPackage.LoadPackageParam lpParam) throws Throwable {
 
-                    if (TextUtils.equals(
-                            "com.alibaba.android.rimet.LauncherApplication",
-                            application.getClass().getName())) {
+        Application application = (Application) param.thisObject;
+        Context context = application.getApplicationContext();
 
-                        XPluginManager pluginManager = new PluginManager
-                                .Build(context)
-                                .setLoadPackageParam(lpParam)
-                                .build();
+        final String className = application.getClass().getName();
 
-                        // 开始处理加载的包
-                        pluginManager.handleLoadPackage();
+        if (!"com.alibaba.android.rimet.LauncherApplication".equals(className)) {
+            // 不需要处理
+            return;
+        }
+
+        XCoreManager coreManager = new CoreManager.Build(context)
+                .setPluginPackageName(BuildConfig.APPLICATION_ID)
+                .setProcessName(lpParam.processName)
+                .setClassLoader(lpParam.classLoader)
+                .setComponentFactory(new ComponentFactory() {
+                    @Override
+                    protected List<Class<? extends XConfig>> getVersionData() {
+                        return super.getVersionData();
                     }
-                });
+
+                    @Override
+                    protected List<Class<? extends XPlugin>> getPluginData() {
+                        return super.getPluginData();
+                    }
+                })
+                .setCoreListener(new CoreListenerAdapter() {
+
+                    @Override
+                    public void onInitComplete(XCoreManager coreManager) {
+                        super.onInitComplete(coreManager);
+
+                        final Context contextX = coreManager.getLoadPackage().getContext();
+
+                        // 初始化
+                        CoreUtil.init(coreManager);
+                        DisplayUtil.init(contextX);
+                        ToastUtil.getInstance().init(contextX);
+                        Picasso.setSingletonInstance(new Picasso.Builder(contextX).build());
+                    }
+                })
+                .build();
+
+        // 开始处理加载的包
+        coreManager.loadPlugins();
     }
 }

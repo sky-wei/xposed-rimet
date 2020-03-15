@@ -25,9 +25,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amap.api.services.core.PoiItem;
-import com.sky.xposed.common.ui.base.BaseListAdapter;
-import com.sky.xposed.common.ui.util.ViewUtil;
 import com.sky.xposed.rimet.R;
+import com.sky.xposed.ui.base.BaseListAdapter;
+import com.sky.xposed.ui.util.ViewUtil;
 
 /**
  * Created by sky on 2019/4/3.

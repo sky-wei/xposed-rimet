@@ -16,7 +16,7 @@
 
 package com.sky.xposed.rimet.data.service;
 
-import com.sky.xposed.rimet.Constant;
+import com.sky.xposed.rimet.XConstant;
 
 import java.util.concurrent.TimeUnit;
 
@@ -33,7 +33,7 @@ public class ServiceFactory implements IServiceFactory {
 
     @Override
     public <T> T createService(Class<T> tClass) {
-        return createRetrofit(createHttpClient(), Constant.Service.BASE_URL).create(tClass);
+        return createRetrofit(createHttpClient(), XConstant.Service.BASE_URL).create(tClass);
     }
 
     /**

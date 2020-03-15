@@ -23,22 +23,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.sky.xposed.common.ui.view.ItemMenu;
 import com.sky.xposed.common.util.PackageUtil;
-import com.sky.xposed.common.util.ToastUtil;
+import com.sky.xposed.core.interfaces.XVersionManager;
 import com.sky.xposed.rimet.BuildConfig;
-import com.sky.xposed.rimet.Constant;
 import com.sky.xposed.rimet.R;
-import com.sky.xposed.rimet.data.VersionManager;
-import com.sky.xposed.rimet.data.cache.ICacheManager;
-import com.sky.xposed.rimet.plugin.interfaces.XConfigManager;
-import com.sky.xposed.rimet.plugin.interfaces.XVersionManager;
-import com.sky.xposed.rimet.ui.dialog.DingDingDialog;
+import com.sky.xposed.rimet.XConstant;
 import com.sky.xposed.rimet.ui.dialog.LoveDialog;
+import com.sky.xposed.rimet.ui.dialog.SettingsDialog;
 import com.sky.xposed.rimet.ui.util.ActivityUtil;
 import com.sky.xposed.rimet.ui.util.DialogUtil;
-
-import java.util.Set;
+import com.sky.xposed.ui.util.CoreUtil;
+import com.sky.xposed.ui.view.ItemMenu;
 
 public class MainActivity extends Activity {
 
@@ -47,27 +42,20 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // 初始化
-        ToastUtil.getInstance().init(getApplicationContext());
-
         ItemMenu imVersion = findViewById(R.id.im_version);
         ItemMenu imDingVersion = findViewById(R.id.im_ding_version);
         TextView tvSupportVersion = findViewById(R.id.tv_support_version);
 
         imVersion.setDesc("v" + BuildConfig.VERSION_NAME);
-        imDingVersion.setDesc(getDingVersionName());
+        imDingVersion.setDesc(getVersionName(XConstant.Rimet.PACKAGE_NAME));
 
-        XVersionManager mVersionManager = new VersionManager
-                .Build(this)
-                .setConfigManager(mConfigManager)
-                .setCacheManager(mCacheManager)
-                .build();
+        XVersionManager versionManager = CoreUtil.getCoreManager().getVersionManager();
 
         StringBuilder builder = new StringBuilder();
         builder.append("配置入口: 钉钉->我的->设置->钉钉助手");
         builder.append("\n注: 只有Xposed功能生效,才会在设置中显示钉钉助手");
         builder.append("\n\n适配的版本: \n");
-        builder.append(mVersionManager.getSupportVersion());
+        builder.append(versionManager.getSupportVersion());
 
         tvSupportVersion.setText(builder.toString());
     }
@@ -86,7 +74,7 @@ public class MainActivity extends Activity {
 
         if (item.getItemId() == R.id.menu_settings) {
             // 显示
-            DingDingDialog dialog = new DingDingDialog();
+            SettingsDialog dialog = new SettingsDialog();
             dialog.show(getFragmentManager(), "setting");
             return true;
         }
@@ -120,106 +108,12 @@ public class MainActivity extends Activity {
         }
     }
 
-    private String getDingVersionName() {
+    private String getVersionName(String packageName) {
 
         // 获取版本名
         PackageUtil.SimplePackageInfo info = PackageUtil
-                .getSimplePackageInfo(this, Constant.Rimet.PACKAGE_NAME);
+                .getSimplePackageInfo(this, packageName);
 
         return info == null ? "Unknown" : "v" + info.getVersionName();
     }
-
-    private final XConfigManager mConfigManager = new XConfigManager() {
-        @Override
-        public String getString(int flag, String defValue) {
-            return null;
-        }
-
-        @Override
-        public boolean getBoolean(int flag, boolean defValue) {
-            return false;
-        }
-
-        @Override
-        public int getInt(int flag, int defValue) {
-            return 0;
-        }
-
-        @Override
-        public long getLong(int flag, long defValue) {
-            return 0;
-        }
-
-        @Override
-        public Set<String> getStringSet(int flag, Set<String> defValue) {
-            return null;
-        }
-
-        @Override
-        public void putString(int flag, String value) {
-
-        }
-
-        @Override
-        public void putBoolean(int flag, boolean value) {
-
-        }
-
-        @Override
-        public void putInt(int flag, int value) {
-
-        }
-
-        @Override
-        public void putLong(int flag, long value) {
-
-        }
-
-        @Override
-        public void putStringSet(int flag, Set<String> value) {
-
-        }
-
-        @Override
-        public XConfigManager getConfigManager(String name) {
-            return null;
-        }
-
-        @Override
-        public void release() {
-
-        }
-    };
-
-    private final ICacheManager mCacheManager = new ICacheManager() {
-        @Override
-        public String buildKey(String value) {
-            return null;
-        }
-
-        @Override
-        public <T> T get(String key, Class<T> tClass) {
-            return null;
-        }
-
-        @Override
-        public <T> void put(String key, T value) {
-
-        }
-
-        @Override
-        public void remove(String key) {
-
-        }
-
-        @Override
-        public void clear() {
-
-        }
-
-        @Override
-        public void close() {
-
-        }
-    };
 }

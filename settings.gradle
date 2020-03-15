@@ -1,3 +1,8 @@
 include ':app'
-include ':frame'
-include ':annotations'
+
+file('frame').eachDir { dir ->
+    if (dir.name != "app" && dir.name != "gradle") {
+        include dir.name
+        project(":${dir.name}").projectDir = dir
+    }
+}

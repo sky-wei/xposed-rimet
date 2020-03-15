@@ -1,0 +1,2 @@
+com.sky.xposed.core
+string app_name

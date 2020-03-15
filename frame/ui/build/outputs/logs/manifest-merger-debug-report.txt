@@ -1,0 +1,37 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml:1:1-2:35
+INJECTED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml:1:1-2:35
+INJECTED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml:1:1-2:35
+INJECTED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml:1:1-2:35
+INJECTED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml:1:1-2:35
+INJECTED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml:1:1-2:35
+INJECTED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml:1:1-2:35
+	package
+		ADDED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml:2:5-32
+		INJECTED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml
+		INJECTED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml
+	android:versionName
+		INJECTED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml
+		ADDED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml:1:1-2:35
+		INJECTED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml
+	android:versionCode
+		INJECTED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml
+		ADDED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml:1:1-2:35
+		INJECTED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml:1:11-69
+uses-sdk
+INJECTED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml
+INJECTED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml
+INJECTED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml
+INJECTED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml
+		ADDED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml
+		INJECTED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml
+		ADDED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml
+		INJECTED from /media/data/Work/SkyProject/xposed-rimet-github/frame/ui/src/main/AndroidManifest.xml

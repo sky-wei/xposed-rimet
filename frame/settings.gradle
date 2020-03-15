@@ -1,0 +1,6 @@
+rootProject.name='xposed-frame-github'
+include ':app'
+include ':annotations'
+include ':compiler'
+include ':core'
+include ':ui'

@@ -19,14 +19,14 @@ package com.sky.xposed.rimet.presenter;
 import android.annotation.SuppressLint;
 
 import com.sky.xposed.common.util.Alog;
+import com.sky.xposed.core.interfaces.XConfig;
+import com.sky.xposed.core.interfaces.XCoreManager;
+import com.sky.xposed.core.interfaces.XVersionManager;
 import com.sky.xposed.rimet.BuildConfig;
 import com.sky.xposed.rimet.contract.RimetContract;
 import com.sky.xposed.rimet.data.model.UpdateModel;
 import com.sky.xposed.rimet.data.model.VersionModel;
 import com.sky.xposed.rimet.data.source.IRimetSource;
-import com.sky.xposed.rimet.plugin.interfaces.XConfig;
-import com.sky.xposed.rimet.plugin.interfaces.XPluginManager;
-import com.sky.xposed.rimet.plugin.interfaces.XVersionManager;
 
 import java.util.Map;
 
@@ -41,11 +41,11 @@ public class RimetPresenter extends AbstractPresenter implements RimetContract.P
     private RimetContract.View mView;
     private XVersionManager mVersionManager;
 
-    public RimetPresenter(XPluginManager xPluginManager, RimetContract.View view) {
-        super(xPluginManager);
+    public RimetPresenter(XCoreManager coreManager, RimetContract.View view) {
+        super(coreManager);
         mView = view;
-        mVersionManager = getXPluginManager().getVersionManager();
-        mRimetSource = getRepositoryFactory().createRimetSource();
+        mVersionManager = getCoreManager().getVersionManager();
+//        mRimetSource = getRepositoryFactory().createRimetSource();
     }
 
     @SuppressLint("CheckResult")

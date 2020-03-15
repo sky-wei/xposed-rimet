@@ -16,15 +16,18 @@
 
 package com.sky.xposed.rimet.data.config;
 
+import com.sky.xposed.annotations.AConfig;
+import com.sky.xposed.core.base.AbstractConfig;
 import com.sky.xposed.rimet.data.M;
 
 /**
  * Created by sky on 2019/1/14.
  */
-public class RimetConfig5006 extends RimetConfig {
+@AConfig(versionName = "5.0.6")
+public class RimetConfig5006 extends AbstractConfig {
 
     @Override
-    public RimetConfig loadConfig() {
+    protected void onLoadConfig() {
 
         /** Class */
         add(M.classz.class_rimet_LauncherApplication, "com.alibaba.android.rimet.LauncherApplication");
@@ -74,7 +77,5 @@ public class RimetConfig5006 extends RimetConfig {
         add(M.res.res_iv_pick, "iv_pick");
         add(M.res.res_btn_pick, "btn_pick");
         add(M.res.res_setting_msg_notice, "setting_msg_notice");
-
-        return this;
     }
 }

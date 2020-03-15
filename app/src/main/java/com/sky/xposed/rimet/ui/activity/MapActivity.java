@@ -57,15 +57,15 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
-import com.sky.xposed.common.ui.util.ViewUtil;
 import com.sky.xposed.common.util.Alog;
+import com.sky.xposed.common.util.CollectionUtil;
 import com.sky.xposed.common.util.ToastUtil;
 import com.sky.xposed.rimet.R;
 import com.sky.xposed.rimet.ui.adapter.SearchResultAdapter;
 import com.sky.xposed.rimet.ui.util.DialogUtil;
 import com.sky.xposed.rimet.ui.util.MapUtil;
-import com.sky.xposed.rimet.ui.util.PermissionUtil;
-import com.sky.xposed.rimet.util.CollectionUtil;
+import com.sky.xposed.ui.util.PermissionUtil;
+import com.sky.xposed.ui.util.ViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;

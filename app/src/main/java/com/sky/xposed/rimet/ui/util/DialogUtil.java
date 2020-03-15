@@ -33,13 +33,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.sky.xposed.common.ui.util.LayoutUtil;
-import com.sky.xposed.common.ui.util.ViewUtil;
 import com.sky.xposed.common.util.Alog;
-import com.sky.xposed.common.util.DisplayUtil;
 import com.sky.xposed.common.util.ToastUtil;
 import com.sky.xposed.rimet.BuildConfig;
 import com.sky.xposed.rimet.R;
+import com.sky.xposed.ui.UIConstant;
+import com.sky.xposed.ui.util.DisplayUtil;
+import com.sky.xposed.ui.util.LayoutUtil;
+import com.sky.xposed.ui.util.ViewUtil;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -127,7 +128,7 @@ public class DialogUtil {
         editText.setSingleLine(true);
         editText.setFilters(new InputFilter[]{ new InputFilter.LengthFilter(10)});
         editText.setHint(contentHint);
-        ViewUtil.setInputType(editText, com.sky.xposed.common.Constant.InputType.TEXT);
+        ViewUtil.setInputType(editText, UIConstant.InputType.TEXT);
         frameLayout.addView(editText);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -162,7 +163,7 @@ public class DialogUtil {
         editText.setSingleLine(true);
         editText.setFilters(new InputFilter[]{ new InputFilter.LengthFilter(50)});
         editText.setHint("请输入搜索的关键字");
-        ViewUtil.setInputType(editText, com.sky.xposed.common.Constant.InputType.TEXT);
+        ViewUtil.setInputType(editText, UIConstant.InputType.TEXT);
         frameLayout.addView(editText);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);

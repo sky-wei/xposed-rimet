@@ -1,0 +1,19 @@
+com.sky.xposed.ui
+attr sky_itemMenuDesc
+attr sky_itemMenuLine
+attr sky_itemMenuName
+attr sky_itemMenuShowMore
+attr sky_itemMenuTextSize
+drawable ic_action_arrow_back
+drawable ic_action_check
+drawable ic_action_clear
+drawable ic_action_more_vert
+drawable ic_right_arrow
+drawable selector_item_menu
+id iv_arrow
+id tv_desc
+id tv_name
+id view_line
+layout customize_item_menu
+string app_name
+styleable ItemMenu sky_itemMenuDesc sky_itemMenuLine sky_itemMenuName sky_itemMenuShowMore sky_itemMenuTextSize

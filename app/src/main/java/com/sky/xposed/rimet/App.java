@@ -18,8 +18,14 @@ package com.sky.xposed.rimet;
 
 import android.app.Application;
 
-import com.sky.xposed.common.util.Alog;
 import com.sky.xposed.common.util.ToastUtil;
+import com.sky.xposed.core.adapter.CoreListenerAdapter;
+import com.sky.xposed.core.component.ComponentFactory;
+import com.sky.xposed.core.interfaces.XCoreManager;
+import com.sky.xposed.core.internal.CoreManager;
+import com.sky.xposed.ui.util.CoreUtil;
+import com.sky.xposed.ui.util.DisplayUtil;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by sky on 2019/3/26.
@@ -30,9 +36,18 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Alog.setDebug(BuildConfig.DEBUG);
+        XCoreManager coreManager = new CoreManager.Build(this)
+                .setProcessName(getPackageName())
+                .setClassLoader(getClassLoader())
+                .setPluginPackageName(getPackageName())
+                .setComponentFactory(new ComponentFactory())
+                .setCoreListener(new CoreListenerAdapter())
+                .build();
 
         // 初始化
-        ToastUtil.getInstance().init(getApplicationContext());
+        CoreUtil.init(coreManager);
+        DisplayUtil.init(this);
+        ToastUtil.getInstance().init(this);
+        Picasso.setSingletonInstance(new Picasso.Builder(this).build());
     }
 }
