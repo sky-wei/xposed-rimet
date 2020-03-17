@@ -1,3 +1,0 @@
-[submodule "frame"]
-	path = frame
-	url = git@github.com:sky-wei/xposed-frame.git
