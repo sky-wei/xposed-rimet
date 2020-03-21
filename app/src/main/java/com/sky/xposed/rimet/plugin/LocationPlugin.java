@@ -27,6 +27,7 @@ import com.sky.xposed.rimet.XConstant;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.Random;
 
 /**
  * Created by sky on 2020-03-01.
@@ -96,6 +97,7 @@ public class LocationPlugin extends AbstractPlugin {
     private final class AMapLocationListenerProxy implements InvocationHandler {
 
         private Object mListener;
+        private Random mRandom = new Random();
 
         private AMapLocationListenerProxy(Object listener) {
             mListener = listener;
@@ -123,8 +125,9 @@ public class LocationPlugin extends AbstractPlugin {
 
             if (!TextUtils.isEmpty(latitude) && !TextUtils.isEmpty(longitude)) {
                 // 重新修改值
-                location.setLongitude(Double.parseDouble(longitude));
-                location.setLatitude(Double.parseDouble(latitude));
+                int number = mRandom.nextInt(15 - 3 + 1) + 3;
+                location.setLongitude(Double.parseDouble(longitude) + Double.valueOf(number) / 100000);
+                location.setLatitude(Double.parseDouble(latitude) + Double.valueOf(number) / 100000);
             }
         }
     }

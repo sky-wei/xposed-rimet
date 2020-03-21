@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.sky.xposed.annotations.APlugin;
 import com.sky.xposed.common.util.ResourceUtil;
@@ -27,6 +28,9 @@ import com.sky.xposed.core.base.AbstractPlugin;
 import com.sky.xposed.core.interfaces.XCoreManager;
 import com.sky.xposed.rimet.BuildConfig;
 import com.sky.xposed.rimet.XConstant;
+import com.sky.xposed.rimet.ui.dialog.SettingsDialog;
+import com.sky.xposed.ui.util.DisplayUtil;
+import com.sky.xposed.ui.util.LayoutUtil;
 import com.sky.xposed.ui.view.SimpleItemView;
 
 /**
@@ -62,19 +66,32 @@ public class SettingsPlugin extends AbstractPlugin {
 
         final int index = viewGroup.indexOfChild(view);
 
-        SimpleItemView viewDing = new SimpleItemView(activity);
-        viewDing.getNameView().setTextSize(17);
-        viewDing.setName(XConstant.Name.TITLE);
-        viewDing.setExtend("v" + BuildConfig.VERSION_NAME);
-        viewDing.setOnClickListener(v -> {
+        LinearLayout linearLayout = new LinearLayout(activity);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+
+        SimpleItemView itemView = new SimpleItemView(activity);
+        itemView.setMinimumHeight(DisplayUtil.DIP_55);
+        itemView.getNameView().setTextSize(16);
+        itemView.setName("钉钉助手");
+        itemView.setExtend("v" + BuildConfig.VERSION_NAME);
+        itemView.setOnClickListener(v -> {
             // 打开设置
             openSettings(activity);
         });
-        viewGroup.addView(viewDing, index);
+        linearLayout.addView(itemView);
+
+        View lineView = new View(activity);
+        lineView.setBackgroundColor(0xFFEFEFEF);
+        linearLayout.addView(lineView, new LayoutUtil.Build()
+                .setHeight(2)
+                .linearParams());
+
+        viewGroup.addView(linearLayout, index);
     }
 
     private void openSettings(Activity activity) {
 
-
+        SettingsDialog dialog = new SettingsDialog();
+        dialog.show(activity);
     }
 }

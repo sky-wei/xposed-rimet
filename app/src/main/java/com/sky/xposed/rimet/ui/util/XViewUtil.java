@@ -105,9 +105,40 @@ public final class XViewUtil {
         return itemView;
     }
 
+    /**
+     * 创建一个分类的ItemView
+     * @param context
+     * @param name
+     * @return
+     */
     public static SortItemView newSortItemView(Context context, String name) {
 
+        int margin = DisplayUtil.DIP_5;
+
         SortItemView itemView = new SortItemView(context);
+        itemView.setLayoutParams(new LayoutUtil.Build()
+                .setBottomMargin(margin)
+                .setTopMargin(margin)
+                .linearParams());
+        itemView.setName(name);
+
+        return itemView;
+    }
+
+    /**
+     * 创建一个分类的ItemView
+     * @param context
+     * @param name
+     * @return
+     */
+    public static SortItemView newTopSortItemView(Context context, String name) {
+
+        int margin = DisplayUtil.DIP_5;
+
+        SortItemView itemView = new SortItemView(context);
+        itemView.setLayoutParams(new LayoutUtil.Build()
+                .setBottomMargin(margin)
+                .linearParams());
         itemView.setName(name);
 
         return itemView;

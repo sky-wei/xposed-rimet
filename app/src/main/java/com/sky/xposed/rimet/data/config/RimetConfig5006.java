@@ -32,9 +32,9 @@ public class RimetConfig5006 extends AbstractConfig {
         /** Class */
         add(M.classz.class_rimet_LauncherApplication, "com.alibaba.android.rimet.LauncherApplication");
         add(M.classz.class_dingtalkbase_multidexsupport_DDApplication, "com.alibaba.android.dingtalkbase.multidexsupport.DDApplication");
-        add(M.classz.class_defpackage_MessageDs, "mtg,mtg");        // MessageDs
+        add(M.classz.class_defpackage_MessageDs, "mtg");        // MessageDs
         add(M.classz.class_plugin_webwx_ui_ExtDeviceWXLoginUI, "com.tencent.mm.plugin.webwx.ui.ExtDeviceWXLoginUI");
-        add(M.classz.class_defpackage_ServiceFactory, "nrl,nrl");   // ServiceFactory
+        add(M.classz.class_defpackage_ServiceFactory, "nrl");   // ServiceFactory
         add(M.classz.class_android_dingtalk_redpackets_idl_service_RedEnvelopPickIService, "com.alibaba.android.dingtalk.redpackets.idl.service.RedEnvelopPickIService");
         add(M.classz.class_defpackage_RedPacketsRpc, "dft");    // RedPacketsRpc
         add(M.classz.class_defpackage_RedPacketsRpc_9, "dft$9");
@@ -46,21 +46,21 @@ public class RimetConfig5006 extends AbstractConfig {
 
         /** Method */
         add(M.method.method_dingtalkbase_multidexsupport_DDApplication_onCreate, "onCreate");
-        add(M.method.method_defpackage_MessageDs_handler, "a,a");  // INSERT,IGNORE,INSERT_FAIL
+        add(M.method.method_defpackage_MessageDs_handler, "a");  // INSERT,IGNORE,INSERT_FAIL
         add(M.method.method_android_dingtalkim_base_model_typeValue, "typeValue");
         add(M.method.method_wukong_im_message_MessageImpl_messageContent, "messageContent");
         add(M.method.method_wukong_im_message_MessageContentImpl_contents, "contents");
         add(M.method.method_defpackage_RedPacketsRpc_newInstance, "a");
-        add(M.method.method_defpackage_ServiceFactory_getService, "a,a");
+        add(M.method.method_defpackage_ServiceFactory_getService, "a");
         add(M.method.method_android_dingtalk_redpackets_idl_service_RedEnvelopPickIService_pickRedEnvelopCluster, "pickRedEnvelopCluster");
         add(M.method.method_lightapp_runtime_LightAppRuntimeReverseInterfaceImpl_initSecurityGuard, "initSecurityGuard");
         add(M.method.method_android_dingtalk_redpackets_activities_FestivalRedPacketsPickActivity_initView, "a");
         add(M.method.method_android_dingtalk_redpackets_activities_PickRedPacketsActivity_initView, "a");
         add(M.method.method_android_user_settings_activity_NewSettingActivity_onCreate, "onCreate");
-        add(M.method.method_defpackage_MessageDs_recall, "a,a");
+        add(M.method.method_defpackage_MessageDs_recall, "a");
         add(M.method.method_wukong_im_conversation_ConversationImpl_latestMessage, "latestMessage");
         add(M.method.method_wukong_im_base_IMDatabase_getWritableDatabase, "getWritableDatabase");
-        add(M.method.method_defpackage_MessageDs_update, "a,a");
+        add(M.method.method_defpackage_MessageDs_update, "a");
         add(M.method.method_wukong_im_message_MessageContentImpl_TextContentImpl_text, "text");
         add(M.method.method_wukong_im_message_MessageContentImpl_TextContentImpl_setText, "setText");
 

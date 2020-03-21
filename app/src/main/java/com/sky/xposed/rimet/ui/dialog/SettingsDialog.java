@@ -27,6 +27,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.sky.xposed.core.interfaces.XConfig;
+import com.sky.xposed.core.interfaces.XPreferences;
 import com.sky.xposed.rimet.BuildConfig;
 import com.sky.xposed.rimet.XConstant;
 import com.sky.xposed.rimet.ui.activity.MapActivity;
@@ -69,8 +70,9 @@ public class SettingsDialog extends BasePluginDialog {
 
         /*****************   红包   ****************/
 
-        XViewUtil.newSortItemView(getContext(), "红包")
+        XViewUtil.newTopSortItemView(getContext(), "红包")
                 .addToFrame(frameView);
+
 
         XViewUtil.newSwitchItemView(getContext(), "快速打开红包", "用户点击红包,程序自动打开红包")
                 .trackBind(XConstant.Key.ENABLE_FAST_LUCKY, Boolean.FALSE)
@@ -106,17 +108,12 @@ public class SettingsDialog extends BasePluginDialog {
 
         /*****************   虚拟定位   ****************/
 
-        XViewUtil.newSortItemView(getContext(), "虚拟定位")
+        XViewUtil.newSortItemView(getContext(), "打卡(Beta)")
                 .addToFrame(frameView);
-
-        GroupItemView locationGroup = new GroupItemView(getContext());
-        locationGroup.setVisibility(View.GONE);
 
         XViewUtil.newSwitchItemView(getContext(), "虚拟定位", "开启时会修改当前位置信息")
-                .trackBind(XConstant.Key.ENABLE_VIRTUAL_LOCATION, Boolean.FALSE, locationGroup)
+                .trackBind(XConstant.Key.ENABLE_VIRTUAL_LOCATION, Boolean.FALSE)
                 .addToFrame(frameView);
-
-        locationGroup.addToFrame(frameView);
 
         sivSettingsLocation = new EditTextItemView(getContext(), new UAttributeSet.Build()
                 .putInt(UIAttribute.EditTextItem.style, XEditItemView.Style.MULTI_LINE)
@@ -130,7 +127,7 @@ public class SettingsDialog extends BasePluginDialog {
             startActivityForResult(intent, 99);
         });
         sivSettingsLocation.trackBind(XConstant.Key.LOCATION_ADDRESS, "");
-        sivSettingsLocation.addToFrame(locationGroup);
+        sivSettingsLocation.addToFrame(frameView);
     }
 
     @Override
@@ -145,8 +142,7 @@ public class SettingsDialog extends BasePluginDialog {
 
         // 是否支持版本
         XConfig xConfig = getCoreManager().getVersionManager().getSupportConfig();
-        setPromptText("");
-//        setPromptText(xConfig != null ? "" : "不支持当前版本!");
+        setPromptText(xConfig != null ? "" : "不支持当前版本!");
     }
 
     @Override
@@ -181,11 +177,11 @@ public class SettingsDialog extends BasePluginDialog {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 99 && resultCode == Activity.RESULT_OK) {
-//            // 保存位置信息
-//            saveLocationInfo(
-//                    data.getStringExtra("address"),
-//                    data.getDoubleExtra("latitude", 0),
-//                    data.getDoubleExtra("longitude", 0));
+            // 保存位置信息
+            saveLocationInfo(
+                    data.getStringExtra("address"),
+                    data.getDoubleExtra("latitude", 0),
+                    data.getDoubleExtra("longitude", 0));
         }
     }
 
@@ -198,22 +194,20 @@ public class SettingsDialog extends BasePluginDialog {
         ViewUtil.setVisibility(tvPrompt, TextUtils.isEmpty(text) ? View.GONE : View.VISIBLE);
     }
 
-//    /**
-//     * 保存位置信息
-//     * @param address
-//     * @param latitude
-//     * @param longitude
-//     */
-//    private void saveLocationInfo(String address, double latitude, double longitude) {
-//
-//        getDefaultSharedPreferences()
-//                .edit()
-//                .putString(Integer.toString(XConstant.XFlag.ADDRESS), address)
-//                .putString(Integer.toString(XConstant.XFlag.LATITUDE), Double.toString(latitude))
-//                .putString(Integer.toString(XConstant.XFlag.LONGITUDE), Double.toString(longitude))
-//                .apply();
-//
-//        // 设置UI信息
-//        sivSettingsLocation.setExtend(address);
-//    }
+    /**
+     * 保存位置信息
+     * @param address
+     * @param latitude
+     * @param longitude
+     */
+    private void saveLocationInfo(String address, double latitude, double longitude) {
+
+        XPreferences preferences = getDefaultPreferences();
+        preferences.putString(XConstant.Key.LOCATION_ADDRESS, address);
+        preferences.putString(XConstant.Key.LOCATION_LATITUDE, Double.toString(latitude));
+        preferences.putString(XConstant.Key.LOCATION_LONGITUDE, Double.toString(longitude));
+
+        // 设置UI信息
+        sivSettingsLocation.setExtend(address);
+    }
 }

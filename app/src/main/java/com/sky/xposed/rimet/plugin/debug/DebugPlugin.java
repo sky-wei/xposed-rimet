@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sky.xposed.rimet.plugin;
+package com.sky.xposed.rimet.plugin.debug;
 
 import android.app.Activity;
 import android.content.ContentValues;
