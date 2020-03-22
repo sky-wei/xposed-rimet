@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 The sky Authors.
+ * Copyright (c) 2020 The sky Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package com.sky.xposed.rimet.ui.dialog;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -28,9 +27,8 @@ import android.widget.TextView;
 
 import com.sky.xposed.core.interfaces.XConfig;
 import com.sky.xposed.core.interfaces.XPreferences;
-import com.sky.xposed.rimet.BuildConfig;
 import com.sky.xposed.rimet.XConstant;
-import com.sky.xposed.rimet.ui.activity.MapActivity;
+import com.sky.xposed.rimet.data.model.LocationModel;
 import com.sky.xposed.rimet.ui.util.DialogUtil;
 import com.sky.xposed.rimet.ui.util.XViewUtil;
 import com.sky.xposed.ui.UIAttribute;
@@ -111,9 +109,14 @@ public class SettingsDialog extends BasePluginDialog {
         XViewUtil.newSortItemView(getContext(), "打卡(Beta)")
                 .addToFrame(frameView);
 
+        GroupItemView locationGroup = new GroupItemView(getContext());
+        locationGroup.setVisibility(View.GONE);
+
         XViewUtil.newSwitchItemView(getContext(), "虚拟定位", "开启时会修改当前位置信息")
-                .trackBind(XConstant.Key.ENABLE_VIRTUAL_LOCATION, Boolean.FALSE)
+                .trackBind(XConstant.Key.ENABLE_VIRTUAL_LOCATION, Boolean.FALSE, locationGroup)
                 .addToFrame(frameView);
+
+        locationGroup.addToFrame(frameView);
 
         sivSettingsLocation = new EditTextItemView(getContext(), new UAttributeSet.Build()
                 .putInt(UIAttribute.EditTextItem.style, XEditItemView.Style.MULTI_LINE)
@@ -121,13 +124,18 @@ public class SettingsDialog extends BasePluginDialog {
         sivSettingsLocation.setName("位置信息");
         sivSettingsLocation.setExtendHint("设置位置信息");
         sivSettingsLocation.setOnItemClickListener(view -> {
-            // 跳转到地图界面
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.setClassName(BuildConfig.APPLICATION_ID, MapActivity.class.getName());
-            startActivityForResult(intent, 99);
+
+            LocationDialog dialog = new LocationDialog();
+            dialog.show(getActivity(), (resultCode, data) -> {
+
+                if (Activity.RESULT_OK == resultCode) {
+                    // 保存选择的位置信息
+                    saveLocationInfo((LocationModel) data.getSerializable(XConstant.Key.DATA));
+                }
+            });
         });
         sivSettingsLocation.trackBind(XConstant.Key.LOCATION_ADDRESS, "");
-        sivSettingsLocation.addToFrame(frameView);
+        sivSettingsLocation.addToFrame(locationGroup);
     }
 
     @Override
@@ -172,19 +180,6 @@ public class SettingsDialog extends BasePluginDialog {
         return super.onMoreItemSelected(item);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == 99 && resultCode == Activity.RESULT_OK) {
-            // 保存位置信息
-            saveLocationInfo(
-                    data.getStringExtra("address"),
-                    data.getDoubleExtra("latitude", 0),
-                    data.getDoubleExtra("longitude", 0));
-        }
-    }
-
     /**
      * 设置提示消息
      * @param text
@@ -196,18 +191,18 @@ public class SettingsDialog extends BasePluginDialog {
 
     /**
      * 保存位置信息
-     * @param address
-     * @param latitude
-     * @param longitude
+     * @param model
      */
-    private void saveLocationInfo(String address, double latitude, double longitude) {
+    private void saveLocationInfo(LocationModel model) {
+
+        if (model == null) return;
 
         XPreferences preferences = getDefaultPreferences();
-        preferences.putString(XConstant.Key.LOCATION_ADDRESS, address);
-        preferences.putString(XConstant.Key.LOCATION_LATITUDE, Double.toString(latitude));
-        preferences.putString(XConstant.Key.LOCATION_LONGITUDE, Double.toString(longitude));
+        preferences.putString(XConstant.Key.LOCATION_ADDRESS, model.getAddress());
+        preferences.putString(XConstant.Key.LOCATION_LATITUDE, Double.toString(model.getLatitude()));
+        preferences.putString(XConstant.Key.LOCATION_LONGITUDE, Double.toString(model.getLongitude()));
 
         // 设置UI信息
-        sivSettingsLocation.setExtend(address);
+        sivSettingsLocation.setExtend(model.getAddress());
     }
 }

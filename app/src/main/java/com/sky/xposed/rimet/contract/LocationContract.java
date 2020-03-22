@@ -16,67 +16,54 @@
 
 package com.sky.xposed.rimet.contract;
 
-import com.sky.xposed.rimet.data.model.UpdateModel;
+import com.sky.xposed.rimet.data.model.LocationModel;
 import com.sky.xposed.ui.base.BasePresenter;
 import com.sky.xposed.ui.base.BaseView;
+
+import java.util.List;
 
 /**
  * Created by sky on 2019-05-28.
  */
-public interface RimetContract {
+public interface LocationContract {
 
     interface View extends BaseView {
 
         /**
-         * 提示用户更新
-         * @param model
+         * 成功
+         * @param models
          */
-        void onUpdate(UpdateModel model);
+        void onLoad(List<LocationModel> models);
 
         /**
-         * 更新失败
+         * 失败
          * @param msg
          */
-        void onUpdateFailed(String msg);
+        void onLoadFailed(String msg);
 
         /**
-         * 更新配置成功
+         * 成功
          */
-        void onUpdateConfigSucceed();
+        void onSaveSucceed();
 
         /**
-         * 更新配置失败
+         * 失败
          * @param msg
          */
-        void onUpdateConfigFailed(String msg);
-
-        /**
-         * 清除成功
-         */
-        void onClearConfigSucceed();
-
-        /**
-         * 清除失败
-         * @param msg
-         */
-        void onClearConfigFailed(String msg);
+        void onSaveFailed(String msg);
     }
 
     interface Presenter extends BasePresenter {
 
         /**
-         * 检测更新
+         * 加载
          */
-        void checkUpdate(boolean auto);
+        void load();
 
         /**
-         * 更新配置
+         * 保存
+         * @param models
          */
-        void updateConfig(boolean auto);
-
-        /**
-         * 清除配置
-         */
-        void clearConfig();
+        void save(List<LocationModel> models);
     }
 }

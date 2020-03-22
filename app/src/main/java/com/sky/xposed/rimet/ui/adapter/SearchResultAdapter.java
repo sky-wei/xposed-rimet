@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 The sky Authors.
+ * Copyright (c) 2020 The sky Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ public class SearchResultAdapter extends BaseListAdapter<PoiItem> {
         TextView tvSubTitle;
         ImageView ivCheck;
 
-        public SearchResultHolder(View view, BaseListAdapter<PoiItem> itemView) {
+        SearchResultHolder(View view, BaseListAdapter<PoiItem> itemView) {
             super(view, itemView);
         }
 
