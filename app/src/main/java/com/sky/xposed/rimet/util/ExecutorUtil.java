@@ -32,7 +32,7 @@ public final class ExecutorUtil {
         MESSAGE_EXECUTOR = Executors.newSingleThreadExecutor();
 
         // 后台的线程池(暂时写两个)
-        BACK_EXECUTOR = Executors.newScheduledThreadPool(2);
+        BACK_EXECUTOR = Executors.newScheduledThreadPool(3);
     }
 
     private ExecutorUtil() {

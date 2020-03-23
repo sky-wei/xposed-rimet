@@ -23,6 +23,7 @@ import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 
 import com.sky.xposed.common.util.Alog;
+import com.sky.xposed.common.util.MD5Util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -37,6 +38,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -429,5 +431,30 @@ public class FileUtil {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static String getFileMD5(File file) {
+        if (!file.exists() || !file.isFile()) {
+            return null;
+        }
+        MessageDigest digest;
+        FileInputStream in = null;
+        byte[] buffer = new byte[1024];
+        int len;
+        try {
+            digest = MessageDigest.getInstance("MD5");
+            in = new FileInputStream(file);
+            while ((len = in.read(buffer, 0, 1024)) != -1) {
+                digest.update(buffer, 0, len);
+            }
+        } catch (Exception e) {
+            Alog.e("获取md5异常", e);
+            return null;
+        } finally {
+            try {
+                if (in != null) in.close();
+            } catch (Exception ignored) {}
+        }
+        return MD5Util.bytesToHexString(digest.digest());
     }
 }

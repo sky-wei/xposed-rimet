@@ -45,7 +45,7 @@ public class LoveDialog extends BasePluginDialog {
 
         LinearLayout.LayoutParams params = LayoutUtil.newWrapLinearLayoutParams();
         params.leftMargin = DisplayUtil.dip2px(getContext(), 15);
-        params.topMargin = DisplayUtil.dip2px(getContext(), 5);
+        params.topMargin = DisplayUtil.dip2px(getContext(), 10);
         params.bottomMargin = DisplayUtil.dip2px(getContext(), 5);
 
         TextView tvTip = new TextView(getContext());
