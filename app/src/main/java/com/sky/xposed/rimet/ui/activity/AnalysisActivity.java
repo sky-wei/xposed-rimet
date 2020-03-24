@@ -16,12 +16,11 @@
 
 package com.sky.xposed.rimet.ui.activity;
 
-import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.text.method.ScrollingMovementMethod;
 import android.widget.TextView;
 
 import com.sky.xposed.common.util.ToastUtil;
@@ -31,6 +30,7 @@ import com.sky.xposed.rimet.task.AnalysisTask;
 import com.sky.xposed.rimet.util.ExecutorUtil;
 import com.sky.xposed.ui.dialog.LoadingDialog;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -47,55 +47,64 @@ public class AnalysisActivity extends Activity {
 
         setContentView(R.layout.activity_analysis);
 
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
+//        ActionBar actionBar = getActionBar();
+//        if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
 
         mTvOutInfo = findViewById(R.id.tv_out_info);
+        mTvOutInfo.setMovementMethod(ScrollingMovementMethod.getInstance());
 
         mLoadingDialog = new LoadingDialog(this);
         mLoadingDialog.setTip("处理中...");
-        mLoadingDialog.show();
 
         AnalysisTask task = new AnalysisTask(getApplicationContext());
-        task.setCompleteCallback(this::onResult);
-        task.setThrowableCallback(tr -> onError("加载信息失败!"));
+        task.setOnPreCallback(() -> mLoadingDialog.show());
+        task.setOnProgressCallback(text -> {
+            mTvOutInfo.append(text);
+            int offset= mTvOutInfo.getLineCount() * mTvOutInfo.getLineHeight();
+            if (offset > mTvOutInfo.getHeight()) {
+                mTvOutInfo.scrollTo(0, offset - mTvOutInfo.getHeight());
+            }
+        });
+        task.setCompleteCallback(this::onAnalysisResult);
+        task.setThrowableCallback(tr -> onAnalysisError("分析信息失败!"));
         task.executeOnExecutor(ExecutorUtil.getBackExecutor(), XConstant.Rimet.PACKAGE_NAME);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_analysis_menu, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.activity_analysis_menu, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//
+//        int itemId = item.getItemId();
+//
+//        if (android.R.id.home == itemId) {
+//            // 退出
+//            onBackPressed();
+//            return true;
+//        } else if (R.id.menu_ok == itemId) {
+//            // 确定
+//            returnChooseResult();
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int itemId = item.getItemId();
-
-        if (android.R.id.home == itemId) {
-            // 退出
-            onBackPressed();
-            return true;
-        } else if (R.id.menu_ok == itemId) {
-            // 确定
-            returnChooseResult();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void returnChooseResult() {
-
-
-    }
-
-    private void onResult(Map<Integer, String> result) {
+    private void onAnalysisResult(Map<Integer, String> result) {
         mLoadingDialog.dismiss();
+
+        Intent data = new Intent();
+        data.putExtra(XConstant.Key.DATA, (Serializable) result);
+
+        setResult(Activity.RESULT_OK, data);
+        finish();
     }
 
-    private void onError(String msg) {
-        mLoadingDialog.dismiss();
+    private void onAnalysisError(String msg) {
         ToastUtil.show(msg);
+        onAnalysisResult(null);
     }
 }

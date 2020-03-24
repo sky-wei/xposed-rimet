@@ -20,9 +20,9 @@ import android.location.Location;
 import android.text.TextUtils;
 
 import com.sky.xposed.annotations.APlugin;
-import com.sky.xposed.core.base.AbstractPlugin;
 import com.sky.xposed.core.interfaces.XCoreManager;
 import com.sky.xposed.rimet.XConstant;
+import com.sky.xposed.rimet.plugin.base.BaseDingPlugin;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -33,7 +33,7 @@ import java.util.Random;
  * Created by sky on 2020-03-01.
  */
 @APlugin()
-public class LocationPlugin extends AbstractPlugin {
+public class LocationPlugin extends BaseDingPlugin {
 
     public LocationPlugin(XCoreManager coreManager) {
         super(coreManager);

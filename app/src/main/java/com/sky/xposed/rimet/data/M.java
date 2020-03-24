@@ -25,6 +25,11 @@ public final class M {
 
     }
 
+    public static final class sky {
+
+        public static final int rimet_package_md5 = 0x00000001;
+    }
+
     public static final class classz {
 
         public static final int class_rimet_LauncherApplication = 0x1f000001;

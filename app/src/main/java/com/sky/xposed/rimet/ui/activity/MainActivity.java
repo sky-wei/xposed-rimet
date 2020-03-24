@@ -54,8 +54,8 @@ public class MainActivity extends Activity {
         StringBuilder builder = new StringBuilder();
         builder.append("配置入口: 钉钉->我的->设置->钉钉助手");
         builder.append("\n注: 只有Xposed功能生效,才会在设置中显示钉钉助手");
-        builder.append("\n\n适配的版本: \n");
-        builder.append(versionManager.getSupportVersion());
+//        builder.append("\n\n适配的版本: \n");
+//        builder.append(versionManager.getSupportVersion());
 
         tvSupportVersion.setText(builder.toString());
     }

@@ -17,18 +17,25 @@
 package com.sky.xposed.rimet.ui.dialog;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Process;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.sky.xposed.core.interfaces.XConfig;
+import com.sky.xposed.common.util.CollectionUtil;
 import com.sky.xposed.core.interfaces.XPreferences;
+import com.sky.xposed.rimet.BuildConfig;
 import com.sky.xposed.rimet.XConstant;
+import com.sky.xposed.rimet.data.M;
 import com.sky.xposed.rimet.data.model.LocationModel;
+import com.sky.xposed.rimet.ui.activity.AnalysisActivity;
+import com.sky.xposed.rimet.ui.activity.MainActivity;
+import com.sky.xposed.rimet.ui.util.ActivityUtil;
 import com.sky.xposed.rimet.ui.util.DialogUtil;
 import com.sky.xposed.rimet.ui.util.XViewUtil;
 import com.sky.xposed.ui.UIAttribute;
@@ -41,6 +48,8 @@ import com.sky.xposed.ui.view.EditTextItemView;
 import com.sky.xposed.ui.view.GroupItemView;
 import com.sky.xposed.ui.view.PluginFrameLayout;
 import com.sky.xposed.ui.view.XEditItemView;
+
+import java.util.Map;
 
 /**
  * Created by sky on 2019/3/13.
@@ -148,9 +157,19 @@ public class SettingsDialog extends BasePluginDialog {
         setTitle("钉钉助手");
         showMoreMenu();
 
+        tvPrompt.setOnClickListener(v -> {
+            // 进入分析界面
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.setClassName(BuildConfig.APPLICATION_ID, AnalysisActivity.class.getName());
+            startActivityForResult(intent, 99);
+        });
+
         // 是否支持版本
-        XConfig xConfig = getCoreManager().getVersionManager().getSupportConfig();
-        setPromptText(xConfig != null ? "" : "不支持当前版本!");
+        XPreferences preferences = getDefaultPreferences();
+        String cMd5 = preferences.getString(XConstant.Key.PACKAGE_MD5);
+        String aMd5 = preferences.getString(toHexString(M.sky.rimet_package_md5));
+
+        setPromptText(TextUtils.equals(cMd5, aMd5) ? "" : "不支持当前版本! 点击适配版本");
     }
 
     @Override
@@ -158,7 +177,8 @@ public class SettingsDialog extends BasePluginDialog {
         super.onCreateMoreMenu(menu);
 
         menu.add(0, 0, 0, "爱心公益");
-        menu.add(0, 1, 0, "关于");
+        menu.add(0, 1, 0, "助手");
+        menu.add(0, 2, 0, "关于");
     }
 
     @Override
@@ -171,6 +191,12 @@ public class SettingsDialog extends BasePluginDialog {
                 loveDialog.show(getFragmentManager(), "love");
                 return true;
             case 1:
+                // 打开助手界面
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.setClassName(BuildConfig.APPLICATION_ID, MainActivity.class.getName());
+                ActivityUtil.startActivity(getContext(), intent);
+                return true;
+            case 2:
                 // 打开关于界面
                 DialogUtil.showAboutDialog(getContext());
                 return true;
@@ -204,5 +230,40 @@ public class SettingsDialog extends BasePluginDialog {
 
         // 设置UI信息
         sivSettingsLocation.setExtend(model.getAddress());
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode != 99 || Activity.RESULT_OK != resultCode) return;
+
+        Map<Integer, String> map = (Map<Integer, String>) data.getSerializableExtra(XConstant.Key.DATA);
+
+        if (CollectionUtil.isEmpty(map) || map.size() < 4) {
+            showMessage("无法获取适配的版本信息!");
+            return;
+        }
+
+        // 保存信息
+        XPreferences preferences = getDefaultPreferences();
+        preferences.putString(toHexString(M.sky.rimet_package_md5), map.get(M.sky.rimet_package_md5));
+        preferences.putString(toHexString(M.classz.class_defpackage_MessageDs), map.get(M.classz.class_defpackage_MessageDs));
+        preferences.putString(toHexString(M.classz.class_defpackage_ServiceFactory), map.get(M.classz.class_defpackage_ServiceFactory));
+        preferences.putString(toHexString(M.classz.class_defpackage_RedPacketsRpc), map.get(M.classz.class_defpackage_RedPacketsRpc));
+        preferences.putString(toHexString(M.classz.class_defpackage_RedPacketsRpc_9), map.get(M.classz.class_defpackage_RedPacketsRpc) + "$9");
+
+        DialogUtil.showDialog(getContext(),
+                "提示", "\n适配成功! 重启即可生效,是否马上重启?", (dialog, which) -> {
+            getCoreManager().getLoadPackage().getHandler().postDelayed(() -> {
+                // 退出
+                Process.killProcess(Process.myPid());
+                System.exit(0);
+            }, 300);
+        });
+    }
+
+    private String toHexString(int key) {
+        return Integer.toHexString(key);
     }
 }

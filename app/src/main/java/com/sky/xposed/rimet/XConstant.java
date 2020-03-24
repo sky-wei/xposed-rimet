@@ -40,6 +40,8 @@ public interface XConstant {
 
         String DATA = "data";
 
+        String PACKAGE_MD5 = "package_md5";
+
         String ENABLE_VIRTUAL_LOCATION = "enable_virtual_location";
 
         String LOCATION_LATITUDE = "location_latitude";

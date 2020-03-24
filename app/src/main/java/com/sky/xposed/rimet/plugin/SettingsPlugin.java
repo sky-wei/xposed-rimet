@@ -24,10 +24,9 @@ import android.widget.LinearLayout;
 
 import com.sky.xposed.annotations.APlugin;
 import com.sky.xposed.common.util.ResourceUtil;
-import com.sky.xposed.core.base.AbstractPlugin;
 import com.sky.xposed.core.interfaces.XCoreManager;
 import com.sky.xposed.rimet.BuildConfig;
-import com.sky.xposed.rimet.XConstant;
+import com.sky.xposed.rimet.plugin.base.BaseDingPlugin;
 import com.sky.xposed.rimet.ui.dialog.SettingsDialog;
 import com.sky.xposed.ui.util.DisplayUtil;
 import com.sky.xposed.ui.util.LayoutUtil;
@@ -37,7 +36,7 @@ import com.sky.xposed.ui.view.SimpleItemView;
  * Created by sky on 2018/12/30.
  */
 @APlugin()
-public class SettingsPlugin extends AbstractPlugin {
+public class SettingsPlugin extends BaseDingPlugin {
 
     public SettingsPlugin(XCoreManager coreManager) {
         super(coreManager);

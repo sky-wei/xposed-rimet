@@ -46,6 +46,8 @@ public class RecallMsgPlugin extends MessagePlugin {
     @Override
     public void hook() {
 
+        if (!isOpenHook()) return;
+
         findMethod(
                 M.classz.class_defpackage_MessageDs,
                 M.method.method_defpackage_MessageDs_recall,

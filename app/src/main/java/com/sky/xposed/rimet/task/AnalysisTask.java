@@ -45,12 +45,15 @@ import dalvik.system.PathClassLoader;
 /**
  * Created by sky on 2020-03-22.
  */
-public class AnalysisTask extends AbstractTask<String, Void, Map<Integer, String>> {
+public class AnalysisTask extends AbstractTask<String, String, Map<Integer, String>> {
 
     @SuppressLint("StaticFieldLeak")
     private Context mContext;
     private ClassLoader mClassLoader;
     private Class mDatabaseClass;
+
+    private OnPreCallback mOnPreCallback;
+    private OnProgressCallback mOnProgressCallback;
 
     private Map<Integer, String> mStringMap = new HashMap<>();
 
@@ -58,17 +61,44 @@ public class AnalysisTask extends AbstractTask<String, Void, Map<Integer, String
         mContext = context;
     }
 
+    public OnPreCallback getOnPreCallback() {
+        return mOnPreCallback;
+    }
+
+    public void setOnPreCallback(OnPreCallback onPreCallback) {
+        mOnPreCallback = onPreCallback;
+    }
+
+    public OnProgressCallback getOnProgressCallback() {
+        return mOnProgressCallback;
+    }
+
+    public void setOnProgressCallback(OnProgressCallback onProgressCallback) {
+        mOnProgressCallback = onProgressCallback;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        onProgressUpdate("准备开始分析...");
+        if (mOnPreCallback != null) mOnPreCallback.onPreExecute();
+    }
+
+    @Override
+    protected void onProgressUpdate(String... values) {
+        super.onProgressUpdate(values);
+        if (mOnProgressCallback != null) mOnProgressCallback.onProgressUpdate(values[0]);
+    }
+
     @Override
     protected Map<Integer, String> onHandler(String... strings) throws Exception {
 
         if (strings == null || strings.length != 1 || TextUtils.isEmpty(strings[0])) {
+            publishProgress("参数异常!");
             return null;
         }
 
         String sourcePath = getSourcePath(strings[0]);
-        String md5Value = FileUtil.getFileMD5(new File(sourcePath));
-
-        Alog.d(">>>>>>>>>>>>>>>>>> " + sourcePath + " >> " + md5Value);
 
         long startTime = System.currentTimeMillis();
 
@@ -83,12 +113,17 @@ public class AnalysisTask extends AbstractTask<String, Void, Map<Integer, String
 
             if (mStringMap.size() >= 3) {
                 // 不需要处理了
-                Alog.d(">>>>>>>>>>>>>>> 不需要 处理了");
+                Alog.d(">>>>>>>>>>>>>>> 不需要处理了");
                 break;
             }
         }
 
+        // 保存当前MD5信息
+        mStringMap.put(M.sky.rimet_package_md5, FileUtil.getFileMD5(new File(sourcePath)));
+
+        publishProgress("分析完成!");
         Alog.d(">>>>>>>>>>>>>>>>>> " + (System.currentTimeMillis() - startTime));
+        publishProgress("总共耗时:" + (System.currentTimeMillis() - startTime) + "毫秒");
         return mStringMap;
     }
 
@@ -110,6 +145,8 @@ public class AnalysisTask extends AbstractTask<String, Void, Map<Integer, String
             // 不需要处理
             return;
         }
+
+        publishProgress("正在分析:" + tClass.getName() + "\n");
 
         Class superClass = tClass.getSuperclass();
 
@@ -206,5 +243,15 @@ public class AnalysisTask extends AbstractTask<String, Void, Map<Integer, String
             }
         }
         return classNames;
+    }
+
+    public interface OnPreCallback {
+
+        void onPreExecute();
+    }
+
+    public interface OnProgressCallback {
+
+        void onProgressUpdate(String text);
     }
 }

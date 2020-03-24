@@ -19,10 +19,10 @@ package com.sky.xposed.rimet.plugin;
 import android.content.Context;
 
 import com.sky.xposed.annotations.APlugin;
-import com.sky.xposed.core.base.AbstractPlugin;
 import com.sky.xposed.core.interfaces.XCoreManager;
 import com.sky.xposed.rimet.data.M;
 import com.sky.xposed.rimet.event.MessageEvent;
+import com.sky.xposed.rimet.plugin.base.BaseDingPlugin;
 
 import java.util.Collection;
 
@@ -30,7 +30,7 @@ import java.util.Collection;
  * Created by sky on 2019/3/14.
  */
 @APlugin
-public class DingDingPlugin extends AbstractPlugin {
+public class DingDingPlugin extends BaseDingPlugin {
 
     public DingDingPlugin(XCoreManager coreManager) {
         super(coreManager);
@@ -39,12 +39,13 @@ public class DingDingPlugin extends AbstractPlugin {
     @Override
     public void hook() {
 
+        if (!isOpenHook()) return;
+
         findMethod(
                 M.classz.class_lightapp_runtime_LightAppRuntimeReverseInterfaceImpl,
                 M.method.method_lightapp_runtime_LightAppRuntimeReverseInterfaceImpl_initSecurityGuard,
                 Context.class)
                 .before(param -> param.setResult(null));
-
 
         findMethod(
                 M.classz.class_defpackage_MessageDs,

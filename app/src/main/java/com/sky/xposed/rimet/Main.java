@@ -30,10 +30,12 @@ import com.sky.xposed.core.interfaces.XPlugin;
 import com.sky.xposed.core.internal.CoreManager;
 import com.sky.xposed.javax.XposedPlus;
 import com.sky.xposed.javax.XposedUtil;
+import com.sky.xposed.rimet.util.FileUtil;
 import com.sky.xposed.ui.util.CoreUtil;
 import com.sky.xposed.ui.util.DisplayUtil;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
@@ -101,13 +103,17 @@ public class Main implements IXposedHookLoadPackage {
                     public void onInitComplete(XCoreManager coreManager) {
                         super.onInitComplete(coreManager);
 
-                        final Context contextX = coreManager.getLoadPackage().getContext();
+                        final Context context = coreManager.getLoadPackage().getContext();
+
+                        // 保存当前版本MD5信息
+                        String md5 = FileUtil.getFileMD5(new File(context.getApplicationInfo().sourceDir));
+                        coreManager.getDefaultPreferences().putString(XConstant.Key.PACKAGE_MD5, md5);
 
                         // 初始化
                         CoreUtil.init(coreManager);
-                        DisplayUtil.init(contextX);
-                        ToastUtil.getInstance().init(contextX);
-                        Picasso.setSingletonInstance(new Picasso.Builder(contextX).build());
+                        DisplayUtil.init(context);
+                        ToastUtil.getInstance().init(context);
+                        Picasso.setSingletonInstance(new Picasso.Builder(context).build());
                     }
                 })
                 .build();
