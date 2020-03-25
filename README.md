@@ -5,7 +5,8 @@
 #### Xposed Module Repository
 [http://repo.xposed.info/module/com.sky.xposed.rimet](http://repo.xposed.info/module/com.sky.xposed.rimet)
 
-![](./screenshot/WechatIMG219.jpeg)
+![](./screenshot/device-2020-03-25-210922.jpg)
+![](./screenshot/device-2020-03-25-211336.jpg)
 
 ## License
 

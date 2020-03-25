@@ -204,7 +204,7 @@ public class DialogUtil {
             TextView tvTail = new TextView(context);
             tvTail.setTextColor(Color.BLACK);
             tvTail.setTextSize(14f);
-            tvTail.setText(Html.fromHtml("<br/>获取更多信息,请关注微信公众号:"));
+            tvTail.setText(Html.fromHtml("<br/>别让懒成为上班迟到的借口<br/>还年轻的我们应当更加努力 <br/><br/>获取更多信息,请关注微信公众号:"));
 //            tvTail.setOnClickListener(v -> copyToClipboard(context, "808328957"));
 
             content.addView(tvHead);

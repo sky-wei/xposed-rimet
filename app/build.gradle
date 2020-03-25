@@ -22,8 +22,8 @@ android {
         applicationId "com.sky.xposed.rimet"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 25
-        versionName "1.3.5"
+        versionCode 26
+        versionName "1.4.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi-v7a"//, "arm64-v8a", "x86","arm64-v8a","x86_64"
@@ -48,7 +48,7 @@ android {
                     outputFileName = "${project.name}_${variant.flavorName}_v${variant.versionName}.apk"
                 }
             }
-            minifyEnabled true
+            minifyEnabled true // 已开源
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.sky
         }

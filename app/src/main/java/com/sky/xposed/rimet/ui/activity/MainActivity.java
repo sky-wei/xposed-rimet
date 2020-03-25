@@ -24,7 +24,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.sky.xposed.common.util.PackageUtil;
-import com.sky.xposed.core.interfaces.XVersionManager;
 import com.sky.xposed.rimet.BuildConfig;
 import com.sky.xposed.rimet.R;
 import com.sky.xposed.rimet.XConstant;
@@ -32,7 +31,6 @@ import com.sky.xposed.rimet.ui.dialog.LoveDialog;
 import com.sky.xposed.rimet.ui.dialog.SettingsDialog;
 import com.sky.xposed.rimet.ui.util.ActivityUtil;
 import com.sky.xposed.rimet.ui.util.DialogUtil;
-import com.sky.xposed.ui.util.CoreUtil;
 import com.sky.xposed.ui.view.ItemMenu;
 
 public class MainActivity extends Activity {
@@ -49,12 +47,12 @@ public class MainActivity extends Activity {
         imVersion.setDesc("v" + BuildConfig.VERSION_NAME);
         imDingVersion.setDesc(getVersionName(XConstant.Rimet.PACKAGE_NAME));
 
-        XVersionManager versionManager = CoreUtil.getCoreManager().getVersionManager();
+//        XVersionManager versionManager = CoreUtil.getCoreManager().getVersionManager();
 
         StringBuilder builder = new StringBuilder();
         builder.append("配置入口: 钉钉->我的->设置->钉钉助手");
         builder.append("\n注: 只有Xposed功能生效,才会在设置中显示钉钉助手");
-//        builder.append("\n\n适配的版本: \n");
+        builder.append("\n\n适配的版本: \n当出现版本不适配时,根据助手中的提示可以自动适配\n");
 //        builder.append(versionManager.getSupportVersion());
 
         tvSupportVersion.setText(builder.toString());
