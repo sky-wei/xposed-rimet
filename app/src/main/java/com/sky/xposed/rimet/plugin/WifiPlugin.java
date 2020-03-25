@@ -16,9 +16,27 @@
 
 package com.sky.xposed.rimet.plugin;
 
+import android.net.wifi.ScanResult;
+import android.net.wifi.SupplicantState;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.text.TextUtils;
+
+import com.google.gson.reflect.TypeToken;
 import com.sky.xposed.annotations.APlugin;
+import com.sky.xposed.common.util.Alog;
+import com.sky.xposed.common.util.CollectionUtil;
 import com.sky.xposed.core.interfaces.XCoreManager;
+import com.sky.xposed.rimet.XConstant;
+import com.sky.xposed.rimet.data.model.WifiModel;
 import com.sky.xposed.rimet.plugin.base.BaseDingPlugin;
+import com.sky.xposed.rimet.util.GsonUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedHelpers;
 
 /**
  * Created by sky on 2020/3/25.
@@ -33,96 +51,94 @@ public class WifiPlugin extends BaseDingPlugin {
     @Override
     public void hook() {
 
-//        XposedHelpers.findAndHookMethod(android.net.wifi.WifiManager.class, "isWifiEnabled", new XC_MethodHook() {
-//                    @Override
-//                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-//                        param.setResult(true);
-//                        XposedBridge.log("DingTalkHelper：模拟 wifi开启");
-//                    }
-//                }
-//        );
-//
-//        XposedHelpers.findAndHookMethod(android.net.wifi.WifiManager.class, "getScanResults", new XC_MethodHook() {
-//            @Override
-//            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-//                super.afterHookedMethod(param);
-//                try {
-//                    Context context = myContext;
-//                    final SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.Name.RIMET, Context.MODE_PRIVATE);
-//                    boolean enbaleWifi = sharedPreferences.getBoolean(Integer.toString(Constant.XFlag.ENABLE_WIFI), false);
-//                    String wifiData = sharedPreferences.getString(Integer.toString(Constant.XFlag.WIFIDATA), "{}");
-//                    if (enbaleWifi && null != wifiData) {
-//                        JSONObject object = new JSONObject(wifiData);
-//                        if (object.length() > 0 && object.has("scanResults")) {
-//                            JSONArray scanResultsArray = object.getJSONArray("scanResults");
-//                            List<ScanResult> wifiList = new ArrayList<>();
-//                            for (int i = 0; i < scanResultsArray.length(); i++) {
-//                                try {
-//                                    ScanResult scanResult = ScanResult.class.newInstance();
-//                                    scanResult.SSID = scanResultsArray.getJSONObject(i).getString("ssid");
-//                                    scanResult.BSSID = scanResultsArray.getJSONObject(i).getString("bssid");
-//                                    ;
-//                                    wifiList.add(scanResult);
-//                                } catch (Exception ex) {
-//                                    XposedBridge.log(ex.getCause());
-//                                }
-//
-//                            }
-//                            XposedBridge.log("DingTalkHelper：模拟了" + wifiList.size() + "个WIFI信息");
-//                            param.setResult(wifiList);
-//                        }
-//                    }
-//                } catch (Exception ex) {
-//                    XposedBridge.log("DingTalkHelper：" + "hook wifi fail！" + ex.getMessage());
-//                }
-//            }
-//        });
-//
-//        XposedHelpers.findAndHookMethod(android.net.wifi.WifiManager.class, "getConnectionInfo", new XC_MethodHook() {
-//            @Override
-//            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-//                super.afterHookedMethod(param);
-//                try {
-//                    XposedBridge.log("DingTalkHelperaaaa：1");
-//                    Context context = myContext;
-//                    final SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.Name.RIMET, Context.MODE_PRIVATE);
-//                    boolean enbaleWifi = sharedPreferences.getBoolean(Integer.toString(Constant.XFlag.ENABLE_WIFI), false);
-//                    boolean enbaleWifiCurrent = sharedPreferences.getBoolean(Integer.toString(Constant.XFlag.ENABLE_WIFI_CURRENT), false);
-//                    String wifiData = sharedPreferences.getString(Integer.toString(Constant.XFlag.WIFIDATA), "{}");
-//                    XposedBridge.log("DingTalkHelper：读取wifi配置信息:" + wifiData);
-//                    if (enbaleWifi && enbaleWifiCurrent && null != wifiData) {
-//                        JSONObject object = new JSONObject(wifiData);
-//                        if (object.length() > 0 && object.has("connectionInfo")) {
-//                            JSONObject connectionInfo = object.getJSONObject("connectionInfo");
-//                            WifiInfo wifiInfo = (WifiInfo) XposedHelpers.newInstance(WifiInfo.class);
-//                            XposedHelpers.setIntField((Object) wifiInfo, "mNetworkId", 68); // MAX_RSSI
-//                            XposedHelpers.setObjectField((Object) wifiInfo, "mSupplicantState", SupplicantState.COMPLETED);
-//                            XposedHelpers.setObjectField((Object) wifiInfo, "mBSSID", connectionInfo.getString("bssid"));
-//                            XposedHelpers.setObjectField((Object) wifiInfo, "mMacAddress", connectionInfo.getString("mac"));
-////                            InetAddress ipAddress = (InetAddress) XposedHelpers.newInstance(InetAddress.class);
-////                            XposedHelpers.setObjectField((Object) wifiInfo, "mIpAddress", "192.168.3.102");
-//                            XposedHelpers.setIntField((Object) wifiInfo, "mLinkSpeed", 433);  // Mbps
-//                            XposedHelpers.setIntField((Object) wifiInfo, "mFrequency", 5785); // MHz
-//                            XposedHelpers.setIntField((Object) wifiInfo, "mRssi", -49); // MAX_RSSI
-//                            try {
-//                                Class cls = XposedHelpers.findClass("android.net.wifi.WifiSsid", myContext.getClassLoader());
-//                                Object wifissid = XposedHelpers.callStaticMethod(cls, "createFromAsciiEncoded", connectionInfo.getString("ssid"));
-//                                XposedHelpers.setObjectField((Object) wifiInfo, "mWifiSsid", wifissid);
-//                            } // Kitkat
-//                            catch (Error e) {
-//                                XposedHelpers.setObjectField((Object) wifiInfo, "mSSID", connectionInfo.getString("ssid"));
-//                            }
-//                            XposedBridge.log("DingTalkHelper：模拟了已连接wifi:" + connectionInfo.getString("ssid"));
-//                            param.setResult(wifiInfo);
-//                        } else {
-//                            XposedBridge.log("DingTalkHelper：未采集 已连接wifi信息");
-//
-//                        }
-//                    }
-//                } catch (Exception ex) {
-//                    XposedBridge.log("DingTalkHelper：" + "hook wifi connect fail！" + ex.getMessage());
-//                }
-//            }
-//        });
+        findMethod(WifiManager.class, "isWifiEnabled")
+                .before(param -> {
+                    if (isEnable(XConstant.Key.ENABLE_VIRTUAL_WIFI)) {
+                        // 只在虚拟Wifi开启才处理
+                        param.setResult(true);
+                    }
+                });
+
+        findMethod(WifiManager.class, "getScanResults")
+                .before(this::handlerGetScanResults);
+
+        findMethod(WifiManager.class, "getConnectionInfo")
+                .before(this::handlerGetConnectionInfo);
+    }
+
+    private void handlerGetScanResults(XC_MethodHook.MethodHookParam param) throws Exception {
+
+        if (!isEnable(XConstant.Key.ENABLE_VIRTUAL_WIFI)) {
+            // 没有启用不需要处理
+            return;
+        }
+
+        String value = getPString(XConstant.Key.WIFI_SCAN_RESULT, "");
+
+        if (TextUtils.isEmpty(value)) {
+            // 不需要处理
+            return;
+        }
+
+        // 获取当前保存的记录信息
+        List<WifiModel.ScanResult> list = GsonUtil.fromJson(value,
+                new TypeToken<List<WifiModel.ScanResult>>() {}.getType());
+
+        if (CollectionUtil.isEmpty(list)) {
+            // 不需要处理
+            return;
+        }
+
+        List<ScanResult> scanResults = new ArrayList<>();
+
+        for (WifiModel.ScanResult result : list) {
+
+            ScanResult scanResult = ScanResult.class.newInstance();
+            scanResult.SSID = result.getSsId();
+            scanResult.BSSID = result.getBssId();
+
+            scanResults.add(scanResult);
+        }
+
+        param.setResult(scanResults);
+
+        Alog.d(">>>>>>>>>>>>>>> 设置ScanResults " + scanResults);
+    }
+
+    private void handlerGetConnectionInfo(XC_MethodHook.MethodHookParam param) {
+
+        if (!isEnable(XConstant.Key.ENABLE_VIRTUAL_WIFI)) {
+            // 没有启用不需要处理
+            return;
+        }
+
+        int state = getPInt(XConstant.Key.WIFI_STATE, -99);
+
+        if (state == -99) {
+            // 暂未获取信息
+            return;
+        }
+
+        String ssId = getPString(XConstant.Key.WIFI_SS_ID);
+        String bssId = getPString(XConstant.Key.WIFI_BSS_ID);
+        String macAddress = getPString(XConstant.Key.WIFI_MAC_ADDRESS);
+
+        WifiInfo wifiInfo = (WifiInfo) XposedHelpers.newInstance(WifiInfo.class);
+
+        XposedHelpers.setIntField(wifiInfo, "mNetworkId", 68); // MAX_RSSI
+        XposedHelpers.setObjectField(wifiInfo, "mSupplicantState", SupplicantState.COMPLETED);
+        XposedHelpers.setObjectField(wifiInfo, "mBSSID", bssId);
+        XposedHelpers.setObjectField(wifiInfo, "mMacAddress", macAddress);
+        XposedHelpers.setIntField(wifiInfo, "mLinkSpeed", 433);  // Mbps
+        XposedHelpers.setIntField(wifiInfo, "mFrequency", 5785); // MHz
+        XposedHelpers.setIntField(wifiInfo, "mRssi", -49); // MAX_RSSI
+
+        Class tClass = findClass("android.net.wifi.WifiSsid");
+        Object wifiSsId = XposedHelpers.callStaticMethod(tClass, "createFromAsciiEncoded", ssId);
+        XposedHelpers.setObjectField(wifiInfo, "mWifiSsid", wifiSsId);
+
+        param.setResult(wifiInfo);
+
+        Alog.d(">>>>>>>>>>>>>>> 设置ConnectionInfo " + wifiInfo);
     }
 }
