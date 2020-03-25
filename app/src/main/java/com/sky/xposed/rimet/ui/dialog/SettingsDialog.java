@@ -33,11 +33,14 @@ import com.sky.xposed.rimet.BuildConfig;
 import com.sky.xposed.rimet.XConstant;
 import com.sky.xposed.rimet.data.M;
 import com.sky.xposed.rimet.data.model.LocationModel;
+import com.sky.xposed.rimet.data.model.StationModel;
+import com.sky.xposed.rimet.data.model.WifiModel;
 import com.sky.xposed.rimet.ui.activity.AnalysisActivity;
 import com.sky.xposed.rimet.ui.activity.MainActivity;
 import com.sky.xposed.rimet.ui.util.ActivityUtil;
 import com.sky.xposed.rimet.ui.util.DialogUtil;
 import com.sky.xposed.rimet.ui.util.XViewUtil;
+import com.sky.xposed.rimet.util.GsonUtil;
 import com.sky.xposed.ui.UIAttribute;
 import com.sky.xposed.ui.base.BasePluginDialog;
 import com.sky.xposed.ui.info.UAttributeSet;
@@ -58,6 +61,10 @@ public class SettingsDialog extends BasePluginDialog {
 
     private TextView tvPrompt;
     private EditTextItemView sivSettingsLocation;
+    private EditTextItemView sivSettingsWifi;
+    private EditTextItemView sivSettingsStation;
+
+    private XPreferences mPreferences;
 
     @Override
     public void createView(PluginFrameLayout frameView) {
@@ -113,10 +120,10 @@ public class SettingsDialog extends BasePluginDialog {
                 .addToFrame(frameView);
 
 
-        /*****************   虚拟定位   ****************/
-
         XViewUtil.newSortItemView(getContext(), "打卡(Beta)")
                 .addToFrame(frameView);
+
+        /*****************   虚拟定位   ****************/
 
         GroupItemView locationGroup = new GroupItemView(getContext());
         locationGroup.setVisibility(View.GONE);
@@ -145,11 +152,87 @@ public class SettingsDialog extends BasePluginDialog {
         });
         sivSettingsLocation.trackBind(XConstant.Key.LOCATION_ADDRESS, "");
         sivSettingsLocation.addToFrame(locationGroup);
+
+        /*****************   Wifi   ****************/
+
+        GroupItemView wifiGroup = new GroupItemView(getContext());
+        wifiGroup.setVisibility(View.GONE);
+
+        XViewUtil.newSwitchItemView(getContext(), "虚拟Wifi", "开启时会修改当前Wifi信息")
+                .trackBind(XConstant.Key.ENABLE_VIRTUAL_WIFI, Boolean.FALSE, wifiGroup)
+                .addToFrame(frameView);
+
+        wifiGroup.addToFrame(frameView);
+
+        sivSettingsWifi = new EditTextItemView(getContext(), new UAttributeSet.Build()
+                .putInt(UIAttribute.EditTextItem.style, XEditItemView.Style.MULTI_LINE)
+                .build());
+        sivSettingsWifi.setName("Wifi信息");
+        sivSettingsWifi.setExtendHint("设置Wifi信息");
+        sivSettingsWifi.setOnItemClickListener(view -> {
+
+            // 记录最后的结果,并关闭当前开关(自己获取信息不需要Hook)
+            final boolean lastValue =
+                    mPreferences.getBoolean(XConstant.Key.ENABLE_VIRTUAL_WIFI);
+            mPreferences.putBoolean(XConstant.Key.ENABLE_VIRTUAL_WIFI, false);
+
+            WifiDialog dialog = new WifiDialog();
+            dialog.show(getActivity(), (resultCode, data) -> {
+
+                mPreferences.putBoolean(XConstant.Key.ENABLE_VIRTUAL_WIFI, lastValue);
+
+                if (Activity.RESULT_OK == resultCode) {
+                    // 保存选择的位置信息
+                    saveWifiInfo((WifiModel) data.getSerializable(XConstant.Key.DATA));
+                }
+            });
+        });
+        sivSettingsWifi.trackBind(XConstant.Key.WIFI_INFO, "");
+        sivSettingsWifi.addToFrame(wifiGroup);
+
+        /*****************   基站   ****************/
+
+        GroupItemView stationGroup = new GroupItemView(getContext());
+        stationGroup.setVisibility(View.GONE);
+
+        XViewUtil.newSwitchItemView(getContext(), "虚拟基站", "开启时会修改当前基站信息")
+                .trackBind(XConstant.Key.ENABLE_VIRTUAL_STATION, Boolean.FALSE, stationGroup)
+                .addToFrame(frameView);
+
+        stationGroup.addToFrame(frameView);
+
+        sivSettingsStation = new EditTextItemView(getContext(), new UAttributeSet.Build()
+                .putInt(UIAttribute.EditTextItem.style, XEditItemView.Style.MULTI_LINE)
+                .build());
+        sivSettingsStation.setName("基站信息");
+        sivSettingsStation.setExtendHint("设置基站信息");
+        sivSettingsStation.setOnItemClickListener(view -> {
+
+            // 记录最后的结果,并关闭当前开关(自己获取信息不需要Hook)
+            final boolean lastValue =
+                    mPreferences.getBoolean(XConstant.Key.ENABLE_VIRTUAL_STATION);
+            mPreferences.putBoolean(XConstant.Key.ENABLE_VIRTUAL_STATION, false);
+
+            StationDialog dialog = new StationDialog();
+            dialog.show(getActivity(), (resultCode, data) -> {
+
+                mPreferences.putBoolean(XConstant.Key.ENABLE_VIRTUAL_STATION, lastValue);
+
+                if (Activity.RESULT_OK == resultCode) {
+                    // 保存选择的位置信息
+                    saveStationInfo((StationModel) data.getSerializable(XConstant.Key.DATA));
+                }
+            });
+        });
+        sivSettingsStation.trackBind(XConstant.Key.STATION_INFO, "");
+        sivSettingsStation.addToFrame(stationGroup);
     }
 
     @Override
     protected void initView(View view, Bundle args) {
         super.initView(view, args);
+
+        mPreferences = getDefaultPreferences();
 
         getTitleView().setElevation(DisplayUtil.DIP_4);
 
@@ -165,11 +248,10 @@ public class SettingsDialog extends BasePluginDialog {
         });
 
         // 是否支持版本
-        XPreferences preferences = getDefaultPreferences();
-        String cMd5 = preferences.getString(XConstant.Key.PACKAGE_MD5);
-        String aMd5 = preferences.getString(toHexString(M.sky.rimet_package_md5));
+        String cMd5 = mPreferences.getString(XConstant.Key.PACKAGE_MD5);
+        String aMd5 = mPreferences.getString(toHexString(M.sky.rimet_package_md5));
 
-        setPromptText(TextUtils.equals(cMd5, aMd5) ? "" : "不支持当前版本! 点击适配版本");
+        setPromptText(TextUtils.equals(cMd5, aMd5) ? "" : "不支持当前版本! 点击去适配");
     }
 
     @Override
@@ -223,13 +305,50 @@ public class SettingsDialog extends BasePluginDialog {
 
         if (model == null) return;
 
-        XPreferences preferences = getDefaultPreferences();
-        preferences.putString(XConstant.Key.LOCATION_ADDRESS, model.getAddress());
-        preferences.putString(XConstant.Key.LOCATION_LATITUDE, Double.toString(model.getLatitude()));
-        preferences.putString(XConstant.Key.LOCATION_LONGITUDE, Double.toString(model.getLongitude()));
+        mPreferences.putString(XConstant.Key.LOCATION_ADDRESS, model.getAddress());
+        mPreferences.putString(XConstant.Key.LOCATION_LATITUDE, Double.toString(model.getLatitude()));
+        mPreferences.putString(XConstant.Key.LOCATION_LONGITUDE, Double.toString(model.getLongitude()));
 
         // 设置UI信息
         sivSettingsLocation.setExtend(model.getAddress());
+    }
+
+    /**
+     * 保存基站信息
+     * @param model
+     */
+    private void saveStationInfo(StationModel model) {
+
+        if (model == null) return;
+
+        mPreferences.putString(XConstant.Key.STATION_INFO, model.getDesc());
+        mPreferences.putInt(XConstant.Key.STATION_MCC, model.getMcc());
+        mPreferences.putInt(XConstant.Key.STATION_MNC, model.getMnc());
+        mPreferences.putInt(XConstant.Key.STATION_LAC, model.getLac());
+        mPreferences.putInt(XConstant.Key.STATION_CELL_ID, model.getCellId());
+
+        // 设置UI信息
+        sivSettingsStation.setExtend(model.getDesc());
+    }
+
+    /**
+     * 保存Wifi信息
+     * @param model
+     */
+    private void saveWifiInfo(WifiModel model) {
+
+        if (model == null) return;
+
+        mPreferences.putString(XConstant.Key.WIFI_INFO, model.getDesc());
+        mPreferences.putBoolean(XConstant.Key.WIFI_ENABLED, model.isEnabled());
+        mPreferences.putInt(XConstant.Key.WIFI_STATE, model.getState());
+        mPreferences.putString(XConstant.Key.WIFI_SS_ID, model.getSsId());
+        mPreferences.putString(XConstant.Key.WIFI_BSS_ID, model.getBssId());
+        mPreferences.putString(XConstant.Key.WIFI_MAC_ADDRESS, model.getMacAddress());
+        mPreferences.putString(XConstant.Key.WIFI_SCAN_RESULT, GsonUtil.toJson(model.getScanResults()));
+
+        // 设置UI信息
+        sivSettingsWifi.setExtend(model.getDesc());
     }
 
     @Override
