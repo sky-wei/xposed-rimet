@@ -45,6 +45,7 @@ allprojects {
     repositories {
         google()
         maven { url 'https://jitpack.io' }
+        maven { url 'https://dl.bintray.com/sky-wei/maven' }
         jcenter()
     }
 }

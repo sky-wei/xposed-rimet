@@ -1,8 +1,1 @@
 include ':app'
-
-file('frame').eachDir { dir ->
-    if (dir.name != "app" && dir.name != "gradle") {
-        include dir.name
-        project(":${dir.name}").projectDir = dir
-    }
-}
