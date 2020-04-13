@@ -25,9 +25,7 @@ import android.text.TextUtils;
 import com.sky.xposed.common.util.Alog;
 import com.sky.xposed.common.util.ClassUtil;
 import com.sky.xposed.rimet.data.M;
-import com.sky.xposed.rimet.util.FileUtil;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -117,9 +115,6 @@ public class AnalysisTask extends AbstractTask<String, String, Map<Integer, Stri
                 break;
             }
         }
-
-        // 保存当前MD5信息
-        mStringMap.put(M.sky.rimet_package_md5, FileUtil.getFileMD5(new File(sourcePath)));
 
         publishProgress("分析完成!");
         Alog.d(">>>>>>>>>>>>>>>>>> " + (System.currentTimeMillis() - startTime));

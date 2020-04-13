@@ -40,6 +40,7 @@ import com.sky.xposed.rimet.ui.activity.MainActivity;
 import com.sky.xposed.rimet.ui.util.ActivityUtil;
 import com.sky.xposed.rimet.ui.util.DialogUtil;
 import com.sky.xposed.rimet.ui.util.XViewUtil;
+import com.sky.xposed.rimet.util.FileUtil;
 import com.sky.xposed.rimet.util.GsonUtil;
 import com.sky.xposed.ui.UIAttribute;
 import com.sky.xposed.ui.base.BasePluginDialog;
@@ -52,6 +53,7 @@ import com.sky.xposed.ui.view.GroupItemView;
 import com.sky.xposed.ui.view.PluginFrameLayout;
 import com.sky.xposed.ui.view.XEditItemView;
 
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -359,14 +361,17 @@ public class SettingsDialog extends BasePluginDialog {
 
         Map<Integer, String> map = (Map<Integer, String>) data.getSerializableExtra(XConstant.Key.DATA);
 
-        if (CollectionUtil.isEmpty(map) || map.size() < 4) {
+        if (CollectionUtil.isEmpty(map) || map.size() < 3) {
             showMessage("无法获取适配的版本信息!");
             return;
         }
 
+        // 获取当前md5值
+        String md5 = FileUtil.getFileMD5(new File(getContext().getApplicationInfo().sourceDir));
+
         // 保存信息
         XPreferences preferences = getDefaultPreferences();
-        preferences.putString(toHexString(M.sky.rimet_package_md5), map.get(M.sky.rimet_package_md5));
+        preferences.putString(toHexString(M.sky.rimet_package_md5), md5);
         preferences.putString(toHexString(M.classz.class_defpackage_MessageDs), map.get(M.classz.class_defpackage_MessageDs));
         preferences.putString(toHexString(M.classz.class_defpackage_ServiceFactory), map.get(M.classz.class_defpackage_ServiceFactory));
         preferences.putString(toHexString(M.classz.class_defpackage_RedPacketsRpc), map.get(M.classz.class_defpackage_RedPacketsRpc));
