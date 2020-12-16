@@ -23,8 +23,8 @@
 # Serializable
 -keepclasseswithmembernames class * implements java.io.Serializable {*;}
 
--keep class com.sky.xposed.rimet.Main {*;}
--keep class com.sky.xposed.rimet.StringFog
+-keep class tk.anysoft.xposed.lark.Main {*;}
+-keep class tk.anysoft.xposed.lark.StringFog
 
 -keep class rx.** {*;}
 -keep class okhttp3.** {*;}
