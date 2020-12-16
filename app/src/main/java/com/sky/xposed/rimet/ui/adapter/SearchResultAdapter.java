@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 The sky Authors.
+ * Copyright (c) 2020 The sky Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,9 +25,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amap.api.services.core.PoiItem;
-import com.sky.xposed.common.ui.base.BaseListAdapter;
-import com.sky.xposed.common.ui.util.ViewUtil;
 import com.sky.xposed.rimet.R;
+import com.sky.xposed.ui.base.BaseListAdapter;
+import com.sky.xposed.ui.util.ViewUtil;
 
 /**
  * Created by sky on 2019/4/3.
@@ -74,7 +74,7 @@ public class SearchResultAdapter extends BaseListAdapter<PoiItem> {
         TextView tvSubTitle;
         ImageView ivCheck;
 
-        public SearchResultHolder(View view, BaseListAdapter<PoiItem> itemView) {
+        SearchResultHolder(View view, BaseListAdapter<PoiItem> itemView) {
             super(view, itemView);
         }
 

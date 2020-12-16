@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 The sky Authors.
+ * Copyright (c) 2020 The sky Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package com.sky.xposed.rimet.data.config;
 
+import com.sky.xposed.core.base.AbstractConfig;
 import com.sky.xposed.rimet.data.model.ConfigModel;
 
 import java.util.Map;
@@ -23,7 +24,7 @@ import java.util.Map;
 /**
  * Created by sky on 2019-05-28.
  */
-public class CacheRimetConfig extends RimetConfig {
+public class CacheRimetConfig extends AbstractConfig {
 
     private ConfigModel mConfigModel;
 
@@ -32,18 +33,16 @@ public class CacheRimetConfig extends RimetConfig {
     }
 
     @Override
-    public RimetConfig loadConfig() {
+    protected void onLoadConfig() {
 
         // 获取版本配置
         Map<Integer, String> config = mConfigModel.getVersionConfig();
 
-        if (config == null) return this;
+        if (config == null) return ;
 
         for (int key : config.keySet()) {
             // 添加到配置中
             add(key, config.get(key));
         }
-
-        return this;
     }
 }

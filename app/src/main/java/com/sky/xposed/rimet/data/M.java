@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 The sky Authors.
+ * Copyright (c) 2020 The sky Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,11 @@ public final class M {
 
     private M() {
 
+    }
+
+    public static final class sky {
+
+        public static final int rimet_package_md5 = 0x00000001;
     }
 
     public static final class classz {

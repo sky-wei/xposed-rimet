@@ -27,7 +27,7 @@
         android:orientation="vertical"
         android:layout_marginTop="20dp">
 
-        <com.sky.xposed.common.ui.view.ItemMenu
+        <com.sky.xposed.ui.view.ItemMenu
             android:id="@+id/im_version"
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -39,72 +39,73 @@
             android:background="@drawable/selector_item_menu"
             />
 
-        <com.sky.xposed.common.ui.view.ItemMenu
+        <com.sky.xposed.ui.view.ItemMenu
             android:id="@+id/im_ding_version"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:onClick="onClick"
-            app:sky_itemMenuLine="true"
+            app:sky_itemMenuLine="false"
             app:sky_itemMenuTextSize="15sp"
             app:sky_itemMenuShowMore="false"
             app:sky_itemMenuName="钉钉版本"
             android:background="@drawable/selector_item_menu"
             />
 
-        <com.sky.xposed.common.ui.view.ItemMenu
+        <com.sky.xposed.ui.view.ItemMenu
             android:id="@+id/im_source"
+            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:onClick="onClick"
-            app:sky_itemMenuLine="true"
+            app:sky_itemMenuLine="false"
             app:sky_itemMenuTextSize="15sp"
             app:sky_itemMenuShowMore="true"
             app:sky_itemMenuName="源码地址"
             android:background="@drawable/selector_item_menu"
             />
 
-        <com.sky.xposed.common.ui.view.ItemMenu
+        <com.sky.xposed.ui.view.ItemMenu
             android:id="@+id/im_download"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:onClick="onClick"
-            app:sky_itemMenuLine="true"
+            app:sky_itemMenuLine="false"
             app:sky_itemMenuTextSize="15sp"
             app:sky_itemMenuShowMore="true"
             app:sky_itemMenuName="下载地址"
             android:background="@drawable/selector_item_menu"
             />
 
-        <com.sky.xposed.common.ui.view.ItemMenu
+        <com.sky.xposed.ui.view.ItemMenu
             android:id="@+id/im_document"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:onClick="onClick"
-            app:sky_itemMenuLine="true"
+            app:sky_itemMenuLine="false"
             app:sky_itemMenuTextSize="15sp"
             app:sky_itemMenuShowMore="true"
             app:sky_itemMenuName="说明文档"
             android:background="@drawable/selector_item_menu"
             />
 
-        <com.sky.xposed.common.ui.view.ItemMenu
+        <com.sky.xposed.ui.view.ItemMenu
             android:id="@+id/im_love"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:onClick="onClick"
-            app:sky_itemMenuLine="true"
+            app:sky_itemMenuLine="false"
             app:sky_itemMenuTextSize="15sp"
             app:sky_itemMenuShowMore="true"
             app:sky_itemMenuName="爱心公益"
             android:background="@drawable/selector_item_menu"
             />
 
-        <com.sky.xposed.common.ui.view.ItemMenu
+        <com.sky.xposed.ui.view.ItemMenu
             android:id="@+id/im_about"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:onClick="onClick"
-            app:sky_itemMenuLine="true"
+            app:sky_itemMenuLine="false"
             app:sky_itemMenuTextSize="15sp"
             app:sky_itemMenuShowMore="true"
             app:sky_itemMenuName="关于"

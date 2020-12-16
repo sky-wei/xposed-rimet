@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 The sky Authors.
+ * Copyright (c) 2020 The sky Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,8 @@ package com.sky.xposed.rimet.presenter;
 
 import android.content.Context;
 
-import com.sky.xposed.rimet.base.BasePresenter;
-import com.sky.xposed.rimet.data.source.IRepositoryFactory;
-import com.sky.xposed.rimet.plugin.interfaces.XPluginManager;
+import com.sky.xposed.core.interfaces.XCoreManager;
+import com.sky.xposed.ui.base.BasePresenter;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
@@ -33,10 +32,10 @@ import io.reactivex.schedulers.Schedulers;
  */
 public abstract class AbstractPresenter implements BasePresenter {
 
-    private XPluginManager mXPluginManager;
+    private XCoreManager mCoreManager;
 
-    public AbstractPresenter(XPluginManager xPluginManager) {
-        mXPluginManager = xPluginManager;
+    public AbstractPresenter(XCoreManager coreManager) {
+        mCoreManager = coreManager;
     }
 
     @Override
@@ -60,7 +59,11 @@ public abstract class AbstractPresenter implements BasePresenter {
     }
 
     public final Context getContext() {
-        return mXPluginManager.getContext();
+        return mCoreManager.getLoadPackage().getContext();
+    }
+
+    public final XCoreManager getCoreManager() {
+        return mCoreManager;
     }
 
     public final String getString(int resId) {
@@ -69,14 +72,6 @@ public abstract class AbstractPresenter implements BasePresenter {
 
     public final String getString(int resId, Object... formatArg) {
         return getContext().getString(resId, formatArg);
-    }
-
-    public final XPluginManager getXPluginManager() {
-        return mXPluginManager;
-    }
-
-    public final IRepositoryFactory getRepositoryFactory() {
-        return mXPluginManager.getRepositoryFactory();
     }
 
     public <T> Observable<T> ioToMain(Observable<T> observable) {

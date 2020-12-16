@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 The sky Authors.
+ * Copyright (c) 2020 The sky Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,13 +33,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.sky.xposed.common.ui.util.LayoutUtil;
-import com.sky.xposed.common.ui.util.ViewUtil;
 import com.sky.xposed.common.util.Alog;
-import com.sky.xposed.common.util.DisplayUtil;
 import com.sky.xposed.common.util.ToastUtil;
 import com.sky.xposed.rimet.BuildConfig;
 import com.sky.xposed.rimet.R;
+import com.sky.xposed.ui.UIConstant;
+import com.sky.xposed.ui.util.DisplayUtil;
+import com.sky.xposed.ui.util.LayoutUtil;
+import com.sky.xposed.ui.util.ViewUtil;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -127,7 +128,7 @@ public class DialogUtil {
         editText.setSingleLine(true);
         editText.setFilters(new InputFilter[]{ new InputFilter.LengthFilter(10)});
         editText.setHint(contentHint);
-        ViewUtil.setInputType(editText, com.sky.xposed.common.Constant.InputType.TEXT);
+        ViewUtil.setInputType(editText, UIConstant.InputType.TEXT);
         frameLayout.addView(editText);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -162,7 +163,7 @@ public class DialogUtil {
         editText.setSingleLine(true);
         editText.setFilters(new InputFilter[]{ new InputFilter.LengthFilter(50)});
         editText.setHint("请输入搜索的关键字");
-        ViewUtil.setInputType(editText, com.sky.xposed.common.Constant.InputType.TEXT);
+        ViewUtil.setInputType(editText, UIConstant.InputType.TEXT);
         frameLayout.addView(editText);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -203,7 +204,7 @@ public class DialogUtil {
             TextView tvTail = new TextView(context);
             tvTail.setTextColor(Color.BLACK);
             tvTail.setTextSize(14f);
-            tvTail.setText(Html.fromHtml("<br/>获取更多信息,请关注微信公众号:"));
+            tvTail.setText(Html.fromHtml("<br/>别让懒成为上班迟到的借口<br/>还年轻的我们应当更加努力 <br/><br/>获取更多信息,请关注微信公众号:"));
 //            tvTail.setOnClickListener(v -> copyToClipboard(context, "808328957"));
 
             content.addView(tvHead);

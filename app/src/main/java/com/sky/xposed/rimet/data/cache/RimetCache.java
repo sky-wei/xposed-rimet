@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 The sky Authors.
+ * Copyright (c) 2020 The sky Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,9 @@
 
 package com.sky.xposed.rimet.data.cache;
 
-import com.sky.xposed.rimet.Constant;
 import com.sky.xposed.rimet.data.model.ConfigModel;
 import com.sky.xposed.rimet.data.model.UpdateModel;
 import com.sky.xposed.rimet.data.model.VersionModel;
-import com.sky.xposed.rimet.plugin.interfaces.XConfigManager;
 
 import java.util.Map;
 
@@ -32,17 +30,14 @@ public class RimetCache implements IRimetCache {
     private static final long TIMEOUT = 1000 * 60 * 60;
 
     private ICacheManager mCacheManager;
-    private XConfigManager mConfigManager;
 
-    public RimetCache(XConfigManager xConfigManager, ICacheManager iCacheManager) {
+    public RimetCache(ICacheManager iCacheManager) {
         mCacheManager = iCacheManager;
-        mConfigManager = xConfigManager.getConfigManager("rimet_cache");
     }
 
     @Override
     public void saveUpdateInfo(UpdateModel model) {
         mCacheManager.put(buildKey(UpdateModel.class.getSimpleName()), model);
-        mConfigManager.putLong(Constant.XFlag.UPDATE_LAST_TIME, System.currentTimeMillis());
     }
 
     @Override
@@ -58,10 +53,10 @@ public class RimetCache implements IRimetCache {
     @Override
     public UpdateModel getUpdateInfo() {
 
-        long lastTime = mConfigManager.getLong(Constant.XFlag.UPDATE_LAST_TIME, 0);
-        UpdateModel model = mCacheManager.get(buildKey(UpdateModel.class.getSimpleName()), UpdateModel.class);
-
-        return model != null && !isExpired(lastTime) ? model : null;
+//        UpdateModel model = mCacheManager.get(buildKey(UpdateModel.class.getSimpleName()), UpdateModel.class);
+//
+//        return model != null && !isExpired(lastTime) ? model : null;
+        return null;
     }
 
     @Override

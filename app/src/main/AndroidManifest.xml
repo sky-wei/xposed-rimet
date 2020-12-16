@@ -33,6 +33,14 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.activity.AnalysisActivity"
+            android:label="解析包">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="949931e653928fc485a30726ed6d7063"/>

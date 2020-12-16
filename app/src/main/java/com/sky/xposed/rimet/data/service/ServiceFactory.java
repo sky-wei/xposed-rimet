@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 The sky Authors.
+ * Copyright (c) 2020 The sky Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package com.sky.xposed.rimet.data.service;
 
-import com.sky.xposed.rimet.Constant;
+import com.sky.xposed.rimet.XConstant;
 
 import java.util.concurrent.TimeUnit;
 
@@ -33,7 +33,7 @@ public class ServiceFactory implements IServiceFactory {
 
     @Override
     public <T> T createService(Class<T> tClass) {
-        return createRetrofit(createHttpClient(), Constant.Service.BASE_URL).create(tClass);
+        return createRetrofit(createHttpClient(), XConstant.Service.BASE_URL).create(tClass);
     }
 
     /**

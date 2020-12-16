@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 The sky Authors.
+ * Copyright (c) 2020 The sky Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,28 +23,29 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.sky.xposed.common.ui.util.LayoutUtil;
-import com.sky.xposed.common.ui.util.ViewUtil;
-import com.sky.xposed.common.ui.view.CommonFrameLayout;
-import com.sky.xposed.common.ui.view.SimpleItemView;
-import com.sky.xposed.common.util.DisplayUtil;
 import com.sky.xposed.common.util.ToastUtil;
 import com.sky.xposed.rimet.ui.util.ActivityUtil;
+import com.sky.xposed.rimet.ui.util.XViewUtil;
+import com.sky.xposed.ui.base.BasePluginDialog;
+import com.sky.xposed.ui.util.DisplayUtil;
+import com.sky.xposed.ui.util.LayoutUtil;
+import com.sky.xposed.ui.view.PluginFrameLayout;
+import com.sky.xposed.ui.view.SimpleItemView;
 
 /**
  * Created by sky on 2019/3/13.
  */
-public class LoveDialog extends CommonDialog {
+public class LoveDialog extends BasePluginDialog {
 
     private SimpleItemView sivAliPayLove;
     private SimpleItemView sivWeChatLove;
 
     @Override
-    public void createView(CommonFrameLayout frameView) {
+    public void createView(PluginFrameLayout frameView) {
 
         LinearLayout.LayoutParams params = LayoutUtil.newWrapLinearLayoutParams();
         params.leftMargin = DisplayUtil.dip2px(getContext(), 15);
-        params.topMargin = DisplayUtil.dip2px(getContext(), 5);
+        params.topMargin = DisplayUtil.dip2px(getContext(), 10);
         params.bottomMargin = DisplayUtil.dip2px(getContext(), 5);
 
         TextView tvTip = new TextView(getContext());
@@ -52,18 +53,21 @@ public class LoveDialog extends CommonDialog {
         tvTip.setText("这个世界有些人更需要你们的帮助！");
         tvTip.setTextSize(12);
 
-        sivWeChatLove = ViewUtil.newSimpleItemView(getContext(), "腾讯公益");
-        sivAliPayLove = ViewUtil.newSimpleItemView(getContext(), "支付宝公益");
+        sivWeChatLove = XViewUtil.newSimpleItemView(getContext(), "腾讯公益");
+        sivAliPayLove = XViewUtil.newSimpleItemView(getContext(), "支付宝公益");
 
-        frameView.addContent(tvTip);
-        frameView.addContent(sivWeChatLove);
-        frameView.addContent(sivAliPayLove);
+        frameView.addSubView(tvTip);
+        frameView.addSubView(sivWeChatLove);
+        frameView.addSubView(sivAliPayLove);
     }
 
     @Override
     protected void initView(View view, Bundle args) {
         super.initView(view, args);
 
+        getTitleView().setElevation(DisplayUtil.DIP_4);
+
+        showBack();
         setTitle("公益");
 
         sivAliPayLove.setOnClickListener(v -> {

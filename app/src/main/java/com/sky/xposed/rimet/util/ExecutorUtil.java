@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 The sky Authors.
+ * Copyright (c) 2020 The sky Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public final class ExecutorUtil {
         MESSAGE_EXECUTOR = Executors.newSingleThreadExecutor();
 
         // 后台的线程池(暂时写两个)
-        BACK_EXECUTOR = Executors.newScheduledThreadPool(2);
+        BACK_EXECUTOR = Executors.newScheduledThreadPool(3);
     }
 
     private ExecutorUtil() {
