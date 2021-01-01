@@ -17,6 +17,7 @@
 package com.sky.xposed.rimet.task;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -31,6 +32,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -153,7 +155,14 @@ public class AnalysisTask extends AbstractTask<String, String, Map<Integer, Stri
             mStringMap.put(M.classz.class_defpackage_RedPacketsRpc, tClass.getName());
         } else if (superClass == mDatabaseClass && handlerDatabaseClass(tClass)) {
             Alog.d(">>>>>>>>>>>>>>>>>>>> Database " + tClass);
-            mStringMap.put(M.classz.class_defpackage_MessageDs, tClass.getName());
+            // 适配V5.1.40, database类有两个，使用找到的第一个类即可，
+            // 不能覆盖，覆盖了就无法使用红包插件了
+            if(!mStringMap.containsKey(M.classz.class_defpackage_MessageDs)){
+                mStringMap.put(M.classz.class_defpackage_MessageDs, tClass.getName());
+            }else{
+                Alog.i(">>>>>>>>>>>>>>>>>>>> Database exists" + mStringMap.get(M.classz.class_defpackage_MessageDs));
+            }
+
         }
     }
 
@@ -171,6 +180,48 @@ public class AnalysisTask extends AbstractTask<String, String, Map<Integer, Stri
             Method method = ClassUtil.findMethod(tClass, value -> {
                 Class[] classes = value.getParameterTypes();
                 return Map.class.equals(value.getReturnType()) && classes.length == 3;
+            });
+            if(method==null){
+                return false;
+            }
+            // String.class, String.class, List.class
+            method = ClassUtil.findMethod(tClass, value -> {
+                Class[] classes = value.getParameterTypes();
+                if(classes.length == 3
+                        && String.class.equals(classes[0])
+                        && String.class.equals(classes[1])
+                        && List.class.isAssignableFrom(classes[2])){
+                    return true;
+                }
+                return false;
+            });
+            if(method==null){
+                return false;
+            }
+            // String.class, Collection.class, boolean.class
+            method = ClassUtil.findMethod(tClass, value -> {
+                Class[] classes = value.getParameterTypes();
+                if(classes.length == 3
+                        && String.class.equals(classes[0])
+                        && Collection.class.isAssignableFrom(classes[1])
+                        && boolean.class.equals(classes[2])){
+                    return true;
+                }
+                return false;
+            });
+            if(method==null){
+                return false;
+            }
+            // String.class, List.class, ContentValues.class
+            method = ClassUtil.findMethod(tClass, value -> {
+                Class[] classes = value.getParameterTypes();
+                if(classes.length == 3
+                        && String.class.equals(classes[0])
+                        && List.class.isAssignableFrom(classes[1])
+                        && ContentValues.class.isAssignableFrom(classes[2])){
+                    return true;
+                }
+                return false;
             });
             return method != null;
         } catch (Throwable ignored) {
