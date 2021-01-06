@@ -43,6 +43,7 @@ import com.sky.xposed.rimet.ui.util.XViewUtil;
 import com.sky.xposed.rimet.util.FileUtil;
 import com.sky.xposed.rimet.util.GsonUtil;
 import com.sky.xposed.ui.UIAttribute;
+import com.sky.xposed.ui.UIConstant;
 import com.sky.xposed.ui.base.BasePluginDialog;
 import com.sky.xposed.ui.info.UAttributeSet;
 import com.sky.xposed.ui.util.DisplayUtil;
@@ -110,6 +111,36 @@ public class SettingsDialog extends BasePluginDialog {
         sivLuckyDelayed.setExtendHint("延迟时间单位(毫秒)");
         sivLuckyDelayed.trackBind(XConstant.Key.LUCKY_DELAYED, 500);
         sivLuckyDelayed.addToFrame(luckyGroup);
+
+
+        GroupItemView noOpenTimeGroup = new GroupItemView(getContext());
+        noOpenTimeGroup.setVisibility(View.GONE);
+        noOpenTimeGroup.addToFrame(frameView);
+
+        XViewUtil.newSwitchItemView(getContext(), "夜间不抢", "夜间时段不自动抢红包")
+                .trackBind(XConstant.Key.ENABLE_NO_OPEN_TIME, Boolean.FALSE, noOpenTimeGroup)
+                .addToFrame(luckyGroup);
+
+        EditTextItemView noOpenStartTime = new EditTextItemView(getContext(), new UAttributeSet.Build().build());
+        noOpenStartTime.setMaxLength(4);
+        noOpenStartTime.setName("夜间开始时间");
+        noOpenStartTime.setExtendHint("夜间开始时间(HHmm)");
+        noOpenStartTime.setUnit("(HHmm)");
+        noOpenStartTime.setInputType(UIConstant.InputType.NUMBER);
+        noOpenStartTime.trackBind(XConstant.Key.NO_OPEN_START_TIME, "2300");
+        noOpenStartTime.addToFrame(noOpenTimeGroup);
+
+        EditTextItemView noOpenEndTime = new EditTextItemView(getContext(), new UAttributeSet.Build().build());
+        noOpenEndTime.setMaxLength(4);
+        noOpenEndTime.setName("夜间结束时间");
+        noOpenEndTime.setExtendHint("夜间结束时间(HHmm)");
+        noOpenEndTime.setUnit("(HHmm)");
+        noOpenEndTime.setInputType(UIConstant.InputType.NUMBER);
+        noOpenEndTime.trackBind(XConstant.Key.NO_OPEN_END_TIME, "0800");
+        noOpenEndTime.addToFrame(noOpenTimeGroup);
+
+
+
 
 
         /*****************   防撤回   ****************/

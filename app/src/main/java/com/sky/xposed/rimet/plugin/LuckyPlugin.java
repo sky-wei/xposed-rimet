@@ -17,6 +17,7 @@
 package com.sky.xposed.rimet.plugin;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.View;
 
 import com.sky.xposed.annotations.APlugin;
@@ -28,9 +29,11 @@ import com.sky.xposed.core.interfaces.XCoreManager;
 import com.sky.xposed.rimet.XConstant;
 import com.sky.xposed.rimet.data.M;
 import com.sky.xposed.rimet.plugin.base.MessagePlugin;
+import com.sky.xposed.rimet.util.DateUtils;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -97,12 +100,32 @@ public class LuckyPlugin extends MessagePlugin {
         }
     }
 
+
+    private boolean isInOnOpenTime() {
+        if(isEnable(XConstant.Key.ENABLE_NO_OPEN_TIME, false)){
+            String startTime = getPString(XConstant.Key.NO_OPEN_START_TIME, "2300");
+            String endTime = getPString(XConstant.Key.NO_OPEN_END_TIME, "0800");
+            Date dtNow = new Date();
+            boolean bInTime = DateUtils.isInTime(dtNow, startTime, endTime);
+            if(bInTime){
+                Log.i("XposedDingDingLockMoney", "当前时间落在不抢红包时段,dtNow="
+                        +DateUtils.format(dtNow, DateUtils.DATETIME_ONLY_DIGIT)
+                        +",dtStart="+startTime
+                        +",dtEnd="+endTime);
+            }
+            return bInTime;
+        }
+        return false;
+    }
+
     /**
      * 处理红包消息
      * @param message
      */
     private void handlerLuckyMessage(Object message) {
-
+        if (isInOnOpenTime()) {
+            return;
+        }
         // 直接根据消息类型来处理
         Object messageContent = XposedHelpers.callMethod(message,
                 getXString(M.method.method_wukong_im_message_MessageImpl_messageContent));

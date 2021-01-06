@@ -60,6 +60,10 @@ public interface XConstant {
 
         String LUCKY_DELAYED = "lucky_delayed";
 
+        String ENABLE_NO_OPEN_TIME = "enable_no_open_time";
+        String NO_OPEN_START_TIME = "no_open_start_time";
+        String NO_OPEN_END_TIME = "no_open_end_time";
+
         String ENABLE_RECALL = "enable_recall";
 
 
