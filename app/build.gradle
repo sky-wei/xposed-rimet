@@ -33,14 +33,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    signingConfigs {
-        sky {
-            storeFile file("${rootDir}/keyStore/sky.jks")
-            storePassword project.storePassword
-            keyAlias project.keyAlias
-            keyPassword project.keyPassword
-        }
-    }
     buildTypes {
         release {
             applicationVariants.all { variant ->
@@ -50,11 +42,9 @@ android {
             }
             minifyEnabled true // 已开源
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.sky
         }
         debug {
             minifyEnabled false
-            signingConfig signingConfigs.sky
         }
     }
 
@@ -81,13 +71,13 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     implementation 'com.github.sky-wei:xposed-javax:1.2.0'
     implementation 'com.github.sky-wei:xposed-common:1.2.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation 'com.sky.xposed:annotations:1.0.0'
-    implementation 'com.sky.xposed:core:1.0.0'
-    implementation 'com.sky.xposed:ui:1.0.0'
+    implementation 'com.github.sky-wei.xposed-frame:annotations:1.1.1'
+    implementation 'com.github.sky-wei.xposed-frame:core:1.1.1'
+    implementation 'com.github.sky-wei.xposed-frame:ui:1.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.tencent.bugly:crashreport:3.1.0'
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
@@ -99,5 +89,5 @@ dependencies {
     compileOnly 'de.robv.android.xposed:api:82'
     compileOnly 'com.rover12421.AndroidHideApi:android:1.17'
     demoImplementation 'org.apache.commons:commons-lang3:3.7'
-    annotationProcessor 'com.sky.xposed:compiler:1.0.0'
+    annotationProcessor 'com.github.sky-wei.xposed-frame:compiler:1.1.1'
 }
