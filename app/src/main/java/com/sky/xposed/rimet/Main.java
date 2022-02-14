@@ -19,6 +19,7 @@ package com.sky.xposed.rimet;
 import android.app.Application;
 import android.content.Context;
 
+import com.sky.xposed.common.util.Alog;
 import com.sky.xposed.common.util.ToastUtil;
 import com.sky.xposed.core.XStore;
 import com.sky.xposed.core.adapter.CoreListenerAdapter;
@@ -102,6 +103,8 @@ public class Main implements IXposedHookLoadPackage {
                     @Override
                     public void onInitComplete(XCoreManager coreManager) {
                         super.onInitComplete(coreManager);
+
+                        Alog.setDebug(BuildConfig.DEBUG);
 
                         final Context context = coreManager.getLoadPackage().getContext();
 

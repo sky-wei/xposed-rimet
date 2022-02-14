@@ -15,27 +15,15 @@
  */
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-def loadProperties(String sourceFileName) {
-    def config = new Properties()
-    def propFile = new File(sourceFileName)
-    if (propFile.canRead()) {
-        config.load(new FileInputStream(propFile))
-        for (Map.Entry property in config) {
-            project.ext[property.key] = property.value
-        }
-    }
-}
-
-loadProperties("local.properties")
-
 buildscript {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
+        maven{ url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
+        classpath 'com.android.tools.build:gradle:4.1.3'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -44,9 +32,9 @@ buildscript {
 allprojects {
     repositories {
         google()
+        mavenCentral()
+        maven{ url 'https://maven.aliyun.com/repository/public' }
         maven { url 'https://jitpack.io' }
-        maven { url 'https://dl.bintray.com/sky-wei/maven' }
-        jcenter()
     }
 }
 

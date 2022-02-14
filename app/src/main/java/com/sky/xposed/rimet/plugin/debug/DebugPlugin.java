@@ -22,6 +22,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 
 import com.sky.xposed.annotations.APlugin;
 import com.sky.xposed.common.util.Alog;
@@ -31,10 +34,12 @@ import com.sky.xposed.core.interfaces.XCoreManager;
 
 import java.util.Arrays;
 
+import de.robv.android.xposed.XposedHelpers;
+
 /**
  * Created by sky on 2018/12/19.
  */
-@APlugin(debug = true, filter = { APlugin.Process.ALL })
+@APlugin(filter = { APlugin.Process.ALL })
 public class DebugPlugin extends AbstractPlugin {
 
     public DebugPlugin(XCoreManager coreManager) {
@@ -183,5 +188,83 @@ public class DebugPlugin extends AbstractPlugin {
 //                        DebugUtil.printStackTrace();
 //                    }
 //                });
+
+        findMethod(
+                "com.alibaba.android.user.contact.organization.friendcontact.FriendFragment",
+                "onActivityCreated",
+                Bundle.class
+        ).after(param -> {
+
+            BaseAdapter adapter = (BaseAdapter) XposedHelpers.getObjectField(param.thisObject, "l");
+
+            getLoadPackage().getHandler().postDelayed(() -> {
+
+                ToStringUtil.toString(adapter);
+                Alog.d(">>>>>>>>>>>>>>>>>>>> " + adapter.getCount());
+                ToStringUtil.toString(adapter.getItem(0));
+
+            }, 3000);
+        });
+
+        findMethod(
+                "com.alibaba.android.dingtalkim.activities.MsgForwardActivity",
+                "onClick",
+                View.class
+        ).before(param -> {
+
+            Alog.d(">>>>>>>>>>>>>>>>>>> onClick " + param.args[0]);
+        });
+
+        findMethod(
+                "com.alibaba.android.dingtalkim.activities.MsgForwardActivity",
+                "onItemClick",
+                AdapterView.class, View.class, int.class, long.class
+        ).before(param -> {
+
+            Alog.d(">>>>>>>>>>>>>>>>>>> onItemClick " + Arrays.toString(param.args));
+        });
+
+        findMethod(
+                "com.alibaba.android.dingtalkim.activities.MsgForwardActivity",
+                "doEntranceItemClick",
+                "com.alibaba.wukong.im.Conversation"
+        ).before(param -> {
+
+            Alog.d(">>>>>>>>>>>>>>>>>>> doEntranceItemClick " + Arrays.toString(param.args));
+        });
+
+
+        findMethod(
+                "com.alibaba.android.dingtalkim.activities.MsgForwardActivity",
+                "doItemClick",
+                String.class, "com.alibaba.wukong.im.Conversation", boolean.class
+        ).before(param -> {
+
+            Alog.d(">>>>>>>>>>>>>>>>>>> doItemClick " + Arrays.toString(param.args));
+//            param.setResult(null);
+        });
+
+        findMethod(
+                "com.alibaba.android.dingtalkim.activities.MsgForwardActivity",
+                "share2Conversation",
+                String.class, "com.alibaba.android.dingtalkim.base.model.DingtalkConversation", boolean.class
+        ).before(param -> {
+
+            Alog.d(">>>>>>>>>>>>>>>>>>> share2Conversation " + Arrays.toString(param.args));
+            Alog.d(">>>>>>>>>>>>>>>>>>> share2Conversation " + XposedHelpers.getObjectField(param.thisObject, "mForwardHandler"));
+        });
+
+        findMethod(
+                "com.alibaba.android.dingtalkim.imtools.ChatMessageSender",
+                "sendMessage",
+                "com.alibaba.wukong.im.Message",
+                boolean.class, boolean.class, String.class, String.class, boolean.class, boolean.class
+        ).before(param -> {
+
+            ToStringUtil.toString(param.thisObject);
+            ToStringUtil.toString(param.args[0]);
+            Alog.d(">>>>>>>>>>>>>>>>>>> sendMessage " + Arrays.toString(param.args));
+            param.setResult(null);
+        });
     }
 }
