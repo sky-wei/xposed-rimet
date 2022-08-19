@@ -97,40 +97,43 @@ public class MapActivity extends Activity implements LocationSource, AdapterView
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try {
+            setContentView(R.layout.activity_map);
 
-        setContentView(R.layout.activity_map);
+            ActionBar actionBar = getActionBar();
+            if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
 
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
+            mMapView = findViewById(R.id.map_view);
+            mMapView.onCreate(savedInstanceState);
 
-        mMapView = findViewById(R.id.map_view);
-        mMapView.onCreate(savedInstanceState);
+            mListView = findViewById(R.id.list_view);
+            mTvPrompt = findViewById(R.id.tv_prompt);
+            mSearchResultAdapter = new SearchResultAdapter(this);
+            mListView.setAdapter(mSearchResultAdapter);
+            mListView.setOnItemClickListener(this);
 
-        mListView = findViewById(R.id.list_view);
-        mTvPrompt = findViewById(R.id.tv_prompt);
-        mSearchResultAdapter = new SearchResultAdapter(this);
-        mListView.setAdapter(mSearchResultAdapter);
-        mListView.setOnItemClickListener(this);
+            mAMap = mMapView.getMap();
 
-        mAMap = mMapView.getMap();
+            mAMap.getUiSettings().setZoomControlsEnabled(false);
+            mAMap.setLocationSource(this);
+            mAMap.getUiSettings().setMyLocationButtonEnabled(true);
+            mAMap.setMyLocationEnabled(true);
 
-        mAMap.getUiSettings().setZoomControlsEnabled(false);
-        mAMap.setLocationSource(this);
-        mAMap.getUiSettings().setMyLocationButtonEnabled(true);
-        mAMap.setMyLocationEnabled(true);
+            mAMap.setOnCameraChangeListener(new MyOnCameraChangeListener());
+            mAMap.setOnMapLoadedListener(new MyOnMapLoadedListener());
 
-        mAMap.setOnCameraChangeListener(new MyOnCameraChangeListener());
-        mAMap.setOnMapLoadedListener(new MyOnMapLoadedListener());
+            mGeocodeSearch = new GeocodeSearch(getApplicationContext());
+            mGeocodeSearch.setOnGeocodeSearchListener(new MyOnGeocodeSearchListener());
 
-        mGeocodeSearch = new GeocodeSearch(getApplicationContext());
-        mGeocodeSearch.setOnGeocodeSearchListener(new MyOnGeocodeSearchListener());
-
-        // 请求权限
-        PermissionUtil.requestPermissions(this,
-                new String[] {
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.ACCESS_FINE_LOCATION},
-                99);
+            // 请求权限
+            PermissionUtil.requestPermissions(this,
+                    new String[] {
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.ACCESS_FINE_LOCATION},
+                    99);
+        } catch (AMapException e) {
+            Alog.e("异常了", e);
+        }
     }
 
     @Override
@@ -224,7 +227,12 @@ public class MapActivity extends Activity implements LocationSource, AdapterView
 
         if (mAMapLocationClient == null) {
 
-            mAMapLocationClient = new AMapLocationClient(getApplicationContext());
+            try{
+                mAMapLocationClient = new AMapLocationClient(getApplicationContext());
+            }catch (Throwable throwable){
+                AMapLocationClient.updatePrivacyShow(getApplicationContext(),true,true);
+                AMapLocationClient.updatePrivacyAgree(getApplicationContext(),true);
+            }
             mAMapLocationClientOption = new AMapLocationClientOption();
 
             // 设置定位参数,只定位一次
@@ -336,14 +344,16 @@ public class MapActivity extends Activity implements LocationSource, AdapterView
      * @param keyWord
      */
     private void doSearchQuery(String keyWord) {
-
-        mQuery = new PoiSearch.Query(keyWord, "", "");
-        mQuery.setPageSize(20);
-        mQuery.setPageNum(0);
-
-        mPoiSearch = new PoiSearch(this, mQuery);
-        mPoiSearch.setOnPoiSearchListener(new MyOnPoiSearchListener());
-        mPoiSearch.searchPOIAsyn();
+        try {
+            mQuery = new PoiSearch.Query(keyWord, "", "");
+            mQuery.setPageSize(20);
+            mQuery.setPageNum(0);
+            mPoiSearch = new PoiSearch(this, mQuery);
+            mPoiSearch.setOnPoiSearchListener(new MyOnPoiSearchListener());
+            mPoiSearch.searchPOIAsyn();
+        } catch (AMapException e) {
+            Alog.e("异常了", e);
+        }
     }
 
     /**
